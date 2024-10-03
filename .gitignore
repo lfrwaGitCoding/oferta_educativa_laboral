@@ -1,6 +1,6 @@
 .dir_*
 .DS_Store
-
+./*/.dir_*
 
 # History files
 .Rhistory

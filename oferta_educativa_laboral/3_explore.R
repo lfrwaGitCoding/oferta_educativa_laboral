@@ -1,40 +1,12 @@
 ############
 # SIAP
-# Dirección de Administración
 # Unidad de Personal
-# Octubre 2024
+# Noviembre 2024
 # Descriptive stats
-# Input is accdb mdbtools converted format (per table)
-# Currently:
-  # tabla Bienestar
-  # tabla Plantilla, e.g. Qna_17_Bienestar_2024.csv
+# Input is output from script:
+# 2_xxx.R
+
 # Output is
-############
-
-############
-# TO DO:
-# Column name descriptions
-# Handle dates:
-# dates with "01/01/50 00:00:00 " but also "<NA>"
-# accdb to csv mdbtools conversion
-# then csv to R reading
-# mdbtools does introduce format changes, e.g. (note row order is not the same!):
-# "03/01/04 00:00:00" csv mdbtools
-# vs
-# 1/1/2050 00:00:00 csv accdb export
-
-# Re-convert with mdbtools but double check, use full ddmmyyyy export as ambiguity for 1950 vs 2050
-
-############
-
-
-
-############
-code_loc <- "~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral"
-
-project_loc <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/data/"
-setwd(project_loc)
-getwd()
 ############
 
 
@@ -49,104 +21,30 @@ library(tidyverse)
 
 
 ############
-# Datasets:
-infile <- 'data_UP/access_SIAP_18092024/processed/Qna_17_Bienestar_2024.csv'
-infile2 <- 'data_UP/access_SIAP_18092024/processed/Qna_17_Plantilla_2024.csv'
+# Load rdata file:
 
-results_loc <- '~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/'
 
-results_dir <- 'october_2024/'
-results_dir <- sprintf('%s/%s', results_loc, results_dir)
-results_dir
+# Check directory locations:
+print(project_root)
+setwd(project_root)
+getwd()
+print(dir(path = normalizePath(project_root), all.files = TRUE))
 
-infile <- episcout::epi_read(infile)
-infile2 <- episcout::epi_read(infile2)
+print(all_locs)
+############
 
-epi_head_and_tail(infile)
-epi_head_and_tail(infile2)
+############
+# Set-up results dir
+print(dir(path = normalizePath(results_dir), all.files = TRUE))
 
-colnames(infile)
-colnames(infile2)
+# Output dir, based on today's date:
+results_outdir <- create_results_dir(project_root = project_root)
+typeof(results_outdir)
+print(results_outdir)
 
 # For saving/naming outputs:
-# infile_prefix <- 'infile'
-infile_prefix <- 'plantilla_q17'
-############
-
-
-############
-# Check overlap between datasets
-
-###
-# Column names shared:
-colnames(infile)[colnames(infile) %in% colnames(infile2)]
-# all, nice
-
-# Not shared:
-colnames(infile)[colnames(infile) != colnames(infile2)]
-
-###
-# Check manually:
-column_names_dfs <- data.frame(df1 = colnames(infile),
-                               df2 = colnames(infile2)
-                               )
-# View(column_names_dfs)
-file_n <- 'df_shared_col_names'
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s.%s', file_n, suffix)
-outfile <- sprintf('%s/%s', results_dir, outfile)
-outfile
-epi_write(column_names_dfs, outfile)
-###
-
-
-###
-# Check how many rows match in both databases
-head(infile$Nombre)
-head(infile2$Nombre)
-row_matches <- intersect(infile$Nombre, infile2$Nombre)
-length(row_matches)
-row_matches
-# 356
-
-head(infile$MATRICULA)
-head(infile2$MATRICULA)
-row_matches <- intersect(infile$MATRICULA, infile2$MATRICULA)
-length(row_matches)
-row_matches
-# 0
-# Consider adding origin and merging datasets
-############
-
-
-############
-# Set up so that I can run one script for both datasets:
-data_f <- infile
-# data_f <- infile2
-dim(data_f)
-str(data_f)
-############
-
-
-############
-# Find non-unique IDs
-df_dups <- data_f
-dups <- epi_clean_get_dups(df_dups, var = "MATRICULA")
-# MATRICULA has '0' in ~4000 rows
-dups <- epi_clean_get_dups(df_dups, var = "CURP")
-dups <- epi_clean_get_dups(df_dups, var = "Nombre")
-dups <- epi_clean_get_dups(df_dups, var = "NSS")
-dups
-# No duplicates by CURP as expected
-# 31 by name
-# 2 by NSS
-
-# View(t(dups))
-# No real duplicates (by CURP)
-# None for infile2
-
-# Clean up:
-rm(list = c('df_dups'))
+print(infile_prefix)
+# infile_prefix <- 'Qna_17_Bienestar_2024'
 ############
 
 
@@ -165,6 +63,7 @@ as.data.frame(sapply(data_f, typeof))
 colnames(data_f)
 ###
 
+
 ###
 # Get character columns:
 char_cols <- data_f %>%
@@ -173,6 +72,8 @@ char_cols <- data_f %>%
 char_cols
 epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
 
+# ID columns are:
+# TO DO:
 
 # Get integer columns:
 int_cols <- data_f %>%
@@ -185,67 +86,114 @@ colnames(data_f)
 int_cols
 epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
 ###
+############
 
 
+############
 ###
 # Dates:
-date_cols <- data_f %>%
+df_dates <- data_f
+
+date_cols <- df_dates %>%
   select(contains("fech")) %>%
   colnames()
 date_cols
 
-epi_head_and_tail(data_f[, date_cols])
+epi_head_and_tail(df_dates[, date_cols])
 # dd/mm/yyyy
 
-# Problematic strings:
-na_exclude <- c("04",
-                "01",
-                "00",
-                "Definitiva",
-                "<NA>"
-                )
+summary(df_dates[, date_cols])
+# chr
+###
 
+
+###
 # Convert dates
-# TO DO: continue here, errors
-# Replace invalid dates with NA:
-col_test <- data_f$FECHAING
+col_test <- df_dates$FECHAING
 summary(col_test)
 summary(as.factor(col_test))
 col_test
-col_test <- as.POSIXct(col_test, format = "%d/%m/%y %H:%M:%S", tz = "Etc/GMT+6")
-# "Etc/GMT+6" represents UTC-6 (Central Standard Time)
-summary(col_test)
-col_test
+str(col_test)
+as.character(col_test)
+
+col_test <- as.Date(col_test, format = "%m/%d/%y")
+str(col_test)
+# formatted_col_test <- format(col_test, "%d/%m/%Y")
+
+# col_test <- as.character(as.Date(col_test, format = "%m/%d/%y"))
+# col_test <- format(as.Date(col_test), "%d/%m/%Y")
+# str(col_test)
+
+head(col_test)
+head(df_dates$FECHAING)
+summary(as.Date(col_test, "%d/%m/%Y"))
+summary(as.Date(df_dates$FECHAING, "%m/%d/%y")) # format is different
+# Looks good, now as dd/mm/yyyy without hms
+# Left as R’s native yyyy-mm-dd format internally
+###
 
 
-# col_test <- ifelse(col_test %in% na_exclude, NA, col_test)
-# summary(col_test)
+###
+# Loop and convert all:
+epi_head_and_tail(df_dates[, date_cols])
+summary(df_dates[, date_cols])
+str(df_dates[, date_cols])
+
+# i <- date_cols[1]
+for (i in date_cols) {
+    print(i)
+    col_i <- df_dates[[i]]
+    str(col_i)
+    col_i <- as.Date(col_i, format = "%m/%d/%y")
+    str(col_i)
+    print(head(col_i))
+    df_dates[[i]] <- col_i
+    print(head(df_dates[, i]))
+    print(summary(df_dates[[i]]))
+        }
+
+epi_head_and_tail(data_f[, date_cols])
+epi_head_and_tail(df_dates[, date_cols])
 
 head(data_f$FECHAING)
-head(col_test)
+head(df_dates$FECHAING)
 
 
-epi_head_and_tail(data_f[, c("Fecha de Ingreso", "Fecha de Baja")], cols = 2)
+summary(df_dates[, date_cols])
+str(data_f[, date_cols])
+str(df_dates[, date_cols])
+# Looks good, base R format: "2005-05-16"
+###
 
-summary(data_f[, c("Fecha de Ingreso", "Fecha de Baja")])
-str(data_f)
-
-# This is the year extracted, convert to factor as only a few years and will use as counts:
-summary(as.Date(data_f$'año Baja', format = "%Y"))
-summary(as.factor(data_f$'año Baja'))
-
-data_f$'año Baja' <- as.factor(data_f$'año Baja')
-summary(data_f$'año Baja')
-
-# Get date columns:
-date_cols <- data_f %>%
-	select_if(~ epi_clean_cond_date(.)) %>%
-	colnames()
-date_cols
+###
+# # Clean up NAs and other values:
+# # Replace invalid dates with NA:
+# # Problematic strings:
+# na_exclude <- c("04",
+#                 "01",
+#                 "00",
+#                 "Definitiva",
+#                 "<NA>"
+#                 )
+#
+# which(col_test %in% na_exclude)
+#
+# col_test <- ifelse(col_test %in% na_exclude, NA, col_test)
+# col_test <- as.Date(col_test)
+# summary(col_test)
 ###
 
 
 ###
+# Clean up:
+data_f <- df_dates
+str(data_f[, date_cols])
+rm(list = c('df_dates'))
+###
+
+
+###
+# TO DO: continue here
 summary(data_f)
 colnames(data_f)
 
@@ -854,6 +802,7 @@ for (i in jumps) {
 ############
 # The end:
 # Save objects, to eg .RData file:
+# TO DO:
 folder <- ''
 script <- '1_setup_SIAP'
 infile_prefix

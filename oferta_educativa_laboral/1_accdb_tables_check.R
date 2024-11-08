@@ -19,8 +19,6 @@
 # Import libraries
 library(data.table)
 library(episcout)
-library(ggthemes)
-library(cowplot)
 library(tidyverse)
 ############
 
@@ -28,7 +26,7 @@ library(tidyverse)
 ############
 # Load rdata file with directory locations
 
-# Load renv properly and set working directory to the project root:
+# Set working directory to the project root:
 setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
 
 # Load the .rdata.gzip file:

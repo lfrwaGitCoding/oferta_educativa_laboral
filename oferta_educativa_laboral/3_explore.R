@@ -3,10 +3,19 @@
 # Unidad de Personal
 # Noviembre 2024
 # Descriptive stats
-# Input is output from script:
-# 2_xxx.R
+# Input is rdata output from script:
+# 2_dups_col_types.R
 
-# Output is
+# Output are many plots, tables, etc for descriptive stats
+############
+
+############
+# Global options:
+
+###
+# options(error = stop) # batch
+Sys.setenv(R_FAIL = TRUE)
+###
 ############
 
 
@@ -17,288 +26,61 @@ library(episcout)
 library(ggthemes)
 library(cowplot)
 library(tidyverse)
+library(skimr)
+# library(renv)
 ############
 
 
 ############
-# Load rdata file:
+# Load rdata file with directory locations
 
-
-# Check directory locations:
-print(project_root)
-setwd(project_root)
+###
+# Set working directory to the project root:
+setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+# renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
-print(dir(path = normalizePath(project_root), all.files = TRUE))
+###
 
-print(all_locs)
-############
+###
+# Dataset:
+rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
+# infile <- '2_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
+infile <- '2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
+infile_path <- paste0(rdata_dir, infile)
+# Full path and file name:
+infile_path
 
-############
-# Set-up results dir
-print(dir(path = normalizePath(results_dir), all.files = TRUE))
+print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
 
+load(infile_path)
+ls()
+
+# Get rid of RStudio warnings for loaded objects:
+data_f <- data_f
+project_root <- project_root
+data_dir <- data_dir
+devel_dir <- devel_dir
+code_dir <- code_dir
+results_dir <- results_dir
+id_cols <- id_cols
+date_cols <- date_cols
+char_cols <- char_cols
+int_cols <- int_cols
+fact_cols <- fact_cols
+###
+
+###
 # Output dir, based on today's date:
-results_outdir <- create_results_dir(project_root = project_root)
+infile_prefix <- strsplit(infile, "\\.")[[1]][1]
+results_outdir <- sprintf('%s_%s', format(Sys.Date(), '%d_%m_%Y'), infile_prefix)
+results_outdir
+results_outdir <-  create_results_dir(project_root = project_root,
+                                      name = results_outdir)
 typeof(results_outdir)
 print(results_outdir)
-
-# For saving/naming outputs:
-print(infile_prefix)
-# infile_prefix <- 'Qna_17_Bienestar_2024'
-############
-
-
-############
-# Check classes and convert
-
+print(dir(path = normalizePath(results_outdir), all.files = TRUE))
+getwd()
 ###
-epi_clean_count_classes(df = data_f)
-tibble::glimpse(data_f)
-str(data_f)
-epi_head_and_tail(data_f)
-epi_head_and_tail(data_f, last_cols = T)
-
-# Explicitly check the type of each column:
-as.data.frame(sapply(data_f, typeof))
-colnames(data_f)
-###
-
-
-###
-# Get character columns:
-char_cols <- data_f %>%
-	select_if(~ epi_clean_cond_chr_fct(.)) %>%
-	colnames()
-char_cols
-epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
-
-# ID columns are:
-# TO DO:
-
-# Get integer columns:
-int_cols <- data_f %>%
-	select_if(~ epi_clean_cond_numeric(.)) %>%
-	colnames()
-int_cols
-
-# True numeric columns are:
-colnames(data_f)
-int_cols
-epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
-###
-############
-
-
-############
-###
-# Dates:
-df_dates <- data_f
-
-date_cols <- df_dates %>%
-  select(contains("fech")) %>%
-  colnames()
-date_cols
-
-epi_head_and_tail(df_dates[, date_cols])
-# dd/mm/yyyy
-
-summary(df_dates[, date_cols])
-# chr
-###
-
-
-###
-# Convert dates
-col_test <- df_dates$FECHAING
-summary(col_test)
-summary(as.factor(col_test))
-col_test
-str(col_test)
-as.character(col_test)
-
-col_test <- as.Date(col_test, format = "%m/%d/%y")
-str(col_test)
-# formatted_col_test <- format(col_test, "%d/%m/%Y")
-
-# col_test <- as.character(as.Date(col_test, format = "%m/%d/%y"))
-# col_test <- format(as.Date(col_test), "%d/%m/%Y")
-# str(col_test)
-
-head(col_test)
-head(df_dates$FECHAING)
-summary(as.Date(col_test, "%d/%m/%Y"))
-summary(as.Date(df_dates$FECHAING, "%m/%d/%y")) # format is different
-# Looks good, now as dd/mm/yyyy without hms
-# Left as R’s native yyyy-mm-dd format internally
-###
-
-
-###
-# Loop and convert all:
-epi_head_and_tail(df_dates[, date_cols])
-summary(df_dates[, date_cols])
-str(df_dates[, date_cols])
-
-# i <- date_cols[1]
-for (i in date_cols) {
-    print(i)
-    col_i <- df_dates[[i]]
-    str(col_i)
-    col_i <- as.Date(col_i, format = "%m/%d/%y")
-    str(col_i)
-    print(head(col_i))
-    df_dates[[i]] <- col_i
-    print(head(df_dates[, i]))
-    print(summary(df_dates[[i]]))
-        }
-
-epi_head_and_tail(data_f[, date_cols])
-epi_head_and_tail(df_dates[, date_cols])
-
-head(data_f$FECHAING)
-head(df_dates$FECHAING)
-
-
-summary(df_dates[, date_cols])
-str(data_f[, date_cols])
-str(df_dates[, date_cols])
-# Looks good, base R format: "2005-05-16"
-###
-
-###
-# # Clean up NAs and other values:
-# # Replace invalid dates with NA:
-# # Problematic strings:
-# na_exclude <- c("04",
-#                 "01",
-#                 "00",
-#                 "Definitiva",
-#                 "<NA>"
-#                 )
-#
-# which(col_test %in% na_exclude)
-#
-# col_test <- ifelse(col_test %in% na_exclude, NA, col_test)
-# col_test <- as.Date(col_test)
-# summary(col_test)
-###
-
-
-###
-# Clean up:
-data_f <- df_dates
-str(data_f[, date_cols])
-rm(list = c('df_dates'))
-###
-
-
-###
-# TO DO: continue here
-summary(data_f)
-colnames(data_f)
-
-# Looks like these are factors:
-fact_cols <- c("Núm OOAD",
-               "OOAD",
-               "CveAdscrip",
-               "Adscripción",
-               "Tipo Contratación",
-               "Clasificación de Categoría",
-               "Cve Categ",
-               "Categoría",
-               "Sexo",
-               "Mca Baja",
-               "Descripcion de baja",
-               "Régimen",
-               'Mca',
-               "CveAR\n2018",
-               "Área de Responsabilidad\n2018"
-               )
-
-# Check summary for each column as factor:
-lapply(data_f[, fact_cols], function(x) summary(as.factor(x)))
-# Yes, all look like factors
-
-# Convert to factors:
-for (i in fact_cols) {
-  data_f[[i]] <- as.factor(data_f[[i]])
-}
-
-summary(data_f[, fact_cols])
-###
-
-
-###
-# Check and convert manually any remaining:
-tibble::glimpse(data_f)
-
-# This is an ID:
-data_f$Matrícula <- as.character(data_f$Matrícula)
-
-tibble::glimpse(data_f)
-summary(data_f)
-epi_clean_count_classes(data_f)
-# Looks good
-###
-
-
-###
-data_f %>%
-  select_if(~ epi_clean_cond_chr_fct(.)) %>%
-  colnames()
-
-data_f %>%
-  select_if(~ epi_clean_cond_numeric(.)) %>%
-  colnames()
-
-# Re-order columns to make it easier to select:
-colnames(data_f)
-df_ord <- data_f %>%
-  select('Matrícula',
-         'Nombre',
-         matches("Fecha"),
-         matches("Antigüedad", ignore.case = FALSE),
-         everything() # should all be factors now
-  )
-
-colnames(df_ord)
-str(df_ord)
-dim(df_ord)
-epi_clean_count_classes(data_f)
-
-# Clean up:
-data_f <- df_ord
-rm(list = c('df_ord'))
-###
-
-
-###
-# Re-define column types for summarising, plotting, etc:
-# Get character columns:
-char_cols <- data_f %>%
-  select_if(is.character) %>%
-	colnames()
-char_cols
-epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
-
-
-# Get integer columns:
-int_cols <- data_f %>%
-	select_if(is.integer) %>%
-	colnames()
-int_cols
-epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
-
-
-# Get factor columns:
-fact_cols <- data_f %>%
-	select_if(is.factor) %>%
-	colnames()
-fact_cols
-epi_head_and_tail(data_f[, fact_cols], cols = length(fact_cols))
-###
-
-# Removed duplicates, specified column types, re-ordered up to here.
 ############
 
 
@@ -307,8 +89,7 @@ epi_head_and_tail(data_f[, fact_cols], cols = length(fact_cols))
 count_missing <- sum(complete.cases(data_f))
 count_missing
 dim(data_f)
-dim(infile2)
-# some rows have missing data
+# all rows have missing data
 
 # Complete cases
 epi_head_and_tail(data_f)
@@ -318,18 +99,20 @@ dim(data_f)
 # Missing data
 na_perc <- epi_stats_na_perc(df = data_f, margin = 2)
 na_perc
-# Only Adscripción has missing data, ~5%
+#
 
 ord <- order(na_perc$na_perc, decreasing = T)
 ord
 na_perc <- na_perc[c(ord), ]
 na_perc
 
-infile_prefix
+print(infile_prefix)
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/na_perc.%s', infile_prefix, suffix)
+outfile <- sprintf(fmt = '%s/na_perc.%s',
+                   results_outdir,
+                   suffix
+                   )
 outfile
-dir()
 
 epi_write(na_perc,
           outfile,
@@ -345,7 +128,12 @@ epi_clean_count_classes(data_f)
 str(data_f)
 
 ###
-# Date columns:
+# Date columns
+# Defined in previous script
+date_cols
+
+epi_head_and_tail(data_f[, date_cols])
+
 summary(data_f[, date_cols])
 
 sum_dates_df <- data.frame('variable' = character(0),
@@ -377,15 +165,19 @@ for (i in date_cols) {
 }
 sum_dates_df
 
-
 infile_prefix
 file_n <- 'desc_dates'
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s', infile_prefix, file_n, suffix)
-outfile
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_outdir,
+                   file_n,
+                   suffix
+                   )
 
+outfile
 epi_write(sum_dates_df, outfile)
 ###
+
 
 ###
 # Get frequency tables
@@ -412,8 +204,8 @@ for (i in date_cols) {
     )
 }
 names(dates_list)
-names(dates_list$'Fecha de Ingreso')
-dates_list$'Fecha de Ingreso'
+names(dates_list$FECHAING)
+dates_list$FECHAING
 
 # Save:
 for (i in names(dates_list)) {
@@ -422,7 +214,13 @@ for (i in names(dates_list)) {
     file_n <- 'freq'
     file_n2 <- 'Date_Differences'
     suffix <- 'txt'
-    outfile <- sprintf(fmt = '%s/%s_%s_%s.%s', infile_prefix, file_n, i, file_n2, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s_%s.%s',
+                       results_outdir,
+                       file_n,
+                       i,
+                       file_n2,
+                       suffix
+                       )
     outfile
 
     # dates_list$xxx$Date_Differences
@@ -433,7 +231,13 @@ for (i in names(dates_list)) {
     file_n <- 'freq'
     file_n2 <- 'Frequencies'
     suffix <- 'txt'
-    outfile <- sprintf(fmt = '%s/%s_%s_%s.%s', infile_prefix, file_n, i, file_n2, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s_%s.%s',
+                       results_outdir,
+                       file_n,
+                       i,
+                       file_n2,
+                       suffix
+                       )
     outfile
     # dates_list$xxx$Frequencies
     df_out <- as.data.frame(dates_list[[i]][[2]])
@@ -458,12 +262,15 @@ stats_num <- epi_stats_format(stats_num, digits = 2)
 infile_prefix
 file_n <- 'sum_stats'
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s', infile_prefix, file_n, suffix)
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_outdir,
+                   file_n,
+                   suffix
+                   )
 outfile
 
 epi_write(file_object = stats_num, file_name = outfile)
 ###
-
 
 ###
 # Factor columns:
@@ -491,10 +298,13 @@ stats_fct_tidy <- epi_stats_format(stats_fct_tidy, digits = 0)
 stats_fct_tidy
 
 # Save as table
-infile_prefix
 file_n <- 'stats_factors'
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s', infile_prefix, file_n, suffix)
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_outdir,
+                   file_n,
+                   suffix
+                   )
 outfile
 
 epi_write(file_object = stats_fct_tidy,
@@ -502,7 +312,6 @@ epi_write(file_object = stats_fct_tidy,
           )
 ###
 ############
-
 
 
 ############
@@ -518,9 +327,9 @@ for (i in colnames(data_f)) {
 num_vars
 
 # Numeric, boxplots:
-epi_plot_box(df = data_f, var_y = "Antigüedad en Años")
+epi_plot_box(df = data_f, var_y = "EDAD")
 
-# i <- "Antigüedad en Años"
+# i <- "EDAD"
 num_list <- epi_plot_list(vars_to_plot = num_vars)
 for (i in names(num_list)) {
   num_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
@@ -537,7 +346,7 @@ for (i in jumps) {
   # infile_prefix
   file_n <- 'plots_box_num'
   suffix <- 'pdf'
-  outfile <- sprintf(fmt = '%s/%s_%s.%s', infile_prefix, file_n, i, suffix)
+  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
   # outfile
   start_i <- i
   end_i <- i + 3
@@ -549,7 +358,7 @@ for (i in jumps) {
 
 ###
 # Histograms:
-epi_plot_hist(df = data_f, var_x = "`Antigüedad en Años`")
+epi_plot_hist(df = data_f, var_x = "EDAD")
 
 num_list <- NULL
 i <- NULL
@@ -558,13 +367,9 @@ for (i in names(num_list)) {
   print(i)
 
   # TO DO for episcout: switch to dplyr::sym() for tidy evaluation and/or clean up column names initially. Can be useful to keep original column names though
-  i <- paste0("`", i, "`") # because of spaces and special characters in column names
+  # i <- paste0("`", i, "`") # because of spaces and special characters in column names
   num_list[[i]] <- epi_plot_hist(df = data_f, var_x = i)
   }
-# num_list
-# TO DO: switch to removing NULL objects from list:
-# Remove of the first three as special characters in column names cause issues:
-num_list <- num_list[-c(1:2)]
 num_list
 
 # Save plots
@@ -575,10 +380,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-  # infile_prefix
+  # results_outdir
   file_n <- 'plots_hist_num'
   suffix <- 'pdf'
-  outfile <- sprintf(fmt = '%s/%s_%s.%s', infile_prefix, file_n, i, suffix)
+  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
   # outfile
   start_i <- i
   end_i <- i + 3
@@ -587,24 +392,55 @@ for (i in jumps) {
 }
 ###
 
+###
+# IMSS colours:
+custom_palette <- c(
+  "#911034",      # Original Red
+  "#b12f45",      # Slightly brighter red
+  "#c19a53",      # Original Gold
+  "#e1b86e",      # Lighter gold/beige
+  "#2a5c4b",      # Original Green
+  "#3b755f",      # Brighter green
+  "#DACBA1",      # Original Beige
+  "#bba483",      # Darker beige
+  "#602218",      # Original Brown
+  "#7b3a2a"       # Rich brown
+)
+
+# Modified to be colour-blind friendly:
+accessible_palette <- c(
+  "#911034",      # Original Red
+  "#e69f00",      # Gold (more distinct from beige)
+  "#56b4e9",      # Blue (replaces a green)
+  "#009e73",      # Green (contrast with blue and yellow)
+  "#f0e442",      # Yellow
+  "#0072b2",      # Dark blue
+  "#D55E00",      # Orange
+  "#cc79a7",      # Purple (replaces a beige)
+  "#602218",      # Original Brown
+  "#7b3a2a"       # Rich brown
+)
+
+###
 
 ###
 # Plots for factors
-str(data_f)
+str(data_f[, fact_cols])
 
-plot_bar <- epi_plot_bar(df = data_f, 'Núm OOAD') #but backticks here error with 'object not found'
+plot_bar <- epi_plot_bar(df = data_f,
+                         var_x = 'SEXO',
+                         custom_palette = custom_palette
+                         )
 plot_bar
-
-# Bar plots:
-i <- "Núm OOAD"
-epi_plot_bar(df = data_f, var_x = i, ) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 bar_list <- epi_plot_list(vars_to_plot = fact_cols)
 for (i in names(bar_list)) {
     # print(i)
-    bar_list[[i]] <- epi_plot_bar(df = data_f, var_x = i) +
-        theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    bar_list[[i]] <- epi_plot_bar(df = data_f,
+                                  var_x = i,
+                                  custom_palette = custom_palette
+                                  ) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
 }
 # bar_list
 
@@ -616,10 +452,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # infile_prefix
+    # results_outdir
     file_n <- 'plots_bar'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', infile_prefix, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
     start_i <- i
     end_i <- i + 3
@@ -642,29 +478,22 @@ summary(data_f[, date_cols])
 
 ####
 # Histograms of date frequencies, to check for gaps and clusters:
-# Column names are an issue, backticks needed here
-ggplot(data = data_f, aes(x = `Fecha de Ingreso`)) +
+ggplot(data = data_f, aes(x = FECHAPROBJUB)) +
     geom_histogram()
+table(data_f$FECHAPROBJUB)
 
-ggplot(data = data_f, aes(x = `Fecha de Baja`)) +
-    geom_histogram()
-
-table(data_f$"Fecha de Baja")
-
-i <- '`Fecha de Baja`'
+i <- 'FECHAPROBJUB'
 epi_plot_hist(df = data_f, var_x = i) +
     geom_density(col = 2)
 
 hist_list <- epi_plot_list(vars_to_plot = date_cols)
 for (i in names(hist_list)) {
     print(i)
-    i <- paste0("`", i, "`") # because of spaces and special characters in column names
+    # i <- paste0("`", i, "`") # because of spaces and special characters in column names
     hist_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
         geom_density(col = 2)
 }
 hist_list
-# same issue with backticks, remove the first two:
-hist_list <- hist_list[-c(1:2)]
 
 # Save plots
 # Plot 4 per page or so:
@@ -674,10 +503,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # infile_prefix
+    # results_outdir
     file_n <- 'plots_hist_dates'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', infile_prefix, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
 
     start_i <- i
@@ -690,7 +519,7 @@ for (i in jumps) {
 
 ####
 # Box Plots: visualise range, median, quartiles, and outliers in date distributions:
-i <- 'Fecha de Baja' # TO DO: need to sort out tidy evaluation in episcout
+i <- 'FECHAPROBJUB' # TO DO: need to sort out tidy evaluation in episcout
 epi_plot_box(data_f, var_y = i)
 
 box_list <- epi_plot_list(vars_to_plot = date_cols)
@@ -708,10 +537,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # infile_prefix
+    # results_outdir
     file_n <- 'plots_box_dates'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', infile_prefix, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
 
     start_i <- i
@@ -721,13 +550,11 @@ for (i in jumps) {
 }
 ####
 
-
 ####
 # Time Series Plot: Visualise distribution over time:
 
-###
 # Needs dates ordered, increasing:
-i <- 'Fecha de Baja'
+i <- 'FECHAPROBJUB'
 ord_i <- sort(as.Date(data_f[[i]]))
 # ord_i <- data_f[ord_i, i]
 # ord_i <- as.vector(ord_i)
@@ -784,10 +611,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # infile_prefix
+    # results_outdir
     file_n <- 'plots_time'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', infile_prefix, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
 
     start_i <- i
@@ -799,39 +626,11 @@ for (i in jumps) {
 ############
 
 
+# Up to here: plots of all variable types
+
 ############
 # The end:
-# Save objects, to eg .RData file:
-# TO DO:
-folder <- ''
-script <- '1_setup_SIAP'
-infile_prefix
-suffix <- 'rdata.gzip'
-outfile <- sprintf(fmt = '%s/%s_%s.%s', folder, script, infile_prefix, suffix)
-outfile
-
-# Check and remove objects that are not necessary to save:
-object_sizes <- sapply(ls(), function(x) object.size(get(x)))
-object_sizes <- as.matrix(rev(sort(object_sizes))[1:10])
-object_sizes
-objects_to_save <- (c('data_f', 'infile_prefix', 'outfile'))
-
-# Save:
-save(list = objects_to_save,
-     file = outfile,
-     compress = 'gzip'
-     )
-
-# Remove/clean up session:
-all_objects <- ls()
-all_objects
-rm_list <- which(!all_objects %in% objects_to_save)
-all_objects[rm_list]
-rm(list = all_objects[rm_list])
-ls() # Anything defined after all_objects and objects_to_save will still be here
-
+# Outputs saved to disk, no need to save as rdata.
 sessionInfo()
 # q()
-
-# Next: run the script for xxx
 ############

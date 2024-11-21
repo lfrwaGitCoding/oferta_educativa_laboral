@@ -143,7 +143,7 @@ id_cols <- c('MATRICULA',
              'Nombre',
              'RFC',
              'CURP',
-             'CORREO',
+             # 'CORREO',
              'NSS'
              )
 id_cols

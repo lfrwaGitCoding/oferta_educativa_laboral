@@ -24,7 +24,12 @@ library(skimr)
 setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
 getwd()
 # Load the .rdata.gzip file:
-load("data/data_UP/access_SIAP_18092024/processed/2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip")
+# TO DO: needs a yaml with a results dir, this saves in scripts dir
+processed_dir <- "data/data_UP/access_SIAP_18092024/processed/"
+infile <- "2b_subset_enfermeras_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip"
+# infile <- "2b_subset_meds_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip"   
+# infile <- "2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip"
+load(paste0(processed_dir, infile))
 ```
 
 

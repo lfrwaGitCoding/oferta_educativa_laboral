@@ -27,6 +27,7 @@ library(ggthemes)
 library(cowplot)
 library(tidyverse)
 library(skimr)
+library(quarto)
 # library(renv)
 ############
 
@@ -45,7 +46,12 @@ getwd()
 # Dataset:
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- '2_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
-infile <- '2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
+# infile <- '2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
+
+# Subset files:
+infile <- "2b_subset_meds_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip"
+# infile <- '2b_subset_enfermeras_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
+
 infile_path <- paste0(rdata_dir, infile)
 # Full path and file name:
 infile_path
@@ -62,11 +68,11 @@ data_dir <- data_dir
 devel_dir <- devel_dir
 code_dir <- code_dir
 results_dir <- results_dir
-id_cols <- id_cols
-date_cols <- date_cols
-char_cols <- char_cols
-int_cols <- int_cols
-fact_cols <- fact_cols
+# id_cols <- id_cols
+# date_cols <- date_cols
+# char_cols <- char_cols
+# int_cols <- int_cols
+# fact_cols <- fact_cols
 ###
 
 ###
@@ -82,6 +88,93 @@ print(dir(path = normalizePath(results_outdir), all.files = TRUE))
 getwd()
 ###
 ############
+
+
+############
+# # Random subset test
+# # Set the seed for reproducibility
+# set.seed(123)
+#
+# # Calculate sample size (10% of total rows)
+# perc <- 0.01
+# sample_size <- floor(perc * nrow(data_f))
+#
+# # Sample random rows
+# sampled_df <- data_f[sample(nrow(data_f), sample_size), ]
+# sampled_df
+#
+# data_f <- sampled_df # to run rest of code as is
+###########
+
+
+
+###########
+# Get column types
+# If data_f has been subset in i.e. 2b_xxx.R then columns won't match
+
+###
+id_cols <- c('MATRICULA',
+             'Nombre',
+             'RFC',
+             'CURP',
+             # 'CORREO',
+             'NSS'
+             )
+epi_head_and_tail(data_f[, id_cols])
+###
+
+###
+# Get character columns:
+char_cols <- data_f %>%
+	select_if(is.character) %>%
+	colnames()
+char_cols
+epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
+###
+
+###
+# Get integer columns:
+int_cols <- data_f %>%
+	select_if(is.integer) %>%
+	colnames()
+int_cols
+epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
+###
+
+###
+# # Get numeric columns:
+# num_cols <- data_f %>%
+# 	select_if(is.numeric) %>%
+# 	colnames()
+# num_cols
+# epi_head_and_tail(data_f[, num_cols], cols = length(num_cols))
+# All are integer
+###
+
+###
+# Get factor columns:
+fact_cols <- data_f %>%
+	select_if(is.factor) %>%
+	colnames()
+fact_cols
+epi_head_and_tail(data_f[, fact_cols], cols = length(fact_cols))
+###
+
+###
+date_cols <- data_f %>%
+	select_if(is.Date) %>%
+	colnames()
+date_cols
+epi_head_and_tail(data_f[, date_cols], cols = length(date_cols))
+###
+
+###
+# Check all column types accounted
+dim(data_f)
+epi_clean_count_classes(df = data_f)
+# Looks good
+###
+###########
 
 
 ###########
@@ -626,7 +719,31 @@ for (i in jumps) {
 ############
 
 
-# Up to here: plots of all variable types
+############
+# Generate the skim summary
+skim_summary <- skimr::skim(data_f)
+skim_summary
+
+# Save as table:
+file_n <- 'skim_summary'
+suffix <- 'txt'
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_outdir,
+                   file_n,
+                   suffix
+                   )
+outfile
+epi_write(file_object = skim_summary,
+          file_name = outfile
+          )
+
+# For a nicely formatted output run the skim summary in a qmd script.
+# e.g. 2_skim_summary.qmd
+# Running quarto from an R script is problematic as quarto won't take full paths
+############
+
+
+# Up to here: plots of all variable types, basic summaries
 
 ############
 # The end:

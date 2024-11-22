@@ -78,15 +78,13 @@ results_dir <- results_dir
 ###
 # Output dir, based on today's date:
 infile_prefix <- strsplit(infile, "\\.")[[1]][1]
-results_subdir <- sprintf('%s_%s', format(Sys.Date(), '%d_%m_%Y'), infile_prefix)
-results_subdir
-results_subdir <- epi_create_dir(base_path = project_root,
-                                 subdir = results_subdir
-                                 )
-
-typeof(results_subdir)
-print(results_subdir)
-print(dir(path = normalizePath(results_subdir), all.files = TRUE))
+results_outdir <- sprintf('%s_%s', format(Sys.Date(), '%d_%m_%Y'), infile_prefix)
+results_outdir
+results_outdir <-  create_results_dir(project_root = project_root,
+                                      name = results_outdir)
+typeof(results_outdir)
+print(results_outdir)
+print(dir(path = normalizePath(results_outdir), all.files = TRUE))
 getwd()
 ###
 ############
@@ -204,7 +202,7 @@ na_perc
 print(infile_prefix)
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/na_perc.%s',
-                   results_subdir,
+                   results_outdir,
                    suffix
                    )
 outfile
@@ -264,7 +262,7 @@ infile_prefix
 file_n <- 'desc_dates'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
+                   results_outdir,
                    file_n,
                    suffix
                    )
@@ -310,7 +308,7 @@ for (i in names(dates_list)) {
     file_n2 <- 'Date_Differences'
     suffix <- 'txt'
     outfile <- sprintf(fmt = '%s/%s_%s_%s.%s',
-                       results_subdir,
+                       results_outdir,
                        file_n,
                        i,
                        file_n2,
@@ -327,7 +325,7 @@ for (i in names(dates_list)) {
     file_n2 <- 'Frequencies'
     suffix <- 'txt'
     outfile <- sprintf(fmt = '%s/%s_%s_%s.%s',
-                       results_subdir,
+                       results_outdir,
                        file_n,
                        i,
                        file_n2,
@@ -358,7 +356,7 @@ infile_prefix
 file_n <- 'sum_stats'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
+                   results_outdir,
                    file_n,
                    suffix
                    )
@@ -396,7 +394,7 @@ stats_fct_tidy
 file_n <- 'stats_factors'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
+                   results_outdir,
                    file_n,
                    suffix
                    )
@@ -441,7 +439,7 @@ for (i in jumps) {
   # infile_prefix
   file_n <- 'plots_box_num'
   suffix <- 'pdf'
-  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
+  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
   # outfile
   start_i <- i
   end_i <- i + 3
@@ -475,10 +473,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-  # results_subdir
+  # results_outdir
   file_n <- 'plots_hist_num'
   suffix <- 'pdf'
-  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
+  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
   # outfile
   start_i <- i
   end_i <- i + 3
@@ -547,10 +545,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # results_subdir
+    # results_outdir
     file_n <- 'plots_bar'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
     start_i <- i
     end_i <- i + 3
@@ -598,10 +596,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # results_subdir
+    # results_outdir
     file_n <- 'plots_hist_dates'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
 
     start_i <- i
@@ -632,10 +630,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # results_subdir
+    # results_outdir
     file_n <- 'plots_box_dates'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
 
     start_i <- i
@@ -706,10 +704,10 @@ length(jumps)
 
 # i <- 2
 for (i in jumps) {
-    # results_subdir
+    # results_outdir
     file_n <- 'plots_time'
     suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
+    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_outdir, file_n, i, suffix)
     # outfile
 
     start_i <- i
@@ -730,7 +728,7 @@ skim_summary
 file_n <- 'skim_summary'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
+                   results_outdir,
                    file_n,
                    suffix
                    )

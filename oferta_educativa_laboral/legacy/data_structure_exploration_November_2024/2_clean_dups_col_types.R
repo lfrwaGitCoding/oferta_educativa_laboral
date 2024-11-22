@@ -9,7 +9,7 @@
 # TO DO:
 # See sh script 'xxx'
 
-# Removes duplicates, specifies column types, re-orders columns and provides a basic summary
+# basic cleaning, duplicate removal, specify column types, re-order, basic summary (skimr):
 
 # Output is rdata object with column types set-up
 # See also 2_skim_summary.qmd for basic description
@@ -42,7 +42,6 @@ Sys.setenv(R_FAIL = TRUE) # interactive session
 library(data.table)
 library(episcout)
 library(tidyverse)
-library(skimr)
 ############
 
 
@@ -173,6 +172,159 @@ rm(list = c('df_ord'))
 ###
 ############
 
+
+
+############
+# Basic clean
+
+###
+# EDAD, min 15, max 95 (?)
+summary(data_f$EDAD)
+length(which(data_f$EDAD < 15))
+which(data_f$EDAD < 15)
+t(data_f[which(data_f$EDAD < 15), ])
+
+length(which(data_f$EDAD > 65))
+length(which(data_f$EDAD > 75))
+length(which(data_f$EDAD > 95))
+
+data_f$EDAD <- ifelse(data_f$EDAD < 15, NA, data_f$EDAD)
+data_f$EDAD <- ifelse(data_f$EDAD > 95, NA, data_f$EDAD)
+summary(data_f$EDAD)
+
+# boxplot(data_f$EDAD)
+# hist(data_f$EDAD)
+# epi_plot_box(data_f, 'EDAD')
+# epi_plot_hist(data_f, 'EDAD') + ylab('Conteo')
+###
+
+###
+summary(data_f$FALTASACUMULADAS)
+length(which(data_f$FALTASACUMULADAS < 0))
+data_f$FALTASACUMULADAS <- ifelse(data_f$FALTASACUMULADAS < 0,
+                                  NA,
+                                  data_f$FALTASACUMULADAS
+                                  )
+summary(data_f$FALTASACUMULADAS)
+summary(data_f$ANT_DIAS)
+summary(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
+
+data_f[, c('FALTASACUMULADAS', 'ANT_DIAS')]
+head(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
+
+
+# TO DO: check what this is
+summary(data_f$ANTDD)
+###
+
+
+###
+# TO DO:
+# Get age from CURP:
+###
+
+
+###
+# Column names:
+# AntiguedadVacA√±os
+# which(colnames(data_f) == 'AntiguedadVacAños')
+# colnames(data_f)[88]
+###
+
+###
+# Numbers must match for these:
+# [1] "MATRICULA"             "Nombre"
+#  [3] "RFC"                   "CURP"
+
+data_f$MATRICULA
+length(which(data_f$MATRICULA == '0'))
+
+# Check for values with fewer than 9 digits:
+col_check <- data_f$MATRICULA
+count_char <- nchar(col_check)
+summary(count_char)
+summary(as.factor(count_char))
+length(which(count_char < 8))
+###
+############
+
+
+############
+# Many columns duplicate information, check
+
+###
+identical(data_f$MATRICULA, data_f$TITULAR)
+epi_head_and_tail(data_f[, c('MATRICULA', 'TITULAR')], cols = 2)
+# some zero's
+# Compare the columns and count matches
+match_count <- sum(data_f$MATRICULA == data_f$TITULAR)
+match_count
+sum(data_f$TITULAR == '0')
+dim(data_f)
+# Looks like some zero's in both columns, but largely the same number/information
+# Remove
+###
+
+
+###
+identical(data_f$Nombre, data_f$NOMBRE_TITULAR)
+epi_head_and_tail(data_f[, c('Nombre', 'NOMBRE_TITULAR')], cols = 2)
+# some mismatches
+# Compare the columns and count matches
+match_count <- length(which(data_f$Nombre == data_f$NOMBRE_TITULAR))
+match_count
+dim(data_f)
+# Looks like ~70% have the same information, 73577 / 90378
+mismatches_index <- which(data_f$Nombre != data_f$NOMBRE_TITULAR)
+epi_head_and_tail(data_f[mismatches_index, c('Nombre', 'NOMBRE_TITULAR')],
+                  cols = 2)
+
+# Remove for now, check
+###
+############
+
+
+
+############
+# Remove columns that aren't needed:
+
+###
+# Convert based on manual inspection, re-read file for column types to convert to
+# 19 Nov 2024, added descriptions, columns to keep, etc. This was manual, directly to the same file:
+print(results_dir)
+col_types_file <- sprintf("%s/%s/%s",
+                          results_dir,
+                          "manual_col_types/",
+                          "df_col_types2.txt"
+                          )
+print(col_types_file)
+
+
+col_types_file <- episcout::epi_read(col_types_file)
+epi_head_and_tail(col_types_file)
+colnames(col_types_file)
+
+# Dummy object:
+df_col_types <- data_f
+str(df_col_types)
+
+# Columns to keep:
+which_col <- 'keep_simple'
+columns_to_keep <- col_types_file$variables[col_types_file[[which_col]] == "y"]
+print(columns_to_keep)
+
+# Subset:
+df_col_types <- df_col_types[, columns_to_keep]
+dim(df_col_types)
+dim(data_f)
+###
+
+###
+# Clean up:
+data_f <- df_col_types
+rm(list = c('df_col_types'))
+###
+############
 
 
 ############
@@ -457,8 +609,6 @@ epi_clean_count_classes(df = data_f)
 # skim_sum <- skimr::skim(data_f)
 ############
 
-
-# Up to here: removed duplicates, specified column types, re-ordered, basic summary
 
 ############
 # The end:

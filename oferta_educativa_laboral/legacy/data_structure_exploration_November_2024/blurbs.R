@@ -135,18 +135,3 @@ ggplot(df_factor, aes(x = IgA_Lavado, y = IgA_Suero)) +
 ############
 
 
-############
-# # Random subset test
-# # Set the seed for reproducibility
-# set.seed(123)
-#
-# # Calculate sample size (10% of total rows)
-# perc <- 0.01
-# sample_size <- floor(perc * nrow(data_f))
-#
-# # Sample random rows
-# sampled_df <- data_f[sample(nrow(data_f), sample_size), ]
-# sampled_df
-#
-# data_f <- sampled_df # to run rest of code as is
-###########

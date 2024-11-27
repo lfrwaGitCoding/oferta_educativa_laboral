@@ -1,186 +1,188 @@
-############
+# ////////////
+# Script information ----
+
 # SIAP
 # Unidad de Personal
 # Noviembre 2024
 # Descriptive stats
+# Plots of all variable types, basic summaries
 # Input is rdata output from script:
 # 2_dups_col_types.R
 
 # Output are many plots, tables, etc for descriptive stats
-############
-
-############
-# Global options:
-
-###
-# options(error = stop) # batch
-Sys.setenv(R_FAIL = TRUE)
-###
-############
+# ////////////
 
 
-############
-# Import libraries
+# ////////////
+# Global options ----
+# options(error = stop)
+# ////////////
+
+
+# ////////////
+# Import libraries ----
 library(data.table)
 library(episcout)
 library(ggthemes)
 library(cowplot)
 library(tidyverse)
 library(skimr)
-library(quarto)
+library(log4r)
+# library(quarto)
 # library(renv)
-############
+# ////////////
 
 
-############
-# Load rdata file with directory locations
-
-###
-# Set working directory to the project root:
+# ////////////
+# Set working directory to the project root  ----
 setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
-###
+# ////////////
 
-###
-# Dataset:
+
+# ////////////
+# Load rdata file ----
+
+# ===
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
-# infile <- '2_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
-# infile <- '2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
-# Subset files:
-infile <- "2b_subset_meds_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip"
-# infile <- '2b_subset_enfermeras_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
+# TO DO: Manually set:
+# infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
+# infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
-infile_path <- paste0(rdata_dir, infile)
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
+# infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_enfermeras.rdata.gzip'
+
+infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
+# infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
+
+
 # Full path and file name:
-infile_path
+infile_path <- paste0(rdata_dir, infile)
+print(infile_path)
 
 print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
 
 load(infile_path)
 ls()
+# ===
 
+# ===
 # Get rid of RStudio warnings for loaded objects:
-data_f <- data_f
 project_root <- project_root
 data_dir <- data_dir
-devel_dir <- devel_dir
-code_dir <- code_dir
 results_dir <- results_dir
-# id_cols <- id_cols
-# date_cols <- date_cols
-# char_cols <- char_cols
-# int_cols <- int_cols
-# fact_cols <- fact_cols
-###
+data_f <- data_f
+code_dir <- code_dir
 
-###
-# Output dir, based on today's date:
+all_colnames <- all_colnames
+char_cols <- char_cols
+date_cols <- date_cols
+fact_cols <- fact_cols
+int_cols <- int_cols
+id_cols <- id_cols
+num_cols <- num_cols
+
+print(project_root)
+setwd(project_root)
+getwd()
+print(dir(path = normalizePath(project_root), all.files = TRUE))
+# ===
+# ////////////
+
+
+# ////////////
+# Source functions/scripts/etc
+# TO DO:
+# Source (until I update episcout)
+source(file.path(paste0(code_dir, '/funcs_epi_source.R')))
+# ////////////
+
+
+# ////////////
+# Output dir, based on today's date ----
+script_n <- '3_explore'
 infile_prefix <- strsplit(infile, "\\.")[[1]][1]
-results_subdir <- sprintf('%s_%s', format(Sys.Date(), '%d_%m_%Y'), infile_prefix)
+results_subdir <- sprintf('%s_%s',
+                          format(Sys.Date(), '%d_%m_%Y'),
+                          infile_prefix
+                          )
 results_subdir
-results_subdir <- epi_create_dir(base_path = project_root,
+results_subdir <- epi_create_dir(base_path = results_dir,
                                  subdir = results_subdir
                                  )
-
-typeof(results_subdir)
-print(results_subdir)
-print(dir(path = normalizePath(results_subdir), all.files = TRUE))
-getwd()
-###
-############
+# ////////////
 
 
-############
-# # Random subset test
-# # Set the seed for reproducibility
-# set.seed(123)
-#
-# # Calculate sample size (10% of total rows)
-# perc <- 0.01
-# sample_size <- floor(perc * nrow(data_f))
-#
-# # Sample random rows
-# sampled_df <- data_f[sample(nrow(data_f), sample_size), ]
-# sampled_df
-#
-# data_f <- sampled_df # to run rest of code as is
-###########
+# ////////////
+# Capture output / log ----
+
+# ===
+# Redirect standard output
+if (!interactive()) { # TRUE if not interactive, will then log output
+    script_n <- '2_clean_dups_col_types'
+    sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
+    sink(sink_stdout, split = TRUE)
+
+    # Redirect messages and warnings
+    sink_msg <- file(paste0(results_subdir, '/', script_n, '.sink_msg.log'), open = "wt")
+    sink(sink_msg, type = "message")
+
+    # Example outputs
+    cat("Test: This is standard output.\n")
+    message("Test: This is a message.")
+    warning("Test: This is a warning.")
+    }
+# ===
+
+# ===
+# Create a logger
+if (!interactive()) { # TRUE if not interactive, will then log output
+    logger <- create.logger()
+    log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
+    logfile(logger) <- log_n # Log file location
+    level(logger) <- "INFO"  # Set logging level (DEBUG, INFO, WARN, ERROR)
+
+    # Add log messages
+    # info(logger, "Script started")
+    # debug(logger, "This is a debug message")
+    # warn(logger, "This is a warning")
+    # error(logger, "This is an error")
+    }
+# ////////////
 
 
+# ////////////
+# Check column types ----
 
-###########
-# Get column types
-# If data_f has been subset in i.e. 2b_xxx.R then columns won't match
+# ===
+# Check loaded cols exist:
+# stopifnot(FALSE)  # This will throw an error
+stopifnot(length(all_colnames) == (ncol(data_f)))
 
-###
-id_cols <- c('MATRICULA',
-             'Nombre',
-             'RFC',
-             'CURP',
-             # 'CORREO',
-             'NSS'
-             )
-epi_head_and_tail(data_f[, id_cols])
-###
+if (!interactive()) {
+    info(logger, "Expected columns match file")
+    error(logger, "Expected columns do not match file")
+    }
 
-###
-# Get character columns:
-char_cols <- data_f %>%
-	select_if(is.character) %>%
-	colnames()
-char_cols
-epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
-###
+colnames(data_f)
 
-###
-# Get integer columns:
-int_cols <- data_f %>%
-	select_if(is.integer) %>%
-	colnames()
-int_cols
-epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
-###
+stopifnot(all(all_colnames %in% colnames(data_f)))
+setdiff(as.character(all_colnames), as.character(colnames(data_f)))
+# ===
 
-###
-# # Get numeric columns:
-# num_cols <- data_f %>%
-# 	select_if(is.numeric) %>%
-# 	colnames()
-# num_cols
-# epi_head_and_tail(data_f[, num_cols], cols = length(num_cols))
-# All are integer
-###
-
-###
-# Get factor columns:
-fact_cols <- data_f %>%
-	select_if(is.factor) %>%
-	colnames()
-fact_cols
-epi_head_and_tail(data_f[, fact_cols], cols = length(fact_cols))
-###
-
-###
-date_cols <- data_f %>%
-	select_if(is.Date) %>%
-	colnames()
-date_cols
-epi_head_and_tail(data_f[, date_cols], cols = length(date_cols))
-###
-
-###
+# ===
 # Check all column types accounted
 dim(data_f)
 epi_clean_count_classes(df = data_f)
 # Looks good
-###
-###########
+# ===
+# ////////////
 
 
-###########
-# Missing data
+# ////////////
+# Missing data ----
 count_missing <- sum(complete.cases(data_f))
 count_missing
 dim(data_f)
@@ -214,18 +216,18 @@ epi_write(na_perc,
           row.names = TRUE,
           col.names = TRUE
           )
-############
+# ////////////
 
 
-############
-# Summary statistics
+# ////////////
+# Summary statistics ----
 epi_clean_count_classes(data_f)
 str(data_f)
 
-###
+# ===
 # Date columns
 # Defined in previous script
-date_cols
+print(date_cols)
 
 epi_head_and_tail(data_f[, date_cols])
 
@@ -271,10 +273,10 @@ outfile <- sprintf(fmt = '%s/%s.%s',
 
 outfile
 epi_write(sum_dates_df, outfile)
-###
+# ===
 
 
-###
+# ===
 # Get frequency tables
 dates_list <- list()
 for (i in date_cols) {
@@ -338,13 +340,13 @@ for (i in names(dates_list)) {
     df_out <- as.data.frame(dates_list[[i]][[2]])
     epi_write(df_out, outfile)
     }
-###
-############
+# ===
+# ////////////
 
 
-############
-###
-# Numeric columns:
+# ////////////
+# ===
+# Numeric columns ----
 stats_num <- epi_stats_summary(df = data_f, class_type = 'int_num')
 stats_num
 
@@ -365,10 +367,12 @@ outfile <- sprintf(fmt = '%s/%s.%s',
 outfile
 
 epi_write(file_object = stats_num, file_name = outfile)
-###
+# ===
 
-###
+# ===
 # Factor columns:
+# TO DO: not useful for these as many with too many categories to visualise
+# Set-up as one file per categorical variable with a frequency table and proportions.
 str(data_f)
 fact_cols
 
@@ -405,14 +409,14 @@ outfile
 epi_write(file_object = stats_fct_tidy,
           file_name = outfile
           )
-###
-############
+# ===
+# ////////////
 
 
-############
-# Plots
+# ////////////
+# Plots ----
 
-###
+# ===
 num_vars <- list()
 for (i in colnames(data_f)) {
   if (epi_clean_cond_numeric(data_f[[i]])) {
@@ -448,10 +452,10 @@ for (i in jumps) {
   my_plot_grid <- epi_plots_to_grid(num_list[start_i:end_i])
   epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
-###
+# ===
 
 
-###
+# ===
 # Histograms:
 epi_plot_hist(df = data_f, var_x = "EDAD")
 
@@ -485,9 +489,9 @@ for (i in jumps) {
   my_plot_grid <- epi_plots_to_grid(num_list[start_i:end_i])
   epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
-###
+# ===
 
-###
+# ===
 # IMSS colours:
 custom_palette <- c(
   "#911034",      # Original Red
@@ -516,9 +520,9 @@ accessible_palette <- c(
   "#7b3a2a"       # Rich brown
 )
 
-###
+# ===
 
-###
+# ===
 # Plots for factors
 str(data_f[, fact_cols])
 
@@ -561,17 +565,23 @@ for (i in jumps) {
                       base_height = 15
     )
     }
-###
-############
+# ===
+# ////////////
 
 
-############
-# Plot dates
+# ////////////
+# Plot dates ----
+# TO DO: consider:
+# Visualization:
+# Plot timelines (e.g., using scatter plots, line charts).
+# Visualize counts of events over time (e.g., monthly, yearly trends with bar charts).
+# Create heatmaps for temporal patterns (e.g., day of the week vs time).
+
 date_cols
 str(data_f[, date_cols])
 summary(data_f[, date_cols])
 
-####
+# ===
 # Histograms of date frequencies, to check for gaps and clusters:
 ggplot(data = data_f, aes(x = FECHAPROBJUB)) +
     geom_histogram()
@@ -609,10 +619,10 @@ for (i in jumps) {
     my_plot_grid <- epi_plots_to_grid(hist_list[start_i:end_i])
     epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
-####
+# ===
 
 
-####
+# ===
 # Box Plots: visualise range, median, quartiles, and outliers in date distributions:
 i <- 'FECHAPROBJUB' # TO DO: need to sort out tidy evaluation in episcout
 epi_plot_box(data_f, var_y = i)
@@ -643,9 +653,9 @@ for (i in jumps) {
     my_plot_grid <- epi_plots_to_grid(box_list[start_i:end_i])
     epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
-####
+# ===
 
-####
+# ===
 # Time Series Plot: Visualise distribution over time:
 
 # Needs dates ordered, increasing:
@@ -681,9 +691,9 @@ ggplot(plot_data, aes(x = !!sym(i), y = value)) +
     geom_point() +
     annotate("text", x = mean(range(plot_data[[i]])), y = -Inf,
              label = label_annot, vjust = -1, size = 2, color = "gray20")
-###
+# ===
 
-###
+# ===
 time_list <- epi_plot_list(vars_to_plot = date_cols)
 for (i in names(time_list)) {
     # Get date, sort it, pass it as vector, add value var for plotting:
@@ -717,13 +727,14 @@ for (i in jumps) {
     my_plot_grid <- epi_plots_to_grid(time_list[start_i:end_i])
     epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
-###
-############
+# ===
+# ////////////
 
 
-############
-# Generate the skim summary
+# ////////////
+# Generate the skim summary ----
 skim_summary <- skimr::skim(data_f)
+# TO DO: consider saving this as rdata to then load to qmd for pretty formatting
 skim_summary
 
 # Save as table:
@@ -742,14 +753,24 @@ epi_write(file_object = skim_summary,
 # For a nicely formatted output run the skim summary in a qmd script.
 # e.g. 2_skim_summary.qmd
 # Running quarto from an R script is problematic as quarto won't take full paths
-############
+# ////////////
 
 
-# Up to here: plots of all variable types, basic summaries
-
-############
-# The end:
+# ////////////
+# The end ----
 # Outputs saved to disk, no need to save as rdata.
 sessionInfo()
+
+# Closing message loggers:
+if (!interactive()) { # TRUE if not interactive, will then log output
+    info(logger, "Script completed successfully")
+
+    # Close screen output log (both screen and warnings/error messages):
+    # Stop sinks
+    sink(type = "message")
+    close(sink_msg)  # Close the connection
+    sink()
+    }
+
 # q()
-############
+# ////////////

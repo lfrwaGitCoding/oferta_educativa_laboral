@@ -79,9 +79,9 @@ print(data_dir)
 dir(data_dir)
 
 processed_data_dir <- sprintf('%s/data_UP/access_SIAP_18092024/processed/', data_dir)
-script <- 'dir_locations'
+script_n <- 'dir_locations'
 suffix <- 'rdata.gzip'
-outfile <- sprintf(fmt = '%s/%s.%s', processed_data_dir, script, suffix)
+outfile <- sprintf(fmt = '%s/%s.%s', processed_data_dir, script_n, suffix)
 outfile
 
 # Check and remove objects that are not necessary to save:

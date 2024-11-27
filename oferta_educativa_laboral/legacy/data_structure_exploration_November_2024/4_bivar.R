@@ -18,7 +18,6 @@
 
 ###
 # options(error = stop) # batch
-Sys.setenv(R_FAIL = TRUE)
 ###
 ############
 

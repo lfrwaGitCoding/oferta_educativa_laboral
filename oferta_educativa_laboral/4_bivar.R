@@ -1,227 +1,198 @@
-############
+# ////////////
+# Script information ----
+
 # SIAP
 # Unidad de Personal
 # Noviembre 2024
+# Descriptive stats
 # Descriptive stats - bivariable analysis
 # Input is rdata output from script:
 # 2_dups_col_types.R
-# or
-# 2b_clean_subset_manual.R
 
 # Output are many plots, tables, etc for two or more variables
 # Focus is on plazas vacantes vs ocupadas
-############
+# ////////////
 
 
-############
-# Global options:
-
-###
-# options(error = stop) # batch
-Sys.setenv(R_FAIL = TRUE)
-###
-############
+# ////////////
+# Preliminaries ----
+## Global options ----
+# options(error = stop)
+# ////////////
 
 
-############
-# Import libraries
+# ////////////
+## Import libraries ----
 library(data.table)
 library(episcout)
 library(ggthemes)
 library(cowplot)
 library(tidyverse)
+library(log4r)
 # library(skimr)
-# library(quarto)
-# library(renv)
-############
+# ////////////
 
 
-############
-# Load rdata file with directory locations
-
-###
-# Set working directory to the project root:
+# ////////////
+## Set working directory to the project root  ----
 setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
-###
+# ////////////
 
-###
-# Dataset:
+
+# ////////////
+## Load rdata file ----
+
+# ===
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
-# infile <- '2_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
-# infile <- '2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
-# Subset files:
-infile <- "2b_subset_meds_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip"
-# infile <- '2b_subset_enfermeras_2_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
+# TO DO: Manually set:
+# infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
+# infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
-infile_path <- paste0(rdata_dir, infile)
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
+# infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_enfermeras.rdata.gzip'
+
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
+infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
+
+
 # Full path and file name:
-infile_path
+infile_path <- paste0(rdata_dir, infile)
+print(infile_path)
 
 print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
 
 load(infile_path)
 ls()
+# ===
 
+# ===
 # Get rid of RStudio warnings for loaded objects:
-data_f <- data_f
 project_root <- project_root
 data_dir <- data_dir
-devel_dir <- devel_dir
-code_dir <- code_dir
 results_dir <- results_dir
-# id_cols <- id_cols
-# date_cols <- date_cols
-# char_cols <- char_cols
-# int_cols <- int_cols
-# fact_cols <- fact_cols
-###
+data_f <- data_f
+code_dir <- code_dir
 
-###
-# Output dir, based on today's date:
-infile_prefix <- strsplit(infile, "\\.")[[1]][1]
-results_outdir <- sprintf('%s_%s', format(Sys.Date(), '%d_%m_%Y'), infile_prefix)
-results_outdir <- paste0(results_outdir, '_bivar')
-results_outdir <-  create_results_dir(project_root = project_root,
-                                      name = results_outdir
-                                      )
-typeof(results_outdir)
-print(results_outdir)
-print(dir(path = normalizePath(results_outdir), all.files = TRUE))
+all_colnames <- all_colnames
+char_cols <- char_cols
+date_cols <- date_cols
+fact_cols <- fact_cols
+int_cols <- int_cols
+id_cols <- id_cols
+num_cols <- num_cols
+
+print(project_root)
+setwd(project_root)
 getwd()
-###
-############
+print(dir(path = normalizePath(project_root), all.files = TRUE))
+# ===
+# ////////////
 
 
-############
-# # Random subset test
-# # Set the seed for reproducibility
-# set.seed(123)
-#
-# # Calculate sample size (10% of total rows)
-# perc <- 0.01
-# sample_size <- floor(perc * nrow(data_f))
-#
-# # Sample random rows
-# sampled_df <- data_f[sample(nrow(data_f), sample_size), ]
-# sampled_df
-#
-# data_f <- sampled_df # to run rest of code as is
-###########
+# ////////////
+# Source functions/scripts/etc
+# TO DO:
+# Source (until I update episcout)
+source(file.path(paste0(code_dir, '/funcs_epi_source.R')))
+# ////////////
 
 
-###########
-# Get column types
-# If data_f has been subset in i.e. 2b_xxx.R then columns won't match
+# ////////////
+## Output dir, based on today's date ----
+script_n <- '4_bivar'
+infile_prefix <- strsplit(infile, "\\.")[[1]][1]
+results_subdir <- sprintf('%s_%s',
+                          format(Sys.Date(), '%d_%m_%Y'),
+                          infile_prefix
+                          )
+results_subdir
+results_subdir <- epi_create_dir(base_path = results_dir,
+                                 subdir = results_subdir
+                                 )
+# ////////////
 
-###
-id_cols <- c('MATRICULA',
-             'Nombre',
-             'RFC',
-             'CURP',
-             # 'CORREO',
-             'NSS'
-             )
-epi_head_and_tail(data_f[, id_cols])
-###
 
-###
-# Get character columns:
-char_cols <- data_f %>%
-	select_if(is.character) %>%
-	colnames()
-char_cols
-epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
-###
+# ////////////
+## Capture output / log ----
 
-###
-# Get integer columns:
-int_cols <- data_f %>%
-	select_if(is.integer) %>%
-	colnames()
-int_cols
-epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
-###
+# ===
+# Redirect standard output
+if (!interactive()) { # TRUE if not interactive, will then log output
+    script_n <- '2_clean_dups_col_types'
+    sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
+    sink(sink_stdout, split = TRUE)
 
-###
-# # Get numeric columns:
-# num_cols <- data_f %>%
-# 	select_if(is.numeric) %>%
-# 	colnames()
-# num_cols
-# epi_head_and_tail(data_f[, num_cols], cols = length(num_cols))
-# # All are integer
-###
+    # Redirect messages and warnings
+    sink_msg <- file(paste0(results_subdir, '/', script_n, '.sink_msg.log'), open = "wt")
+    sink(sink_msg, type = "message")
 
-###
-# Get factor columns:
-fact_cols <- data_f %>%
-	select_if(is.factor) %>%
-	colnames()
-fact_cols
-epi_head_and_tail(data_f[, fact_cols], cols = length(fact_cols))
-###
+    # Example outputs
+    cat("Test: This is standard output.\n")
+    message("Test: This is a message.")
+    warning("Test: This is a warning.")
+    }
+# ===
 
-###
-date_cols <- data_f %>%
-	select_if(is.Date) %>%
-	colnames()
-date_cols
-epi_head_and_tail(data_f[, date_cols], cols = length(date_cols))
-###
+# ===
+# Create a logger
+if (!interactive()) { # TRUE if not interactive, will then log output
+    logger <- create.logger()
+    log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
+    logfile(logger) <- log_n # Log file location
+    level(logger) <- "INFO"  # Set logging level (DEBUG, INFO, WARN, ERROR)
 
-###
+    # Add log messages
+    # info(logger, "Script started")
+    # debug(logger, "This is a debug message")
+    # warn(logger, "This is a warning")
+    # error(logger, "This is an error")
+    }
+# ////////////
+
+
+# ////////////
+## Check column types ----
+
+# ===
+# Check loaded cols exist:
+# stopifnot(FALSE)  # This will throw an error
+stopifnot(length(all_colnames) == (ncol(data_f)))
+
+if (!interactive()) {
+    info(logger, "Expected columns match file")
+    error(logger, "Expected columns do not match file")
+    }
+
+colnames(data_f)
+
+stopifnot(all(all_colnames %in% colnames(data_f)))
+setdiff(as.character(all_colnames), as.character(colnames(data_f)))
+# ===
+
+# ===
 # Check all column types accounted
 dim(data_f)
 epi_clean_count_classes(df = data_f)
 # Looks good
-###
-###########
+# ===
+# ////////////
 
 
-
-############
-###
+# ////////////
+# Bivariate analysis ----
+## Numerical vs numerical ----
+### Correlation matrix ----
 # TO DO:
-# re re-order columns, got lost somewhere
-# Re-order columns to make it easier to select
+# Consider adding
+# Covariance:
+# Compute and visualize covariance matrix.
+# Time-Series Specifics (if applicable):
+# Check lag correlations for time-dependent variables.
 
-# ID columns:
-id_cols
-epi_head_and_tail(data_f[, id_cols], cols = length(id_cols))
-
-colnames(data_f)
-df_ord <- data_f %>%
-  select('MATRICULA',
-         'Nombre',
-         'RFC',
-         'CURP',
-         # 'CORREO',
-         'NSS',
-         'SEXO',
-         matches("FECH"),
-         everything()
-  )
-
-colnames(df_ord)
-str(df_ord)
-dim(df_ord)
-epi_clean_count_classes(data_f)
-
-# Clean up:
-data_f <- df_ord
-rm(list = c('df_ord'))
-###
-############
-
-
-
-############
-# Bivariate analysis
-# Correlation matrix:
-cormat_all <- epi_stats_corr(df = data_f[, int_cols], method = 'spearman')
+cormat_all <- epi_stats_corr(df = data_f[, num_cols], method = 'spearman')
 names(cormat_all)
 names(cormat_all$cormat)
 cormat_all$cormat$r
@@ -235,7 +206,7 @@ p_values <- as.data.frame(cormat_all$cormat_melted_pval)
 file_n <- 'spearman_r'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_outdir,
+                   results_subdir,
                    file_n,
                    suffix
                    )
@@ -247,124 +218,89 @@ epi_write(file_object = r_values,
 file_n <- 'spearman_p_values'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_outdir,
+                   results_subdir,
                    file_n,
                    suffix
                    )
 outfile
 epi_write(p_values, outfile)
-############
 
 
-############
-####
-# Bivariate analysis
-# Factors only
+### Plot numerical vs numerical ----
+###  scatterplots with trend lines or smoothing (e.g., LOESS curves).
+# TO DO:
+# Scatter/Pairwise/multi plots for relevant combinations
+# Need to code a convenience function
+scatter.smooth(df_factor$IgA_Lavado, df_factor$IgA_Suero)
+
+ggplot(df_factor, aes(x = IgA_Lavado, y = IgA_Suero)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = TRUE) +  # 'se' controls the confidence interval display
+  theme_minimal() +
+  labs(x = "IgA_Lavado", y = "IgA_Suero", title = "Scatter Plot with Best Fit Line")
+# ////////////
+
+
+# ////////////
+# ===
+## Categorical vs Categorical: Factors only ----
+### Create contingency tables nxn ----
 
 # Comparison
 # 2x2 tables n, percent, signif tests
 # nxn tables: max 3 variables, hard to visualise/summarise otherwise
 # Loop for 'PLZOCU' plots and signif tests for factors
 
+# TO DO:
+# Consider:
+# Contingency Analysis:
+# Generate cross-tabulations.
+# Compute association measures (e.g., Chi-square, Cramér’s V).
+# Visualization:
+# Stacked bar charts or mosaic plots.
+# Heatmaps for large contingency tables.
+
 fact_cols
 epi_head_and_tail(data_f[, fact_cols])
 
-epi_plot_bar(df = data_f, var_x = 'PLZOCU')
-epi_plot_hist(df = data_f, var_x = "EDAD")
-####
+# epi_plot_bar(df = data_f, var_x = 'PLZOCU')
+# epi_plot_hist(df = data_f, var_x = "EDAD")
+# ===
 
 
-####
-# TO DO: create a function and move to episcout
-
+# ===
+#### Check other vars vs PLZOCUP ----
 summary(data_f)
-f_tab <- ftable(xtabs(~ PLZOCU +
-                          CLASIF_UNIDAD,
-                      # +
-                      #     DELEGACION,
-                      # +
-                      #     DESCRIP_CLASCATEG +
-                      #     ESCOLARIDAD +
-                      #     CLASIF_UNIDAD,
-                      data = data_f
-                      )
-                )
-# View(f_tab)
-
-df_f_tab <- as.data.frame(f_tab)
-df_f_tab
-data.frame(t(df_f_tab))
-
-df_f_tab_wide <- tidyr::pivot_wider(df_f_tab,
-                                    names_from = PLZOCU,
-                                    values_from = c(Freq)
-                                    )
-df_f_tab_wide
-colnames(df_f_tab_wide)[colnames(df_f_tab_wide) == '0'] <- 'vacante'
-colnames(df_f_tab_wide)[colnames(df_f_tab_wide) == '1'] <- 'ocupada'
-df_f_tab_wide$total <- df_f_tab_wide$vacante + df_f_tab_wide$ocupada
-df_f_tab_wide$perc_vacante <- round(((df_f_tab_wide$vacante / df_f_tab_wide$total) * 100), digits = 2)
-df_f_tab_wide$perc_ocupada <- round(((df_f_tab_wide$ocupada / df_f_tab_wide$total) * 100), digits = 2)
-
-epi_head_and_tail(df_f_tab_wide, cols = ncol(df_f_tab_wide))
-df_f_tab_wide <- df_f_tab_wide[order(df_f_tab_wide$perc_vacante, decreasing = TRUE), ]
-
-file_n <- 'df_f_tab_wide_PLZOCU_DELEGACION'
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_outdir,
-                   file_n,
-                   suffix
-                   )
-outfile
-epi_write(df_f_tab_wide, outfile)
-####
-
-
-####
-# Check other vars vs PLZOCUP
-
-colnames(data_f_PLZOCU)
-summary(data_f_PLZOCU)
-
 dep_var <- "PLZOCU"
 # ind_vars <- c("CLASIF_UNIDAD")
 ind_vars <- c("ADSCRIPCION")
 
-df_result <- generate_summary_table(
-  df = data_f,
-  dep_var = dep_var,
-  ind_vars = ind_vars
-  )
+df_result <- epi_stats_table(
+    df = data_f,
+    dep_var = dep_var,
+    ind_vars = ind_vars
+    )
 
-epi_head_and_tail(df_result)
+epi_head_and_tail(df_result, cols = ncol(df_result))
 
-file_n <- paste0('df_f_tab_wide_', dep_var, '_', ind_vars)
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_outdir,
-                   file_n,
-                   suffix
-                   )
-outfile
-epi_write(df_f_tab_wide, outfile)
-####
 
-####
-# TO DO: loop through relevant vars, many are factors with many options though
-colnames(data_f_PLZOCU)
-summary(data_f_PLZOCU)
+# Loop through relevant vars, most are factors with many options though
+colnames(data_f)
+summary(data_f)
+summary(data_f$TipoMcaOcup)
+summary(data_f$COMSIN)
 
-colnames(data_f_PLZOCU)[colnames(data_f_PLZOCU) == "DESCRIP_TIPO DE PLAZA"] = "DESCRIP_TIPO_DE_PLAZA"
-colnames(data_f_PLZOCU)
-summary(data_f_PLZOCU$TipoMcaOcup)
-
-dep_var <- "PLZOCU"
+# dep_var <- "PLZOCU"
 # ind_vars <- c("TipoMcaOcup")
-df <- data_f_PLZOCU
+df <- data_f
 
+# Exclude dependent and non-factor columns:
 cols_to_loop <- colnames(df)[!colnames(df) %in% c("PLZOCU")]
+cols_to_loop <- cols_to_loop[cols_to_loop %in% fact_cols]
 cols_to_loop
+length(cols_to_loop)
+summary(data_f[, cols_to_loop])
+
 
 for (i in cols_to_loop) {
     ind_vars <- i
@@ -380,95 +316,73 @@ for (i in cols_to_loop) {
     file_n <- paste0('table_', dep_var, '_', ind_vars)
     suffix <- 'txt'
     outfile <- sprintf(fmt = '%s/%s.%s',
-                       results_outdir,
+                       results_subdir,
                        file_n,
                        suffix
                        )
     print(outfile)
     epi_write(df_result, outfile)
     }
-####
+# ===
+# ////////////
 
 
+# ////////////
+# ===
+### Generate contingency tables 2x2 ----
+# Generate a contingency table for two variables
+fact_cols
+
+contingency_2x2_df <- epi_stats_contingency_2x2_df(data_f[, fact_cols], x_var = "PLZOCU", y_var = "SEXO")
+print(contingency_2x2_df)
+
+# Generate contingency tables for all variables
+contingency_2x2_list <- epi_stats_contingency_2x2_tables(data_f[, fact_cols], x_var = "PLZOCU")
+print(contingency_2x2_list[[1]])
+
+# Rename columns in contingency tables
+# TO DO: not sure what this is actually doing
+# renamed_list <- rename_contingency_2x2_cols(contingency_2x2_list, data_f[, fact_cols], x_var = "Plaza_ocupada")
+# print(renamed_list[[1]])
+
+# Perform a single 2x2 test
+result <- epi_stats_contingency_2x2_test(data_f[, fact_cols], "PLZOCU", "SEXO")
+print(result)
+
+# Select columns for testing
+testable_columns <- epi_stats_contingency_2x2_cols(data_f[, fact_cols])
+print(testable_columns)
+
+# Run tests on all testable columns
+results_df <- epi_stats_contingency_2x2_all(data_f[, fact_cols], "PLZOCU")
+print(results_df)
+
+# Save results
+file_n <- '2x2_sig_tests'
+suffix <- 'txt'
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_subdir,
+                   file_n,
+                   suffix
+                   )
+outfile
+epi_write(file_object = results_df,
+          file_name = outfile
+          )
+
+# ===
 
 
-# TO DO: continue here
+# ===
+#### Contingency table 2x2 significance tests ----
+### Compute association measures (Chi-square, Fisher’s exact test)
+# Also extra at this point as unclear what the value is
+# will run anyway
 
-####
-# Contingency table significance tests
-# Function:
-# TO DO: move to episcout
-twoxtwo_test <- function(df, target_var_name, other_var_name) {#, test = 'chisq.test') {
-  tab <- table(df[[target_var_name]], df[[other_var_name]])
-  # test <- chisq.test(tab)
-  test <- fisher.test(tab)
-  broom::tidy(test)  # Using broom to tidy the chi-squared test output
-}
+# ===
 
-twoxtwo_test(col_facts, 'Estado', 'Sexo')
-twoxtwo_test(col_facts, 'Estado', 'IRC')
-col_facts$IRC  # will cause signif test to error as only one column
-table(col_facts$Estado, col_facts$IRC)
-summary(col_facts)
 
-table(col_facts$Estado, col_facts$Otras)
-table(col_facts$Estado, col_facts$BULUT_1)
-
-df <- col_facts
-unique_counts <- lapply(df, function(x) length(unique(x)))
-print(unique_counts)
-
-# Include only columns with unique values of 1 or less:
-include <- which(unique_counts >= 2)
-
-# Iterate over variables and test:
-# TO DO: create a function and move to episcout
-results <- lapply(names(col_facts[, include])[names(col_facts[, include]) != "Estado"], function(other_var_name) {
-  twoxtwo_test(df = col_facts[, include], target_var_name = "Estado", other_var_name = other_var_name)
-})
-
-# Name list elements:
-names(results) <- names(col_facts[, include])[names(col_facts[, include]) != "Estado"]
-results
-
-# Convert to data.frame:
-results_df <- bind_rows(results, .id = "Variable")
-results_df
-epi_write(results_df, 'fishers.txt')
-####
-
-####
-# Generate contingency tables:
-# TO DO: move to episcout
-cont_df <- function(df, x_var = 1, y_var = 2) {
-  table_df <- as.data.frame(table(df[[x_var]], df[[y_var]]))
-  colnames(table_df)[1] <- colnames(df)[x_var]
-  colnames(table_df)[2] <- colnames(df)[y_var]
-  return(table_df)
-  }
-
-contingency_df <- cont_df(df = col_facts, x_var = 1, y_var = 4)
-contingency_df
-
-# Loop:
-# TO DO: create a function and move to episcout
-results <- lapply(colnames(col_facts)[colnames(col_facts) != "Estado"], function(y_var) {
-  cont_df(df = col_facts, x_var = 1, y_var = y_var)
-})
-colnames(results[[9]][2])
-colnames(results[[7]])
-results[[1]]
-# Column names get lost:
-for (i in 1:length(results)) {
-  df <- results[[i]]
-  colnames(df)[2] <- colnames(col_facts)[i + 1]
-  results[[i]] <- df
-  # Also name list elements:
-  names(results)[i] <- colnames(col_facts)[i + 1]
-}
-results
-names(results)
-
+# ===
 # TO DO: create a function and move to episcout
 # Create a new workbook:
 wb <- openxlsx::createWorkbook()
@@ -479,9 +393,13 @@ lapply(names(results), function(x) {
 })
 # Save the workbook
 openxlsx::saveWorkbook(wb, "2x2_tables_vs_Estado.xlsx", overwrite = TRUE)
+# ===
 
 
-# Plot contingency tables:
+# ===
+#### Plot/Visualize with mosaic plots or stacked bar charts. ----
+# TO DO: continue here ----
+
 # TO DO: move to episcout
 cont_plot <- function(df, x_var = 'Var1', y_var = 'Var2') {
   ggplot(df, aes(x = !!sym(x_var), y = Freq, fill = !!sym(y_var))) +
@@ -502,9 +420,9 @@ for (i in 1:length(results)) {
                     plot_grid = fact_plot
   )
   }
-####
+# ===
 
-####
+# ===
 # Pair plots of contingency tables, not sure they add much (?)
 # library(GGally)
 colnames(col_facts)
@@ -569,10 +487,19 @@ epi_plot_cow_save(file_name = 'ggpairs_facts.pdf',
 #                               showStrips = TRUE
 #                               )
 
-####
+# ===
 
-####
-# Boxplots / violin Plots
+# ===
+## Numerical vs Categorical ----
+#### Visualize with grouped boxplots or violin plots ----
+
+# TO DO:
+# Consider:
+# Visualization:
+# Boxplots, violin plots, or beeswarm plots by groups.
+# Add jitter to scatter plots to display overlapping points.
+
+#### Boxplots / violin Plots
 colnames(col_nums)
 
 epi_plot_box(df = df_factor,
@@ -629,15 +556,25 @@ for (i in jumps) {
   epi_plot_cow_save(file_name = file_name, plot_grid = my_plot_grid)
 }
 
-####
-############
+# ===
+# ////////////
 
 
-############
+# ////////////
+#### Perform group comparisons and significance tests ----
+
+# TO DO:
+# Consider:
+# Group Comparisons:
+# Calculate group means, medians, or distributions.
+# Test for significant differences:
+# T-tests or Wilcoxon tests (for two groups).
+# ANOVA or Kruskal-Wallis tests (for more than two groups).
+
 # TO DO: significance tests for num vars vs 'Estado'
 # TO DO: create a function and move to episcout
 
-# Wilcoxon Rank-Sum Test:
+# Wilcoxon Rank-Sum Test
 factor_var <- df_factor[['Estado']]
 num_var <- df_factor$Neu_count_1
 
@@ -701,23 +638,41 @@ for (c in colnames(col_nums)) {
   }
 }
 epi_head_and_tail(wilcoxon_res, cols = 7)
+# ////////////
 
 
-############
-
-
-############
-# Numerical for each factor? Too much
-
+# ////////////
+# Date Variables with Other Types ----
 
 # TO DO:
-# Local vs systemic comparison
-# "IgA_Suero"
-# "IgA_Lavado"
-# "IgG_Suero"
-# "IgG_Lavado"
-# "IgM_Suero"
-# "IgM_Lavado"
+# Consider:
+# Trends:
+# Aggregate numerical data over time (e.g., monthly averages, yearly totals).
+# Plot time-series trends with line charts.
+# Event Analysis:
+# Compare categorical event frequencies over time.
+# Use Gantt charts or event plots for timelines.
+# Lagged Effects:
+# Analyze lag relationships (e.g., weekly sales impact on monthly outcomes).
+# ////////////
+
+
+# ////////////
+# TO DO:
+# Consider:
+# Outlier Detection ----
+# Numerical Variables:
+# Detect outliers using:
+# Z-scores or modified Z-scores.
+# IQR rule (values outside [Q1 - 1.5IQR, Q3 + 1.5IQR]).
+# Visualize with boxplots or scatter plots.
+# Multivariate Outliers:
+# Use Mahalanobis distance or DBSCAN clustering.
+# ////////////
+
+
+# ////////////
+# TO DO:
 
 # To a table:
 # (summary(na.omit(df_factor$IgA_Lavado)),
@@ -732,83 +687,34 @@ epi_head_and_tail(wilcoxon_res, cols = 7)
 # Two/+ factors
 # clustered bar, stacked bar, heatmap
 
-
 # Pause after this as descriptive
-############
+# ////////////
 
 
-############
-#
-
-############
-
-
-############
-#
-
-############
-
-
-############
+# ////////////
 # Next:
 # Impute based on key variables
 # Comparisons for survival
 # Comparisons for local vs systemic response
 # Inferential analysis
-############
+# ////////////
 
 
-# Up to here: basic cleaning, data subset, manual though as needed for subsequent analysis
-
-
-############
-# The end:
-# Save objects, to eg .RData file:
-print(data_dir)
-dir(data_dir)
-
-processed_data_dir <- sprintf('%s/data_UP/access_SIAP_18092024/processed/',
-                              data_dir)
-script <- '2b_subset_meds'
-infile_prefix
-suffix <- 'rdata.gzip'
-outfile <- sprintf(fmt = '%s/%s_%s.%s',
-                   processed_data_dir,
-                   script,
-                   infile_prefix,
-                   suffix
-                   )
-outfile
-
-# Check and remove objects that are not necessary to save:
-object_sizes <- sapply(ls(), function(x) object.size(get(x)))
-object_sizes <- as.matrix(rev(sort(object_sizes))[1:10])
-object_sizes
-ls()
-
-objects_to_save <- (c('data_f',
-                      'project_root',
-                      'data_dir',
-                      'devel_dir',
-                      'code_dir',
-                      'results_dir'
-                      )
-                    )
-
-# Save:
-save(list = objects_to_save,
-     file = outfile,
-     compress = 'gzip'
-     )
-
-# Remove/clean up session:
-all_objects <- ls()
-all_objects
-rm_list <- which(!all_objects %in% objects_to_save)
-all_objects[rm_list]
-rm(list = all_objects[rm_list])
-ls() # Anything defined after objects_to_save will still be here
-
+# ////////////
+# The end ----
+# Outputs saved to disk, no need to save as rdata.
 sessionInfo()
+
+# Closing message loggers:
+if (!interactive()) { # TRUE if not interactive, will then log output
+    info(logger, "Script completed successfully")
+
+    # Close screen output log (both screen and warnings/error messages):
+    # Stop sinks
+    sink(type = "message")
+    close(sink_msg)  # Close the connection
+    sink()
+    }
+
 # q()
-############
+# ////////////

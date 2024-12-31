@@ -1,0 +1,84 @@
+
+Example tree:
+
+project_root/
+├── reports/                # Generated reports will be saved here
+│   └── output/             # Subfolder for final HTML reports
+|── report_template.qmd # Main report template (or .Rmd)
+├── resources/              # Templates and styling files
+|   ├── styles.css          # Custom CSS for styling reports
+│   ├── logo.html           # HTML snippet for the logo/header
+│   └── custom-header.html  # Additional HTML for branding
+├── scripts/                # Scripts for data processing and report generation
+│   ├── generate_report.R   # Main R script for automation
+
+
+Invoke in script as e.g.:
+> quarto render report.qmd
+
+or
+
+> rmarkdown::render("report.Rmd")
+
+
+
+```{=html}
+<!-- If using as dynamic var, do:
+<!-- {{< meta weeks >}}
+in _quarto.yml file
+
+-->
+```
+
+
+# Override parameters when generating the report:
+> quarto render report.qmd --execute-params report_title="Q4 Review" input_data="data/quarter4.csv"
+
+Or
+
+>
+
+
+
+<!-- # can use fence divs to only show in eg html (if interactive)
+:::{.content-visible when-format = "html"}
+code for some interactive plot or table
+:::
+-->
+
+
+<!--
+report_title: "`r params$report_title`"
+report_sub_title: "`r params$report_sub_title`"
+tipo_plantilla: "`r params$tipo_plantilla`"
+quincena: "`r params$quincena`"
+date_of_report: "`r format(Sys.Date(), '%d/%m/%Y')`"
+author_1: "`r params$author_1`"
+-->
+
+<!-- Este es un reporte para la quincena: `r params$quincena` -->
+
+<!-- Derivado del archivo: `r params$input_file` -->
+
+<!-- # Análisis estadístico descriptivo por quincena -->
+
+<!-- ```{r} -->
+<!-- # Example data loading (replace with actual logic) -->
+<!-- data <- read.csv(params$input_file) -->
+<!-- summary(data) -->
+<!-- ``` -->
+
+
+<!-- ## Insert an existing plot -->
+<!-- ```{r} -->
+<!-- cat("![Plot Title](", "output/pre_generated_plot.png", ")") -->
+<!-- ``` -->
+
+<!-- ## Load pre-generated summary table -->
+<!-- ```{r} -->
+<!-- summary_table <- read.csv("output/summary_table.csv") -->
+<!-- knitr::kable(summary_table) -->
+<!-- ``` -->
+
+
+<!-- ![Logo](`r params$logo_2`){width=5cm} -->

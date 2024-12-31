@@ -1,0 +1,184 @@
+---
+title: "Análisis de la administración del personal"
+subtitle: "SIAP - IMSS"
+---
+
+**Tipo de plantilla:** {{< meta tipo_plantilla >}}
+
+**Quincena reporta:** {{< meta quincena >}}
+
+**Responsable:** {{< meta author_1 >}}
+
+**Fecha de generación:** `r format(Sys.time(), "%d/%m/%Y %H:%M")`
+
+<!-- Location of this qmd script is: -->
+<!-- ~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/template_qmd -->
+
+## Introducción
+
+- **Objetivo**: Definir el propósito del análisis (por ejemplo, analizar patrones en el ausentismo laboral y su relación con métricas de salud).
+- **Descripción del conjunto de datos**: 
+  - Fuente: Sistema de Recursos Humanos.
+  - Período: 2015-2023.
+  - Tamaño: `r nrow(dataset)` observaciones y `r ncol(dataset)` variables.
+- **Preguntas clave**: 
+  - ¿Cuáles son las tendencias temporales en el ausentismo laboral?
+  - ¿Existen diferencias significativas entre departamentos?
+
+
+### Descripción de los datos
+
+#### Estructura de los datos
+```{r}
+# Código para mostrar la estructura y dimensiones del conjunto de datos
+str(dataset)
+dim(dataset)
+
+# Resumen de las variables
+summary(dataset)
+```
+
+#### Tipos de variables
+
+Variables categóricas: Sexo, departamento, estado civil.
+Variables numéricas: Edad, salario, días de ausencia.
+Variables de fecha: Fecha de contratación, fecha de inicio de ausencia.
+
+
+#### Datos faltantes
+
+Porcentaje de valores faltantes por variable:
+
+```{r}
+# Visualización de datos faltantes
+library(naniar)
+vis_miss(dataset
+```
+
+
+Estrategia para manejar datos faltantes:
+Imputación media para datos numéricos.
+Completar categorías faltantes con "Desconocido".
+
+#### Calidad de datos vs CURP
+
+
+
+## Análisis univariado
+
+### Variables numéricas
+
+Estadísticas descriptivas:
+```{r}
+# Resumen de variables numéricas
+summary(dataset$edad)
+```
+
+Distribuciones:
+```{r}
+# Histograma de una variable numérica
+hist(dataset$edad, main = "Distribución de la Edad", xlab = "Edad")
+```
+
+
+Distribución de edad y género
+```{r}
+
+```
+
+
+### Variables categóricas
+
+Frecuencias:
+```{r}
+# Tabla de frecuencias
+table(dataset$sexo)
+```
+
+
+Visualización:
+```{r}
+# Gráfico de barras
+barplot(table(dataset$sexo), main = "Distribución por Sexo", col = "lightblue")
+```
+
+
+
+### Variables de fecha
+
+Rangos de fechas:
+```{r}
+# Resumen de fechas
+summary(dataset$fecha_contratacion)
+```
+
+Visualización de tendencias:
+```{r}
+# Gráfico de líneas para eventos temporales
+library(ggplot2)
+ggplot(dataset, aes(x = fecha_contratacion)) +
+  geom_histogram(binwidth = 365, fill = "blue", color = "white") +
+  labs(title = "Contrataciones a lo Largo del Tiempo", x = "Fecha", y = "Conteo")
+```
+
+## Análisis bivariado
+
+### Numérica vs. numérica
+
+Correlación:
+```{r}
+# Matriz de correlación
+cor(dataset[, sapply(dataset, is.numeric)])
+```
+
+
+### Numérica vs. categórica
+
+Comparación entre grupos:
+```{r}
+# Prueba t y boxplot
+boxplot(edad ~ sexo, data = dataset, main = "Comparación de Edad por Sexo")
+t.test(edad ~ sexo, data = dataset)
+```
+
+### Categórica vs. categórica
+
+Tablas de contingencia:
+```{r}
+# Tabla cruzada
+table(dataset$sexo, dataset$estado_civil)
+chisq.test(table(dataset$sexo, dataset$estado_civil))
+```
+
+### Visualizaciones avanzadas
+
+Correlación entre variables numéricas:
+```{r}
+# Gráfico de tendencia temporal
+ggplot(dataset, aes(x = fecha_inicio_ausencia, y = dias_ausencia)) +
+  geom_line() +
+  labs(title = "Tendencia de Días de Ausencia", x = "Fecha", y = "Días de Ausencia")
+```
+
+Patrones temporales:
+```{r}
+# Mapa de calor de correlaciones
+library(corrplot)
+corrplot(cor(dataset[, sapply(dataset, is.numeric)]), method = "circle")
+```
+
+
+## Resumen y conclusiones
+
+Hallazgos clave:
+Edad promedio de los empleados: r mean(dataset$edad, na.rm = TRUE).
+La mayoría de las ausencias ocurren en el departamento de producción.
+Próximos pasos:
+Analizar factores predictivos de ausentismo usando modelos estadísticos.
+
+## Apéndice
+
+### Información de sesión
+
+`r sessionInfo()`
+

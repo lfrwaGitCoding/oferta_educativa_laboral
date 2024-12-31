@@ -1,0 +1,15 @@
+{
+  "hash": "635e40477d159bf4a2eb21c119f5af47",
+  "result": {
+    "engine": "knitr",
+    "markdown": "\n# {{< meta report_title >}}\n\n**{{< meta report_subtitle >}}**\n\n**Tipo de plantilla:** {{< meta tipo_plantilla >}}\n\n**Quincena reporta:** {{< meta quincena >}}\n\n**Responsable:** {{< meta author_1 >}}\n\n**Fecha de generación:** 19/12/2024\n\n\n## A subtitle\n\nText with links <https://quarto.org>\n\n## Some Code\n\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n[1] 2\n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

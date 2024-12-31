@@ -1,0 +1,16 @@
+{
+  "report_template.qmd": {
+    "report_template.html": "6a4f5b88"
+  },
+  "report_test.qmd": {
+    "report_test.html": "71f8c437",
+    "report_test.docx": "41a63c66",
+    "report_test.tex": "9e5d5553"
+  },
+  "manuscript_templates/elsevier_template/elsevier_template.qmd": {
+    "elsevier_template.tex": "fe37082e"
+  },
+  "manuscript_templates/plos_template/plos_template.qmd": {
+    "plos_template.tex": "6198fca1"
+  }
+}

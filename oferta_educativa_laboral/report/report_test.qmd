@@ -1,0 +1,46 @@
+---
+title: "Análisis de la administración del personal"
+subtitle: "SIAP - IMSS"
+---
+
+**Tipo de plantilla:** {{< meta tipo_plantilla >}}
+
+**Quincena reporta:** {{< meta quincena >}}
+
+**Responsable:** {{< meta author_1 >}}
+
+**Fecha de generación:** `r format(Sys.time(), "%d/%m/%Y %H:%M")`
+
+
+## Introducción
+
+- **Objetivo**: Dxxx
+
+
+### Descripción de los datos
+
+#### Estructura de los datos
+```{r}
+2 + 2
+```
+
+
+<!-- #| fig-cap: "xxx" -->
+<!-- #| fig-align: "center" -->
+<!-- #| tbl-cap: "xxx" -->
+
+:::: {.content-visible when-format='html'}
+
+some text here
+
+::::
+
+
+::: {layout-ncol=2}
+
+![](resources/img_1.png){width=200px, height=200px}
+
+![](resources/img_2.jpg){width=200px, height=200px}
+
+:::
+

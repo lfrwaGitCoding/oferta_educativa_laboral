@@ -48,14 +48,14 @@ getwd()
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-# infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
+infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
 # infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_enfermeras.rdata.gzip'
 
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
-infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
+# infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
 
 # Full path and file name:

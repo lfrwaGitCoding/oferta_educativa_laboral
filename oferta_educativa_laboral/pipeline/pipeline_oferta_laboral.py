@@ -276,6 +276,7 @@ def conda_info(outfile):
     '''
     Save to logs conda information and packages installed.
     '''
+    
     packages = 'conda_packages.txt'
     channels = 'conda_channels.txt'
     environment = 'environment.yml'

@@ -22,8 +22,6 @@
 # Import libraries ----
 library(data.table)
 library(episcout)
-library(ggthemes)
-library(cowplot)
 library(tidyverse)
 library(openxlsx)
 # ////////////
@@ -44,15 +42,8 @@ getwd()
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-# infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
-# infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
-
-# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
-# infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_enfermeras.rdata.gzip'
-
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
-# infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
-
+# infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.all_columns.rdata.gzip'
+infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.all_columns.rdata.gzip'
 
 # Full path and file name:
 infile_path <- paste0(rdata_dir, infile)
@@ -182,12 +173,24 @@ epi_clean_count_classes(df = data_f)
 
 # ===
 colnames(data_f)
+# View(head(data_f, n = 100))
+
+summary(data_f$CVEADSC)
+length(unique(data_f$CVEADSC))
+
+summary(data_f$ADSCRIPCION)
+length(unique(data_f$ADSCRIPCION))
+
+summary(data_f$IP)
+length(unique(data_f$IP))
 
 summary(data_f$NOMBREAR)
-summary(data_f$ADSCRIPCION)
 summary(data_f$DELEGACION)
 summary(data_f$CLASIF_UNIDAD)
+summary(data_f$IP)
 
+
+# ===
 # Filter data based on these categories from CLASIF_UNIDAD:
 unidades_meds <- c("01 Primer Nivel",
                    "02 Segundo Nivel",
@@ -209,12 +212,44 @@ summary(data_f_un_meds$CLASIF_UNIDAD)
 dim(data_f_un_meds)
 
 # Get values where ADSCRIPCION also has values in unidades_meds:
-epi_head_and_tail(data_f_un_meds[, c("ADSCRIPCION", "CLASIF_UNIDAD")], cols = 2)
-# View(head(data_f_un_meds[, c("ADSCRIPCION", "CLASIF_UNIDAD")], n = 1000))
+epi_head_and_tail(data_f_un_meds[, c("IP", "ADSCRIPCION", "CVEADSC", "CLASIF_UNIDAD")], cols = 3)
+# View(head(data_f_un_meds[, c("ADSCRIPCION", "CVEADSC", "CLASIF_UNIDAD")], n = 1000))
+
 
 
 summary(data_f_un_meds$CLASIF_UNIDAD)
 summary(data_f_un_meds$ADSCRIPCION)
+# ===
+
+
+# ===
+# Filter data based on 1. MEDICOS from DESCRIP_CLASCATEG:
+data_f_un_meds <- data_f_un_meds[data_f_un_meds$DESCRIP_CLASCATEG == "1.MÉDICOS", ]
+dim(data_f_un_meds)
+dim(data_f)
+epi_head_and_tail(data_f_un_meds)
+# View(head(data_f_un_meds))
+summary(data_f_un_meds$DESCRIP_CLASCATEG)
+summary(data_f$DESCRIP_CLASCATEG)
+
+# Drop levels with zero count
+levels(data_f_un_meds$DESCRIP_CLASCATEG)
+data_f_un_meds <- droplevels(subset(data_f_un_meds, DESCRIP_CLASCATEG != 0))
+levels(data_f_un_meds$DESCRIP_CLASCATEG)
+summary(data_f_un_meds$DESCRIP_CLASCATEG)
+dim(data_f_un_meds)
+
+# Get values where ADSCRIPCION also has values in unidades_meds:
+epi_head_and_tail(data_f_un_meds[, c("DESCRIP_CLASCATEG", "CLASIF_UNIDAD")], cols = 2)
+# View(head(data_f_un_meds[, c("ADSCRIPCION", "CLASIF_UNIDAD")], n = 1000))
+
+summary(data_f_un_meds$DESCRIP_CLASCATEG)
+summary(data_f_un_meds$CLASIF_UNIDAD)
+
+# Check:
+# View(t(data_f[data_f$ADSCRIPCION == 'UMR 01 EJIDO CUCAPAH INDIGENA', ]))
+# Looks alright, eg filtered "01 Primer Nivel" are not "1.MÉDICOS"
+# ===
 # ////////////
 
 
@@ -240,12 +275,12 @@ summary(df$NOMBREAR)
 # ===
 contingency_2x2_df <- epi_stats_contingency_2x2_df(df[, fact_cols],
                                                    x_var = "PLZOCU",
-                                                   y_var = "ADSCRIPCION"
+                                                   y_var = "IP"
                                                    )
 print(contingency_2x2_df)
 
 contingency_2x2_df <- epi_stats_contingency_2x2_df(df[, fact_cols],
-                                                   x_var = "ADSCRIPCION",
+                                                   x_var = "IP",
                                                    y_var = "NOMBREAR"
                                                    )
 print(head(contingency_2x2_df))
@@ -254,7 +289,8 @@ print(contingency_2x2_df)
 
 # ===
 dep_var <- "NOMBREAR"
-ind_vars <- c("ADSCRIPCION")
+# ind_vars <- c("ADSCRIPCION")
+ind_vars <- c("IP")
 
 formula_str <- sprintf("~ %s + %s", dep_var, ind_vars)
 formula_obj <- as.formula(formula_str)
@@ -264,7 +300,7 @@ f_tab <- ftable(xtabs(formula_obj, data = df))
 
 # Convert to data frame
 df_f_tab <- as.data.frame(f_tab)
-df_f_tab
+epi_head_and_tail(df_f_tab, cols = 3)
 
 # Reshape to wide format
 df_f_tab_wide <- tidyr::pivot_wider(
@@ -272,15 +308,63 @@ df_f_tab_wide <- tidyr::pivot_wider(
     names_from = all_of(dep_var),
     values_from = c(Freq)
   )
+epi_head_and_tail(df_f_tab_wide, cols = 5)
 
-epi_head_and_tail(df_f_tab_wide, cols = ncol(df_f_tab_wide))
+length(unique(df_f_tab_wide[[ind_vars]]))
+length(unique(df[[ind_vars]]))
+length(unique(data_f[[ind_vars]]))
+
+length(setdiff(unique(data_f[[ind_vars]]), unique(df_f_tab_wide[[ind_vars]])))
+head(setdiff(unique(data_f[[ind_vars]]), unique(df_f_tab_wide[[ind_vars]])))
+# View(as.data.frame(setdiff(unique(data_f$ADSCRIPCION), unique(df_f_tab_wide$ADSCRIPCION))))
 # ===
+
+# ===
+# Row sums so as to have total number of medics per location:
+df_f_tab_wide$Total <- rowSums(df_f_tab_wide[, -1])
+epi_head_and_tail(df_f_tab_wide, cols = 5)
+summary(df_f_tab_wide$Total)
+sum(df_f_tab_wide$Total)
+dim(data_f_un_meds)
+dim(data_f)
+
+head(df_f_tab_wide$Total)
+hist(df_f_tab_wide$Total)
+# ===
+
+
+# ===
+# Order columns so that IP, Total, any with FAM, any with RURAL, SALUD COMUNITARIA, URGENCIAS come first:
+colnames(df_f_tab_wide)
+df_f_tab_wide_ord <- df_f_tab_wide %>%
+  select('IP',
+         'Total',
+         matches("FAM"),
+         matches("RURAL"),
+         'SALUD COMUNITARIA',
+         'URGENCIAS',
+         everything()
+         )
+epi_head_and_tail(df_f_tab_wide_ord, cols = 6)
+colnames(df_f_tab_wide_ord)
+# ===
+
+
+# ===
+# Desc order based on Total:
+df_f_tab_wide_ord <- df_f_tab_wide_ord %>%
+  arrange(desc(Total))
+
+epi_head_and_tail(df_f_tab_wide_ord, cols = 6)
+colnames(df_f_tab_wide_ord)
+# ===
+
 
 # ===
 # Save as table
 # pwd already in results folder:
 infile_prefix
-file_n <- 'ADSCRIPCION_NOMBREAR'
+file_n <- 'IP_NOMBREAR'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
                    results_subdir,
@@ -288,7 +372,9 @@ outfile <- sprintf(fmt = '%s/%s.%s',
                    suffix
                    )
 outfile
-epi_write(file_object = df_f_tab_wide, file_name = outfile)
+epi_write(file_object = df_f_tab_wide_ord,
+          file_name = outfile
+          )
 
 # Save as Excel file
 suffix <- 'xlsx'
@@ -303,6 +389,193 @@ write.xlsx(df_f_tab_wide, file = outfile)
 # ////////////
 
 
+# ////////////
+# Numero de medicos especialistas por especialidad y OOAD ----
+
+# ===
+dep_var <- "NOMBREAR"
+# ind_vars <- c("ADSCRIPCION")
+ind_vars <- c("DELEGACION")
+
+formula_str <- sprintf("~ %s + %s", dep_var, ind_vars)
+formula_obj <- as.formula(formula_str)
+formula_obj
+
+f_tab <- ftable(xtabs(formula_obj, data = df))
+
+# Convert to data frame
+df_f_tab <- as.data.frame(f_tab)
+epi_head_and_tail(df_f_tab, cols = 3)
+
+# Reshape to wide format
+df_f_tab_wide <- tidyr::pivot_wider(
+    df_f_tab,
+    names_from = all_of(dep_var),
+    values_from = c(Freq)
+  )
+epi_head_and_tail(df_f_tab_wide, cols = 5)
+
+length(unique(df_f_tab_wide[[ind_vars]]))
+length(unique(df[[ind_vars]]))
+length(unique(data_f[[ind_vars]]))
+
+length(setdiff(unique(data_f[[ind_vars]]), unique(df_f_tab_wide[[ind_vars]])))
+head(setdiff(unique(data_f[[ind_vars]]), unique(df_f_tab_wide[[ind_vars]])))
+# View(as.data.frame(setdiff(unique(data_f[[ind_vars]]), unique(df_f_tab_wide[[ind_vars]]))))
+# ===
+
+# ===
+# Row sums so as to have total number of medics per location:
+df_f_tab_wide$Total <- rowSums(df_f_tab_wide[, -1])
+epi_head_and_tail(df_f_tab_wide, cols = 5)
+summary(df_f_tab_wide$Total)
+sum(df_f_tab_wide$Total)
+dim(data_f_un_meds)
+dim(data_f)
+
+head(df_f_tab_wide$Total)
+hist(df_f_tab_wide$Total)
+# ===
+
+
+# ===
+# Order columns so that IP, Total, any with FAM, any with RURAL, SALUD COMUNITARIA, URGENCIAS come first:
+colnames(df_f_tab_wide)
+df_f_tab_wide_ord <- df_f_tab_wide %>%
+  select('DELEGACION',
+         'Total',
+         matches("FAM"),
+         matches("RURAL"),
+         'SALUD COMUNITARIA',
+         'URGENCIAS',
+         everything()
+         )
+epi_head_and_tail(df_f_tab_wide_ord, cols = 6)
+colnames(df_f_tab_wide_ord)
+# ===
+
+
+# ===
+# Desc order based on Total:
+df_f_tab_wide_ord <- df_f_tab_wide_ord %>%
+  arrange(desc(Total))
+
+epi_head_and_tail(df_f_tab_wide_ord, cols = 6)
+colnames(df_f_tab_wide_ord)
+# ===
+
+
+# ===
+# Save as table
+# pwd already in results folder:
+infile_prefix
+file_n <- 'DELEGACION_NOMBREAR'
+suffix <- 'txt'
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_subdir,
+                   file_n,
+                   suffix
+                   )
+outfile
+epi_write(file_object = df_f_tab_wide_ord,
+          file_name = outfile
+          )
+# ////////////
+
+
+# ////////////
+# Horizontal bar plot of numero de medicos especialistas por especialidad y OOAD ----
+
+
+# ===
+epi_head_and_tail(df_f_tab_wide_ord)
+str(df_f_tab_wide_ord$DELEGACION)
+levels(df_f_tab_wide_ord$DELEGACION)
+
+# Reorder category based on numeric values, ascending:
+df_f_tab_wide_ord <- df_f_tab_wide_ord %>%
+  arrange(-desc(Total))
+
+df_f_tab_wide_ord$DELEGACION <- factor(df_f_tab_wide_ord$DELEGACION,
+                                       levels = df_f_tab_wide_ord$DELEGACION[order(df_f_tab_wide_ord$Total, decreasing = TRUE)]
+                                       )
+
+str(df_f_tab_wide_ord$DELEGACION)
+levels(df_f_tab_wide_ord$DELEGACION)
+epi_head_and_tail(df_f_tab_wide_ord)
+
+str(df_f_tab_wide_ord$Total)
+# ===
+
+# ===
+bar_plot <- epi_plot_bar(df_f_tab_wide_ord,
+             var_x = "DELEGACION",
+             var_y = "Total"
+             ) +
+  coord_flip() +
+  labs(title = "Número de médicos/as por especialidad y OOAD") +
+  theme(legend.position = "none")
+bar_plot
+
+# Save:
+file_n <- 'plot_bar_med_esp_OOAD'
+suffix <- 'pdf'
+outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile
+ggsave(outfile, plot = bar_plot,
+       height = 20, width = 20, units = "in"
+       )
+# ===
+
+# ===
+# Add numbers by specialty:
+epi_head_and_tail(df_f_tab_wide_ord)
+
+df <- df_f_tab_wide_ord
+# Reshape the data to long format:
+df_long <- df %>%
+  pivot_longer(
+    cols = -c(DELEGACION, Total),      # Columns to pivot (all except DELEGACION and Total)
+    names_to = "Especialidad",              # New column for the service types
+    values_to = "Cantidad"                # New column for the counts
+  )
+print(df_long)
+
+
+# But too many labels, so use only top ~10
+# Reshape to long:
+esp_med_freqs <- df_long %>%
+  group_by(Especialidad) %>%
+  summarise(TotalCount = sum(Cantidad, na.rm = TRUE)) %>%
+  arrange(desc(TotalCount)) %>%
+  slice_head(n = 10) %>%
+  pull(Especialidad)
+esp_med_freqs
+
+# Filter the dataset to include only the top 20 services
+df_long_filt <- df_long %>%
+  mutate(Especialidad = ifelse(Especialidad %in% esp_med_freqs, Especialidad, "Otras"))
+
+# Stacked bar plot:
+stacked_bar <- ggplot(df_long_filt,
+                      aes(x = DELEGACION, y = Cantidad, fill = Especialidad)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(title = "Número de médicos/as por especialidad y OOAD - especialidades más frecuentes") +
+  theme(legend.position = "bottom")
+stacked_bar
+
+# Save:
+# file_n <- 'plot_bar_med_esp_OOAD_top_ordinario'
+file_n <- 'plot_bar_med_esp_OOAD_top'
+suffix <- 'pdf'
+outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile
+ggsave(outfile, plot = stacked_bar,
+       height = 20, width = 20, units = "in"
+       )
+# ===
+# ////////////
 
 
 # ////////////

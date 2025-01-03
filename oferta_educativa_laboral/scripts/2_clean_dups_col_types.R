@@ -10,7 +10,7 @@
 # TO DO: add
 # See sh script 'xxx'
 
-# Output is rdata object with column types specified, ready for subsetting, plotting, etc.
+# Output is rdata object with column types specified, redundant and admin columns removed, and ready for subsetting, plotting, etc.
 # ////////////
 
 
@@ -48,7 +48,7 @@ library(log4r)
 # ////////////
 # Load rdata file with directory locations ----
 
-# +++
+# ===
 # Set working directory to the project root:
 setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
@@ -82,7 +82,7 @@ print(all_locs)
 # Source functions/scripts/etc
 # TO DO:
 # Source (until I update episcout)
-source(file.path(paste0(code_dir, '/funcs_epi_source.R')))
+source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # ////////////
 
 
@@ -94,8 +94,8 @@ print(dir(path = normalizePath(data_dir), all.files = TRUE))
 infiles_dir <- 'data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-# infile <- 'Qna_17_Bienestar_2024.csv'
-infile <- 'Qna_17_Plantilla_2024.csv'
+infile <- 'Qna_17_Bienestar_2024.csv'
+# infile <- 'Qna_17_Plantilla_2024.csv'
 infile_path <- paste0(data_dir, infiles_dir, infile)
 
 # Full path and file loaded:

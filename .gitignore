@@ -2,6 +2,13 @@
 .DS_Store
 ./*/.dir_*
 
+# quarto files:
+.quarto/
+_report_outputs/
+*.docx
+*.pdf
+*.html
+
 # History files
 .Rhistory
 .Rapp.history

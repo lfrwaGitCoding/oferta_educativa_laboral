@@ -1,13 +1,17 @@
 .dir_*
 .DS_Store
 ./*/.dir_*
+./*/DS_Store
 
 # quarto files:
-.quarto/
-_report_outputs/
+.quarto
+./*/quarto
+_report_outputs
 *.docx
 *.pdf
 *.html
+report_test_files
+./*/*tex
 
 # History files
 .Rhistory

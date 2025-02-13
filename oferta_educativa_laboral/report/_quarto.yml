@@ -27,9 +27,8 @@ execute:
 # bibliography: references.bib
 
 lang: es
-css: resources/styles.css
 toc-title: "Tabla de contenidos"
-output-dir: _report_outputs
+output-dir: _report_outputs/
 
 format:
   html:
@@ -40,20 +39,22 @@ format:
     code-fold: true
     embed-resources: true # so that the html doc is standalone with all files included; self-contained: true was deprecated
     # minimal: true # disable html qmd default bells
-    output-dir: _report_outputs
-    include-before-body: resources/header.html
-    include-after-body: resources/footer.html
+    # output-dir: _report_outputs/
+    template: resources/index_med_comp.html
+    # include-before-body: resources/header.html
+    # include-after-body: resources/footer.html
 
   pdf:
     toc: true
     toc-depth: 2
-    output-dir: _report_outputs
+    # output-dir: _report_outputs/
+    css: resources/styles.css
     # include-in-header: resources/header.tex
     # include-after-body: resources/footer.tex
   docx:
     toc: true
     toc-depth: 2
-    output-dir: _report_outputs
+    # output-dir: _report_outputs/
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):
 report_title: "Análisis de la administración del personal"

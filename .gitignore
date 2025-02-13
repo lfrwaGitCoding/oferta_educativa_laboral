@@ -6,12 +6,13 @@
 # quarto files:
 .quarto
 ./*/.quarto
+./*/*/.quarto
 _report_outputs
 *.docx
 *.pdf
 *.html
 report_test_files
-./*/*tex
+./*/*/*tex
 
 # History files
 .Rhistory

@@ -1,11 +1,11 @@
 .dir_*
 .DS_Store
 ./*/.dir_*
-./*/DS_Store
+./*/.DS_Store
 
 # quarto files:
 .quarto
-./*/quarto
+./*/.quarto
 _report_outputs
 *.docx
 *.pdf

@@ -1,0 +1,30 @@
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+
+% Define Colors
+\definecolor{gobmx_maroon}{RGB}{77, 0, 27}
+\definecolor{gobmx_gold}{RGB}{161, 119, 43}
+
+% Page Style for Header
+\pagestyle{fancy}
+\fancyhf{}  % Clear header/footer
+
+% Left Logo
+\fancyhead[L]{%
+  \includegraphics[height=1.5cm]{resources/gobmx_logo.png}  % Replace with actual logo file
+}
+
+% Centered Title
+\fancyhead[C]{%
+  \color{gobmx_gold} \textbf{\Huge UNIDAD DE EDUCACIÓN E INVESTIGACIÓN}
+}
+
+% Background Color (for full-width effect)
+\makeatletter
+\renewcommand{\headrule}{%
+    \color{gobmx_maroon}\hrule height 20pt
+    \color{gobmx_gold}\hrule height 10pt
+}
+\makeatother

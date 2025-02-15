@@ -38,9 +38,9 @@ some text here
 
 ::: {layout-ncol=2}
 
-![](resources/img_1.png){width=200px, height=200px}
+![](resources/simple/img_1.png){width=200px, height=200px}
 
-![](resources/img_2.jpg){width=200px, height=200px}
+![](resources/simple/img_2.jpg){width=200px, height=200px}
 
 :::
 

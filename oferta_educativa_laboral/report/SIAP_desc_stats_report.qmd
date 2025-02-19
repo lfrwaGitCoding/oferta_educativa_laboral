@@ -5,9 +5,11 @@ subtitle: "SIAP - IMSS"
 
 **Tipo de plantilla:** {{< meta tipo_plantilla >}}
 
-**Quincena reporta:** {{< meta quincena >}}
+**Quincena:** {{< meta quincena >}}
 
-**Responsable:** {{< meta author_1 >}}
+**Responsable:** {{< meta pers_1 >}}
+
+**Contacto:** {{< meta contacto_1 >}}
 
 **Fecha de generación:** `r format(Sys.time(), "%d/%m/%Y %H:%M")`
 
@@ -15,13 +17,21 @@ subtitle: "SIAP - IMSS"
 
 <!-- ~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/template_qmd -->
 
+\newpage
+
+\tableofcontents
+\newpage
+
+
 ## Introducción
 
 -   **Objetivo**: Definir el propósito del análisis (por ejemplo, analizar patrones en el ausentismo laboral y su relación con métricas de salud).
 -   **Descripción del conjunto de datos**:
     -   Fuente: Sistema de Recursos Humanos.
     -   Período: 2015-2023.
-    -   Tamaño: `r nrow(dataset)` observaciones y `r ncol(dataset)` variables.
+
+<!-- -   Tamaño: `#r nrow(dataset)` observaciones y `#r ncol(dataset)` variables. -->
+
 -   **Preguntas clave**:
     -   ¿Cuáles son las tendencias temporales en el ausentismo laboral?
     -   ¿Existen diferencias significativas entre departamentos?
@@ -30,7 +40,7 @@ subtitle: "SIAP - IMSS"
 
 #### Estructura de los datos
 
-```{r}
+```{r, eval = FALSE}
 # Código para mostrar la estructura y dimensiones del conjunto de datos
 str(dataset)
 dim(dataset)
@@ -49,10 +59,10 @@ Variables de fecha: Fecha de contratación, fecha de inicio de ausencia.
 
 Porcentaje de valores faltantes por variable:
 
-```{r}
+```{r, eval = FALSE}
 # Visualización de datos faltantes
 library(naniar)
-vis_miss(dataset
+vis_miss(dataset)
 ```
 
 Estrategia para manejar datos faltantes: Imputación media para datos numéricos.
@@ -66,21 +76,21 @@ Completar categorías faltantes con "Desconocido".
 
 Estadísticas descriptivas:
 
-```{r}
+```{r, eval = FALSE}
 # Resumen de variables numéricas
 summary(dataset$edad)
 ```
 
 Distribuciones:
 
-```{r}
+```{r, eval = FALSE}
 # Histograma de una variable numérica
 hist(dataset$edad, main = "Distribución de la Edad", xlab = "Edad")
 ```
 
 Distribución de edad y género
 
-```{r}
+```{r, eval = FALSE}
 
 ```
 
@@ -88,14 +98,14 @@ Distribución de edad y género
 
 Frecuencias:
 
-```{r}
+```{r, eval = FALSE}
 # Tabla de frecuencias
 table(dataset$sexo)
 ```
 
 Visualización:
 
-```{r}
+```{r, eval = FALSE}
 # Gráfico de barras
 barplot(table(dataset$sexo), main = "Distribución por Sexo", col = "lightblue")
 ```
@@ -104,14 +114,14 @@ barplot(table(dataset$sexo), main = "Distribución por Sexo", col = "lightblue")
 
 Rangos de fechas:
 
-```{r}
+```{r, eval = FALSE}
 # Resumen de fechas
 summary(dataset$fecha_contratacion)
 ```
 
 Visualización de tendencias:
 
-```{r}
+```{r, eval = FALSE}
 # Gráfico de líneas para eventos temporales
 library(ggplot2)
 ggplot(dataset, aes(x = fecha_contratacion)) +
@@ -125,7 +135,7 @@ ggplot(dataset, aes(x = fecha_contratacion)) +
 
 Correlación:
 
-```{r}
+```{r, eval = FALSE}
 # Matriz de correlación
 cor(dataset[, sapply(dataset, is.numeric)])
 ```
@@ -134,7 +144,7 @@ cor(dataset[, sapply(dataset, is.numeric)])
 
 Comparación entre grupos:
 
-```{r}
+```{r, eval = FALSE}
 # Prueba t y boxplot
 boxplot(edad ~ sexo, data = dataset, main = "Comparación de Edad por Sexo")
 t.test(edad ~ sexo, data = dataset)
@@ -144,7 +154,7 @@ t.test(edad ~ sexo, data = dataset)
 
 Tablas de contingencia:
 
-```{r}
+```{r, eval = FALSE}
 # Tabla cruzada
 table(dataset$sexo, dataset$estado_civil)
 chisq.test(table(dataset$sexo, dataset$estado_civil))
@@ -154,7 +164,7 @@ chisq.test(table(dataset$sexo, dataset$estado_civil))
 
 Correlación entre variables numéricas:
 
-```{r}
+```{r, eval = FALSE}
 # Gráfico de tendencia temporal
 ggplot(dataset, aes(x = fecha_inicio_ausencia, y = dias_ausencia)) +
   geom_line() +
@@ -163,7 +173,7 @@ ggplot(dataset, aes(x = fecha_inicio_ausencia, y = dias_ausencia)) +
 
 Patrones temporales:
 
-```{r}
+```{r, eval = FALSE}
 # Mapa de calor de correlaciones
 library(corrplot)
 corrplot(cor(dataset[, sapply(dataset, is.numeric)]), method = "circle")
@@ -179,4 +189,4 @@ Próximos pasos: Analizar factores predictivos de ausentismo usando modelos esta
 
 ### Información de sesión
 
-`r sessionInfo()`
+<!-- `r sessionInfo()` -->

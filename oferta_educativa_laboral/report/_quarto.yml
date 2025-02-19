@@ -1,17 +1,4 @@
 # ------------------------------------------
-# Official site for variables insertion (placeholders) and env variables
-# https://quarto.org/docs/authoring/variables.html
-
-# The meta shortcode allows you to insert content from Pandoc metadata (e.g. YAML at the top of the document and/or in _quarto.yml).
-
-# For example, the following shortcode inserts the value of the title field from YAML metadata:
-
-# {{< meta title >}}
-# "_" underscore files are 'included' in other sections and not rendered
-# ------------------------------------------
-
-
-# ------------------------------------------
 # Project output variables
 
 execute:
@@ -29,39 +16,27 @@ execute:
 
 project:
   output-dir: _report_outputs/
+  resources: _report_outputs/
 
 lang: es
 toc-title: "Tabla de contenidos"
 
 format:
-  html:
-    toc: true
-    toc-depth: 2
-    toc-location: left
-    toc-expand: 2
-    code-fold: true
-    embed-resources: true # so that the html doc is standalone with all files included; self-contained: true was deprecated
-    resources: _report_outputs/ # where to put the resources, ie the '[project_name]_files/' folder that quarto generates
-    # minimal: true # disable html qmd default bells
-    template: resources/gob_mx_styles/index_med_comp.html
-    # include-before-body: resources/header.html
-    # include-after-body: resources/footer.html
-
   pdf:
-    toc: true
-    toc-depth: 2
-    css: resources/simple/styles.css
-    # include-in-header: resources/gob_mx_header.tex
-    # include-after-body: resources/footer.tex
-  docx:
-    toc: true
-    toc-depth: 2
+    # toc: true
+    # toc-depth: 2
+    number_sections: true
+    documentclass: article
+    header-includes:
+      - \input{resources/pdf/preamble.tex}
+
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):
 #report_title: "Análisis de la administración del personal"
 #report_subtitle: "SIAP - IMSS"
-tipo_plantilla: "Plantilla ordinaria"
-quincena: "Quincena 17 del 2024"
-author_1: "Antonio J Berlanga Taylor"
+tipo_plantilla: "Ordinaria"
+quincena: "17 del 2024"
+pers_1: "Antonio J Berlanga Taylor"
+contacto_1: "antonio.berlanga@imss.gob.mx"
 date: ""
 # ------------------------------------------

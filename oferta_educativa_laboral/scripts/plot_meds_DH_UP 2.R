@@ -113,9 +113,8 @@ bar_plot <- epi_plot_bar(data_f,
                   axis.text.y = element_text(size = 11),  # Increase y-axis text size
                   axis.title.x = element_text(size = 12), # Increase x-axis title size
                   axis.title.y = element_text(size = 12)  # Increase y-axis title size
-              ) +
-  labs(x = NULL, y = NULL)  # Remove axis labels
-  bar_plot
+              )
+bar_plot
 
 # Save:
 file_n <- 'plot_bar_meds_DH_estado'
@@ -123,9 +122,9 @@ suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile, plot = bar_plot,
-       height = 8.5, width = 11, units = "in",
+       height = 11, width = 8.5, units = "in",
        dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
+       scale = 4  # Increase scale factor
 )
 # ===
 
@@ -154,8 +153,7 @@ bar_plot <- epi_plot_bar(data_f,
           axis.text.y = element_text(size = 11),  # Increase y-axis text size
           axis.title.x = element_text(size = 12), # Increase x-axis title size
           axis.title.y = element_text(size = 12)  # Increase y-axis title size
-    ) +
-  labs(x = NULL, y = NULL)  # Remove axis labels
+    )
 bar_plot
 
 # Save:
@@ -164,9 +162,7 @@ suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile, plot = bar_plot,
-       height = 8.5, width = 11, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
+       height = 11, width = 8.5, units = "in"
 )
 
 

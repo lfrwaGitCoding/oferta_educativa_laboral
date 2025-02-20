@@ -39,8 +39,7 @@ dir()
 # Load file ----
 
 # ===
-# rdata_dir <- '/results/19_02_2025_UP_meds_por_DH/'
-rdata_dir <- '/results/19_02_2025_mac24/'
+rdata_dir <- '/results/19_02_2025_UP_meds_por_DH/'
 code_dir <- '/Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral'
 results_dir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/'
 
@@ -77,10 +76,9 @@ results_subdir <- sprintf('%s_%s',
                           infile_prefix
 )
 results_subdir
-# results_subdir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/19_02_2025_mac24/'
-# results_subdir <- epi_create_dir(base_path = results_dir,
-#                                  subdir = results_subdir
-# )
+results_subdir <- epi_create_dir(base_path = results_dir,
+                                 subdir = results_subdir
+)
 # ////////////
 
 
@@ -88,7 +86,7 @@ results_subdir
 # ////////////
 # Horizontal bar plot of Numero de medicos por estado ----
 # Set a global theme with larger axis text
-theme_set(theme_minimal(base_size = 11))  # Adjust base size for all text
+theme_set(theme_minimal(base_size = 14))  # Adjust base size for all text
 
 # ===
 epi_head_and_tail(data_f, cols = ncol(data_f))
@@ -113,9 +111,8 @@ bar_plot <- epi_plot_bar(data_f,
                   axis.text.y = element_text(size = 11),  # Increase y-axis text size
                   axis.title.x = element_text(size = 12), # Increase x-axis title size
                   axis.title.y = element_text(size = 12)  # Increase y-axis title size
-              ) +
-  labs(x = NULL, y = NULL)  # Remove axis labels
-  bar_plot
+              )
+bar_plot
 
 # Save:
 file_n <- 'plot_bar_meds_DH_estado'
@@ -123,9 +120,7 @@ suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile, plot = bar_plot,
-       height = 8.5, width = 11, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
+       height = 20, width = 20, units = "in"
 )
 # ===
 
@@ -148,14 +143,13 @@ bar_plot <- epi_plot_bar(data_f,
                          var_y = "PLAZAS_VACANTES_perc"
 ) +
     coord_flip() +
-    labs(title = "Porcentaje de plazas vacantes de médicos por estado") +
+    labs(title = "Número de plazas vacantes de médicos por estado") +
     theme(legend.position = "none",
           axis.text.x = element_text(size = 11),  # Increase x-axis text size
           axis.text.y = element_text(size = 11),  # Increase y-axis text size
           axis.title.x = element_text(size = 12), # Increase x-axis title size
           axis.title.y = element_text(size = 12)  # Increase y-axis title size
-    ) +
-  labs(x = NULL, y = NULL)  # Remove axis labels
+    )
 bar_plot
 
 # Save:
@@ -164,9 +158,7 @@ suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile, plot = bar_plot,
-       height = 8.5, width = 11, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
+       height = 20, width = 20, units = "in"
 )
 
 

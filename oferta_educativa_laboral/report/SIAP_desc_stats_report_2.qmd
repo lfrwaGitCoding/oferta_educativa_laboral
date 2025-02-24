@@ -1,0 +1,281 @@
+---
+title: "Análisis de la administración del personal - primera fase"
+subtitle: "SIAP - IMSS"
+---
+
+**Tipo de plantilla:** {{< meta tipo_plantilla >}}
+
+**Quincena:** {{< meta quincena >}}
+
+**Responsable:** {{< meta pers_1 >}}
+
+**Contacto:** {{< meta contacto_1 >}}
+
+**Fecha de generación:** `r format(Sys.time(), "%d/%m/%Y %H:%M")`
+
+
+<!-- Preamble, note that R code gets executed first, so ```{=latex}```, might not follow the order ser in the qmd file here -->
+
+<!-- Should be in preamble.tex but not working: -->
+\renewcommand{\listfigurename}{Lista de Figuras}
+\renewcommand{\listtablename}{Lista de Tablas}
+
+<!-- Setup: -->
+\newpage
+\tableofcontents
+\listoffigures
+\listoftables
+
+
+
+<!-- Location of this qmd script is where results are -->
+<!-- eg "~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/documents/reports/reporte_oferta_laboral_04022025/select_results/22_11_2024_2_clean_dups_col_types_Qna_17_Plantilla_2024/to_include" -->
+
+<!-- Setup libraries for qmd, location not needed if running as a pipeline. -->
+```{r, echo = FALSE}
+library(magrittr)  # Ensure pipes work
+library(kableExtra)  # Required for additional table formatting
+
+# results_path <- "~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/documents/reports/reporte_oferta_laboral_04022025/select_results/22_11_2024_2_clean_dups_col_types_Qna_17_Plantilla_2024/to_include/"
+```
+
+\newpage
+
+## 1_totales
+
+<!-- Move all to QC appendix -->
+3b_skim_summary.html
+sum_stats.txt
+desc_dates.txt
+plots_bar_21_copy.pdf
+
+
+<!-- Failed: -->
+<!-- {{< include 1_totales/3b_skim_summary.html >}} -->
+<!-- \input{include: 1_totales/sum_stats.txt} -->
+<!-- {{< include 1_totales/sum_stats.txt >}} -->
+<!-- ```{include: 1_totales/desc_dates.txt} -->
+<!-- ``` -->
+
+<!-- Works: and is placed in the correct location -->
+<!-- ![COMSIN](1_totales/plots_bar_21_copy.pdf){ width=50% } -->
+
+<!-- This works but may get too small if table is large: -->
+<!-- results = "asis" Outputs text "as is", without escaping special characters, for tex output. -->
+```{r, echo = FALSE, results = "asis"}
+# table_to_pdf <- "1_totales/sum_stats.txt"
+table_to_pdf <- "sum_stats.txt"
+table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
+
+# Create LaTeX table with a caption:
+table_to_latex <- knitr::kable(table_to_pdf, format = "latex", booktabs = TRUE) 
+
+# Print properly structured LaTeX table with scaling
+cat("
+\\begin{table}[h]
+\\centering
+\\caption{Resumen estadístico de variables numéricas}
+\\label{tab:sum_stats.txt}
+\\resizebox{\\textwidth}{!}{%", table_to_latex, "}
+\\end{table}
+")
+```
+
+
+\newpage
+
+## 2_sociodemo
+
+![edad](plots_hist_num_1.pdf)
+
+![edad](plots_box_num_1.pdf)
+
+![genero](plots_bar_9 copy 2.pdf)
+
+![ESCOLARIDAD](plots_bar_29.pdf)
+
+```{r, echo = FALSE, results = "asis"}
+# table_to_pdf <- "1_totales/sum_stats.txt"
+table_to_pdf <- "table_PLZOCU_ESCOLARIDAD.txt"
+table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
+
+# Create a LaTeX table:
+table_to_latex <- knitr::kable(table_to_pdf, format = "latex", booktabs = TRUE, align = "c") %>%
+    kableExtra::kable_styling(latex_options = c("hold_position"))
+                               
+writeLines(table_to_latex, "table_PLZOCU_ESCOLARIDAD.tex")
+```
+
+```{=latex}
+\input{table_PLZOCU_ESCOLARIDAD.tex}
+```
+
+\newpage
+
+<!-- TO DO: continue here -->
+<!-- Doesn't insert a new page after table_PLZOCU_ESCOLARIDAD.tex -->
+
+## 2a_persona_en_plaza
+
+![FECHAINI, FECHAFIN](plots_hist_dates_5.pdf)
+
+![ANT_DIAS](plots_hist_num_1 copy 2.pdf)
+
+![ANT_DIAS](plots_box_num_1 copy.pdf)
+
+![FECHAPRIMERCONFZA](plots_hist_dates_9.pdf)
+
+![FECHANOMINACION](plots_hist_dates_5 copy 2.pdf)
+
+![COMSIN](plots_bar_21_copy.pdf)
+
+error:
+```{r, echo = FALSE, results = "asis"}
+# table_to_pdf <- "1_totales/sum_stats.txt"
+table_to_pdf <- "table_PLZOCU_COMSIN.txt"
+table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
+
+# Create LaTeX table with a caption:
+table_to_latex <- knitr::kable(table_to_pdf, format = "latex", booktabs = TRUE) 
+
+# Transform to tex:
+# Print properly structured LaTeX table with scaling
+cat("
+\\begin{table}[h]
+\\centering
+\\caption{Plazas ocupadas vs comisión sindical}
+\\label{tab:table_PLZOCU_COMSIN.txt}
+\\resizebox{\\textwidth}{!}{%", table_to_latex, "}
+\\end{table}
+")
+```
+
+
+\newpage
+
+## 3_lugares
+
+![DELEGACION, CLASIF_UNIDAD](plots_bar_1.pdf)
+
+
+```{r, echo = FALSE, results = "asis"}
+# table_to_pdf <- "1_totales/sum_stats.txt"
+table_to_pdf <- "table_PLZOCU_DELEGACION.txt"
+table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
+
+# Create LaTeX table with a caption:
+table_to_latex <- knitr::kable(table_to_pdf, format = "latex", booktabs = TRUE) 
+
+# Transform to tex:
+# Print properly structured LaTeX table with scaling
+cat("
+\\begin{table}[h]
+\\centering
+\\caption{Plazas ocupadas vs Delegación}
+\\label{tab:table_PLZOCU_DELEGACION.txt}
+\\resizebox{\\textwidth}{!}{%", table_to_latex, "}
+\\end{table}
+")
+```
+
+
+```{r, echo = FALSE, results = "asis"}
+# table_to_pdf <- "1_totales/sum_stats.txt"
+table_to_pdf <- "table_PLZOCU_DESCRIP_LOCALIDAD.txt"
+table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
+
+# Create LaTeX table with a caption:
+table_to_latex <- knitr::kable(table_to_pdf, format = "latex", booktabs = TRUE) 
+
+# Transform to tex:
+# Print properly structured LaTeX table with scaling
+cat("
+\\begin{table}[h]
+\\centering
+\\caption{Plazas ocupadas vs Localidad}
+\\label{tab:table_PLZOCU_DESCRIP_LOCALIDAD.txt}
+\\resizebox{\\textwidth}{!}{%", table_to_latex, "}
+\\end{table}
+")
+```
+
+
+\newpage
+
+## 4_plaza_desc
+
+plots_bar_9.pdf [DESCRIP_CLASCATEG]
+table_PLZOCU_DESCRIP_CLASCATEG.txt
+
+table_PLZOCU_CLASIF_UNIDAD.txt
+
+plots_hist_dates_1.pdf [FECHAING, FECHAMOV, FECHAOCUP, FECHALIMOCU]
+
+table_PLZOCU_NOMBREAR.txt
+table_PLZOCU_ADSCRIPCION.txt
+table_PLZOCU_CATEGORIA.txt
+table_PLZOCU_ULTIMACATEGBASE.txt
+table_PLZOCU_DESCRIPCION_SERVICIO.txt
+
+table_PLZOCU_DEPENDENCIA.txt
+
+plots_bar_5.pdf [DescripcionTC]
+table_PLZOCU_DescripcionTC.txt
+
+plots_bar_13.pdf [TipoConfianza, GrupoTipoPlaza]
+table_PLZOCU_TipoConfianza.txt
+table_PLZOCU_GrupoTipoPlaza.txt
+
+plots_bar_13 copy.pdf [DESCRIP_TIPO_DE_PLAZA]
+table_PLZOCU_DESCRIP_TIPO_DE_PLAZA.txt
+
+plots_bar_17 copy.pdf [TipoMcaOcup]
+table_PLZOCU_TipoMcaOcup.txt
+table_PLZOCU_MCP.txt
+
+plots_bar_17 copy 2.pdf [PLZAUT, PLZOCU]
+table_PLZOCU_PLZAUT.txt
+
+plots_bar_21.pdf [PLZSOB, PTO]
+table_PLZOCU_PLZSOB.txt
+table_PLZOCU_PTO.txt
+
+plots_bar_29 copy.pdf [VIGENCIAPTO]
+table_PLZOCU_VIGENCIAPTO.txt
+
+plots_bar_9 copy.pdf [PLZOCU_DESCRIP_TURNO]
+table_PLZOCU_DESCRIP_TURNO.txt
+table_PLZOCU_DESCRIP_HORARIO.txt
+
+<!-- table_PLZOCU_DATOADIC_CATBASE.txt -->
+
+
+\newpage
+
+## 5_bajas_jubilaciones
+
+plots_hist_dates_5 copy.pdf [FECHAPROBJUB]
+
+plots_bar_25 copy 2.pdf [JUBILA]
+table_PLZOCU_JUBILA.txt
+
+plots_bar_17.pdf [MCABAJA]
+table_PLZOCU_MCABAJA.txt
+
+plots_bar_25 copy.pdf [MY, RJP]
+table_PLZOCU_MY.txt
+table_PLZOCU_RJP.txt
+
+
+\newpage
+
+## 6_finanzas
+
+<!-- ![CPTO180](plots_bar_25.pdf) -->
+<!-- table_PLZOCU_CPTO180.txt -->
+
+<!-- ![IMP_035, IMP_037, IMP_SDO, FALTASACUMULADAS](plots_hist_num_5.pdf) -->
+<!-- ![IMP_035, IMP_037, IMP_SDO, FALTASACUMULADAS](plots_box_num_5.pdf) -->
+
+<!-- ![IMP_010, IMP_024](plots_hist_num_1 copy.pdf) -->
+<!-- ![IMP_010, IMP_024](plots_box_num_1 copy 2.pdf) -->

@@ -7,8 +7,9 @@
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 \usepackage{fontspec}
+\usepackage{tocloft}
 
-% Define Colors
+% Define Colours
 \definecolor{gobmx_maroon}{RGB}{77, 0, 27}
 \definecolor{gobmx_gold}{RGB}{161, 119, 43}
 
@@ -75,7 +76,18 @@
 % Apply body font globally
 \renewcommand{\normalsize}{\BodyFont}
 
+% ---- Customize List of Figures and Tables appearance ----
 
+% \AtBeginDocument{
+%% This doesn't work here, moved to qmd file:
+% \renewcommand{\listfigurename}{"Lista de Figuras"} % Change "List of Figures" to "Lista de Figuras"
+%% This doesn't work here, moved to qmd file:
+% \renewcommand{\listtablename}{Lista de Tablas} % Change "List of Tables" to "Lista de Tablas"
+\renewcommand{\cftfigpresnum}{Figura~} % Add "Figura" before number in the TOC
+\renewcommand{\cfttabpresnum}{Tabla~} % Add "Tabla" before number in the TOC
+\setlength{\cftfignumwidth}{4em}
+\setlength{\cfttabnumwidth}{4em}
+% }
 
 % ---- Patria and Merriweather failed loads: ----
 

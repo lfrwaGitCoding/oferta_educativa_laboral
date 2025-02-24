@@ -18,7 +18,6 @@ subtitle: "SIAP - IMSS"
 <!-- ~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/template_qmd -->
 
 \newpage
-
 \tableofcontents
 \newpage
 

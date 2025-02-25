@@ -8,6 +8,10 @@
 \usepackage{fancyhdr}
 \usepackage{fontspec}
 \usepackage{tocloft}
+\usepackage{rotating}
+\usepackage{float}  % Allows forcing table placement with [H]
+\usepackage{pdflscape}  % Allows landscape pages
+
 
 % Define Colours
 \definecolor{gobmx_maroon}{RGB}{77, 0, 27}
@@ -85,9 +89,33 @@
 % \renewcommand{\listtablename}{Lista de Tablas} % Change "List of Tables" to "Lista de Tablas"
 \renewcommand{\cftfigpresnum}{Figura~} % Add "Figura" before number in the TOC
 \renewcommand{\cfttabpresnum}{Tabla~} % Add "Tabla" before number in the TOC
-\setlength{\cftfignumwidth}{4em}
-\setlength{\cfttabnumwidth}{4em}
+\setlength{\cftfignumwidth}{5em}
+\setlength{\cfttabnumwidth}{5em}
 % }
+
+
+% ---- Lansdcape pages, rotate header and footer ----
+
+%% Wrap full-page landscape content in:
+% \begin{landscape}
+% ...
+% \end{landscape}
+
+% % Header and footer would need to be manually redefined though, because fancyhdr customises them (above):
+% \begin{landscape}
+% \fancyhead[C]{\includegraphics[width=\textwidth]{resources/pdf/imss_header.pdf}}
+% \fancyfoot[C]{\includegraphics[width=\textwidth]{resources/pdf/imss_footer.pdf}}
+% \begin{table}[h]
+% \centering
+% \caption{Plazas ocupadas por Localidad}
+% \resizebox{\textwidth}{!}{\input{table.tex}}
+% \end{table}
+% \end{landscape}
+
+
+
+
+
 
 % ---- Patria and Merriweather failed loads: ----
 

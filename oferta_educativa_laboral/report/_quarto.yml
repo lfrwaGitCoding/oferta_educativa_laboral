@@ -21,13 +21,15 @@ project:
 lang: es
 toc-title: "Tabla de contenidos"
 
+metadata:
+  crossref: true  # Enables table and figure cross-referencing
+
 format:
   pdf:
     # toc: true # this will mess with preamble.tex though so set it there
     # toc-depth: 2 # same here
     number_sections: true
     documentclass: article
-    # include-in-header: resources/pdf/preamble.tex
     header-includes:
       - \input{resources/pdf/preamble.tex}
     # fig-width: 4 # inches, no percentage adjustment, would havr to be in preamble.tex

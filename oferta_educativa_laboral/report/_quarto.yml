@@ -28,7 +28,7 @@ format:
   pdf:
     # toc: true # this will mess with preamble.tex though so set it there
     # toc-depth: 2 # same here
-    number_sections: true
+    # number-sections: false
     documentclass: article
     header-includes:
       - \input{resources/pdf/preamble.tex}

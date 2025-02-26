@@ -75,3 +75,9 @@ cat("
 <!-- %     \pdfpagewidth=\paperheight -->
 <!-- %     \pdfpageheight=\paperwidth -->
 <!-- % } -->
+
+<!-- % % Works but removes footer image, but center page numbers at the bottom -->
+<!-- % \fancyfoot[C]{% -->
+<!-- %     \vspace{15mm}  % Adjust vertical positioning if needed -->
+<!-- %     \makebox[\textwidth]{\thepage\ de \pageref{LastPage}}  % ✅ Centers the page number -->
+<!-- % } -->

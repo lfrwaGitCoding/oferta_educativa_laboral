@@ -29,12 +29,6 @@ subtitle: "SIAP - IMSS"
 <!-- Location of this qmd script is where results are -->
 <!-- eg "~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/documents/reports/reporte_oferta_laboral_04022025/select_results/22_11_2024_2_clean_dups_col_types_Qna_17_Plantilla_2024/to_include" -->
 
-<!-- Globals: -->
-```{r, echo = FALSE}
-options(knitr.table.format = "latex",
-        knitr.table.digits = 2) # avoids having to write format = "latex" in each kable() call
-```
-
 <!-- Setup libraries for qmd, location not needed if running as a pipeline. -->
 ```{r, echo = FALSE}
 library(magrittr)  # pipes
@@ -43,53 +37,102 @@ library(kableExtra)  # additional table formatting
 ```
 
 ```{r, echo = FALSE}
-# # Define a function to apply consistent styling to all tables
-# epi_table_kable_format <- function(kable_input) {
-#   kable_input %>%
-#     kableExtra::kable_styling(
-#       latex_options = c("striped", "hold_position", "scale_down"), # Alternating row colors, better positioning, auto-resize
-#       # font_size = 9,  # Slightly smaller font for a professional look
-#       full_width = FALSE,  # Keeps tables neatly centered
-#       position = "center"  # Centers the table on the page
-#     ) %>%
-#     column_spec(1, bold = TRUE) %>%  # Bold first column for readability
-#     row_spec(0, bold = TRUE, background = "#D3D3D3")  # Bold header with light gray background
-# }
+epi_table_to_latex <- function(file_path,
+                               caption,
+                               sep = "\t",
+                               header = TRUE,
+                               format = "latex",
+                               digits = 2,
+                               booktabs = TRUE,
+                               longtable = FALSE, # epi_table_kable_format var
+                               font_size = NULL, # epi_table_kable_format var
+                               full_width = FALSE, # epi_table_kable_format var
+                               position = 'center', # epi_table_kable_format var
+                               align = "c", # Allows column alignment customization
+                               repeat_header_text = "\\textit{(continuada)}"
+                               ) {
+    # Load a table from a file (.txt format with tab-separated values).
+    # Apply formatting using kable() and epi_table_kable_format().
+    # Return a LaTeX-formatted table that Quarto can handle.
+    
+    # Check if file exists before reading
+    if (!file.exists(file_path)) {
+        warning(paste("File", file_path, "not found."))
+        return(knitr::asis_output("\\textbf{Table not found}"))
+    }
+    
+    # Read table from file:
+    table_data <- tryCatch({
+        read.table(file_path, header = header, sep = sep)
+    }, error = function(e) {
+        error(paste("Error reading table:", file_path))
+        return(NULL)
+    })
+    
+    # Handle case where table is empty
+    if (is.null(table_data) || nrow(table_data) == 0) {
+        error("Table is empty.")
+        return(knitr::asis_output("\\textbf{Table is empty}"))
+    }
+    
+    # Create formatted LaTeX table:
+    table_to_latex <- knitr::kable(
+        table_data,
+        caption = caption, 
+        booktabs = booktabs,
+        longtable = longtable,
+        format = format,
+        digits = digits,
+        align = align # column alignment
+    ) %>%
+        epi_table_kable_format(longtable = longtable,
+                               font_size = font_size,
+                               full_width = full_width,
+                               position = position,
+                               repeat_header_text = repeat_header_text
+        )
 
+    # Output LaTeX for Quarto PDF conversion:
+    knitr::asis_output(table_to_latex)
+}
+```
+
+```{r, echo = FALSE}
 # Function to apply consistent styling to tables
 epi_table_kable_format <- function(kable_input,
                                    longtable = FALSE,
-                                   font = NULL,
+                                   font_size = NULL,
                                    full_width = FALSE,
-                                   position = 'center') {
-  if (longtable) {
-    # # Extract caption dynamically
-    # caption_text <- attr(kable_input, "caption")
-    # if (is.null(caption_text)) {
-    #   caption_text <- ""  # Avoid NULL captions
-    # }
-    return(
-      kable_input %>%
-        kable_styling(
-          latex_options = c("repeat_header", "striped", "hold_position"),
-          full_width = full_width,
-          position = position
-        )) %>%
-        column_spec(1, bold = TRUE) %>%
-        row_spec(0, bold = TRUE, background = "#D3D3D3")
+                                   position = 'center',
+                                   repeat_header_text = repeat_header_text
+                                   ) {
+    if (longtable) {
+        kable_input <- kable_input %>%
+            kable_styling(
+                latex_options = c("repeat_header", "striped", "hold_position"),
+                full_width = full_width,
+                position = position,
+                repeat_header_text = repeat_header_text,
+                font_size = font_size
+            ) %>%
+            column_spec(1, bold = TRUE) %>%
+            row_spec(0, bold = TRUE, background = "#D3D3D3")
     } else {
-    return(
-      kable_input %>%
-        kable_styling(
-          latex_options = c("striped", "hold_position", "scale_down"),  # Ensures proper placement & auto-resize
-          full_width = full_width,
-          position = position
-        ) %>%
-        column_spec(1, bold = TRUE) %>%
-        row_spec(0, bold = TRUE, background = "#D3D3D3")
-    )
-  }
+        kable_input <- kable_input %>%
+            kable_styling(
+                latex_options = c("striped", "hold_position", "scale_down"),  # Ensures proper placement & auto-resize
+                full_width = full_width,
+                position = position,
+                repeat_header_text = repeat_header_text,
+                font_size = font_size
+            ) %>%
+            column_spec(1, bold = TRUE) %>%
+            row_spec(0, bold = TRUE, background = "#D3D3D3")
+    }
+    
+    return(kable_input)
 }
+
 ```
 
 \newpage
@@ -102,16 +145,9 @@ sum_stats.txt
 desc_dates.txt
 
 ```{r, sum_stats, echo = FALSE, results = "asis"}
-table_to_pdf <- "sum_stats.txt"
-table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
-caption <- "Resumen de variables numéricas"
-
-# Create LaTeX table:
-table_to_latex <- knitr::kable(table_to_pdf, caption = caption, booktabs = TRUE) %>%
-    epi_table_kable_format(longtable = FALSE)
-
-# Ensure Quarto recognizes the table:
-knitr::asis_output(table_to_latex)
+epi_table_to_latex("sum_stats.txt",
+                   "Resumen de variables numéricas"
+                   )
 ```
 
 <!-- TO DO does not work -->
@@ -130,15 +166,10 @@ knitr::asis_output(table_to_latex)
 
 ![Gráfico de barras por Escolaridad](plots_bar_29.pdf)
 
-```{r, escolaridad, echo = FALSE, results = "asis"}
-table_to_pdf <- "table_PLZOCU_ESCOLARIDAD.txt"
-table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
-caption <- "Plazas ocupadas por Escolaridad"
-
-table_to_latex <- knitr::kable(table_to_pdf, caption = caption, booktabs = TRUE) %>%
-    epi_table_kable_format(longtable = FALSE)
-
-knitr::asis_output(table_to_latex)
+```{r, table_PLZOCU_ESCOLARIDAD, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
+                   "Plazas ocupadas por Escolaridad"
+                   )
 ```
 
 \clearpage
@@ -157,15 +188,10 @@ knitr::asis_output(table_to_latex)
 
 ![Gráfico de barras por Comisión sindical](plots_bar_21_copy.pdf){width=70%}
 
-```{r, COMSIN, echo = FALSE, results = "asis"}
-table_to_pdf <- "table_PLZOCU_COMSIN.txt"
-table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
-caption <- "Plazas ocupadas por Comisión sindical"
-
-table_to_latex <- knitr::kable(table_to_pdf, caption = caption, booktabs = TRUE) %>%
-    epi_table_kable_format(longtable = FALSE)
-
-knitr::asis_output(table_to_latex)
+```{r, table_PLZOCU_COMSIN, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_COMSIN.txt",
+                   "Plazas ocupadas por Comisión sindical"
+                   )
 ```
 
 \clearpage
@@ -174,91 +200,144 @@ knitr::asis_output(table_to_latex)
 
 ![Gráficos de barras por Delegación y Unidad](plots_bar_1.pdf)
 
-```{r, DELEGACION, echo = FALSE, results = "asis"}
+```{r, table_PLZOCU_DELEGACION, echo = FALSE, results = "asis"}
 # table_to_pdf <- "1_totales/sum_stats.txt"
-table_to_pdf <- "table_PLZOCU_DELEGACION.txt"
-table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
-caption <- "Plazas ocupadas por Delegación"
-
-table_to_latex <- knitr::kable(table_to_pdf, caption = caption, booktabs = TRUE) %>%
-    epi_table_kable_format(longtable = FALSE)
-
-knitr::asis_output(table_to_latex)
+epi_table_to_latex("table_PLZOCU_DELEGACION.txt",
+                   "Plazas ocupadas por Delegación"
+                   )
 ```
-
 
 \clearpage
 
 <!-- TO DO: Move to QC appendix -->
+<!-- TO DO: Code here for top and bottom, plus any highlights -->
 
-```{r, PLZOCU_DESCRIP_LOCALIDAD, echo = FALSE, results = "asis"}
-table_to_pdf <- "table_PLZOCU_DESCRIP_LOCALIDAD.txt"
-table_to_pdf <- read.table(table_to_pdf, header = TRUE, sep = "\t")
-caption <- "Plazas ocupadas por Localidad"
-
-table_to_latex <- knitr::kable(table_to_pdf, caption = caption, booktabs = TRUE,
-                              longtable = TRUE) %>%
-    epi_table_kable_format(longtable = TRUE)
-
-knitr::asis_output(table_to_latex)
+```{r, table_PLZOCU_DESCRIP_LOCALIDAD, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_LOCALIDAD.txt",
+                   "Plazas ocupadas por Localidad",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
 ```
 
 \clearpage
 
-<!-- TO DO: continue here -->
-
 ## 4_plaza_desc
 
-![DESCRIP_CLASCATEG](plots_bar_9.pdf)
+![Gráfico de barras de Clasificación por Categoría](plots_bar_9.pdf)
 
-table_PLZOCU_DESCRIP_CLASCATEG.txt
+```{r, table_PLZOCU_DESCRIP_CLASCATEG, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
+                   "Plazas ocupadas de acuerdo a Clasificación por Categoría"
+                   )
+```
 
-table_PLZOCU_CLASIF_UNIDAD.txt
 
-<!-- plots_hist_dates_1.pdf [FECHAING, FECHAMOV, FECHAOCUP, FECHALIMOCU] -->
+```{r, table_PLZOCU_CLASIF_UNIDAD, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_CLASIF_UNIDAD.txt",
+                   "Plazas ocupadas de acuerdo a Clasificación por Unidad"
+                   )
+```
 
-<!-- table_PLZOCU_NOMBREAR.txt -->
-<!-- table_PLZOCU_ADSCRIPCION.txt -->
-<!-- table_PLZOCU_CATEGORIA.txt -->
-<!-- table_PLZOCU_ULTIMACATEGBASE.txt -->
-<!-- table_PLZOCU_DESCRIPCION_SERVICIO.txt -->
+\clearpage
 
-<!-- table_PLZOCU_DEPENDENCIA.txt -->
+### Fechas de movimiento por plaza
 
-<!-- plots_bar_5.pdf [DescripcionTC] -->
+![Fechas de movimiento por plaza](plots_hist_dates_1.pdf){width=60%}
+
+\clearpage
+
+<!-- TO DO: Move to QC appendix -->
+<!-- TO DO: Code here for top and bottom, plus any highlights -->
+
+```{r, table_PLZOCU_NOMBREAR, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_NOMBREAR.txt",
+                   "Plazas ocupadas de acuerdo al Área de Responsabilidad",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+<!-- TO DO: Move to QC appendix -->
+<!-- TO DO: Code here for top and bottom, plus any highlights -->
+
+```{r, table_PLZOCU_ADSCRIPCION, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_ADSCRIPCION.txt",
+                   "Plazas ocupadas de acuerdo a Adscripción",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+<!-- TO DO: Move to QC appendix -->
+<!-- TO DO: Code here for top and bottom, plus any highlights -->
+
+```{r, table_PLZOCU_CATEGORIA, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_CATEGORIA.txt",
+                   "Plazas ocupadas de acuerdo a Categoría",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+<!-- TO DO: continue here -->
+
+<!-- ```{r, table_PLZOCU_ULTIMACATEGBASE, echo = FALSE, results = "asis"} -->
+<!-- epi_table_to_latex("table_PLZOCU_ULTIMACATEGBASE.txt", -->
+<!--                    "Plazas ocupadas de acuerdo a la última Categoría de Base" -->
+<!--                    ) -->
+<!-- ``` -->
+
+<!-- ```{r, table_PLZOCU_DESCRIPCION_SERVICIO, echo = FALSE, results = "asis"} -->
+<!-- epi_table_to_latex("table_PLZOCU_DESCRIPCION_SERVICIO.txt", -->
+<!--                    "Plazas ocupadas de acuerdo al Servicio" -->
+<!--                    ) -->
+<!-- ``` -->
+
+<!-- ```{r, table_PLZOCU_DEPENDENCIA, echo = FALSE, results = "asis"} -->
+<!-- epi_table_to_latex("table_PLZOCU_DEPENDENCIA.txt", -->
+<!--                    "Plazas ocupadas de acuerdo a la Dependencia" -->
+<!--                    ) -->
+<!-- ``` -->
+
+\clearpage
+
+![DescripcionTC](plots_bar_5.pdf)
 <!-- table_PLZOCU_DescripcionTC.txt -->
 
-<!-- plots_bar_13.pdf [TipoConfianza, GrupoTipoPlaza] -->
+![TipoConfianza, GrupoTipoPlaza](plots_bar_13.pdf) 
 <!-- table_PLZOCU_TipoConfianza.txt -->
 <!-- table_PLZOCU_GrupoTipoPlaza.txt -->
 
-<!-- plots_bar_13 copy.pdf [DESCRIP_TIPO_DE_PLAZA] -->
+![DESCRIP_TIPO_DE_PLAZA](plots_bar_13 copy.pdf) 
 <!-- table_PLZOCU_DESCRIP_TIPO_DE_PLAZA.txt -->
 
-<!-- plots_bar_17 copy.pdf [TipoMcaOcup] -->
+![TipoMcaOcup](plots_bar_17 copy.pdf)
 <!-- table_PLZOCU_TipoMcaOcup.txt -->
 <!-- table_PLZOCU_MCP.txt -->
 
-<!-- plots_bar_17 copy 2.pdf [PLZAUT, PLZOCU] -->
+![PLZAUT, PLZOCU](plots_bar_17 copy 2.pdf)
 <!-- table_PLZOCU_PLZAUT.txt -->
 
-<!-- plots_bar_21.pdf [PLZSOB, PTO] -->
+![PLZSOB, PTO](plots_bar_21.pdf)
 <!-- table_PLZOCU_PLZSOB.txt -->
 <!-- table_PLZOCU_PTO.txt -->
 
-<!-- plots_bar_29 copy.pdf [VIGENCIAPTO] -->
+![VIGENCIAPTO](plots_bar_29 copy.pdf)
 <!-- table_PLZOCU_VIGENCIAPTO.txt -->
 
-<!-- plots_bar_9 copy.pdf [PLZOCU_DESCRIP_TURNO] -->
+![PLZOCU_DESCRIP_TURNO](plots_bar_9 copy.pdf)
 <!-- table_PLZOCU_DESCRIP_TURNO.txt -->
 <!-- table_PLZOCU_DESCRIP_HORARIO.txt -->
 
 <!-- table_PLZOCU_DATOADIC_CATBASE.txt -->
 
 
-<!-- \clearpage -->
+\clearpage
 
-<!-- ## 5_bajas_jubilaciones -->
+## 5_bajas_jubilaciones
 
 <!-- plots_hist_dates_5 copy.pdf [FECHAPROBJUB] -->
 

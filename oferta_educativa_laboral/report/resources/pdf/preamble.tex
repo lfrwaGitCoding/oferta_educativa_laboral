@@ -11,7 +11,7 @@
 \usepackage{rotating}
 \usepackage{float}  % Allows forcing table placement with [H]
 \usepackage{pdflscape}  % Allows landscape pages
-
+\usepackage{lastpage}  % Enables total page count (\pageref{LastPage})
 
 % Define Colours
 \definecolor{gobmx_maroon}{RGB}{77, 0, 27}
@@ -55,6 +55,23 @@
 % Ensure the first page follows the same styling
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
+
+
+% ---- Add page numbers ----
+
+% Keep existing footer images, but add page numbers to the BOTTOM-RIGHT CORNER
+% Works but can't get it further to the right:
+% \fancyfoot[R]{%
+%     \raisebox{-25mm}{\hspace{5mm} \thepage\ de \pageref{LastPage}}  % Move further right & lower, x of xx style
+% }
+
+% Works:
+\fancyfoot[R]{%
+    \raisebox{-15mm}{\hspace{5mm} \thepage}  %x only style
+}
+
+% Ensure the custom footer applies to all pages
+\renewcommand{\footrulewidth}{0pt}  % No line under footer
 
 
 % ---- Set Font Styles ----

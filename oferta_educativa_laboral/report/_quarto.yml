@@ -35,13 +35,16 @@ format:
     # fig-width: 4 # inches, no percentage adjustment, would havr to be in preamble.tex
     # fig-height: 4  # also inches
     # fig-align: center
+    fig-pos: "h"
+    # fig-cap-location: margin
+    tbl-pos: "h"
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):
 #report_title: "Análisis de la administración del personal"
 #report_subtitle: "SIAP - IMSS"
 tipo_plantilla: "Ordinaria"
 quincena: "17 del 2024"
-pers_1: "Antonio J Berlanga Taylor"
-contacto_1: "antonio.berlanga@imss.gob.mx"
+responsable: "Unidad de Educación e Investigación en Salud"
+contacto_1: "rosana.pelayo@imss.gob.mx; antonio.berlanga@imss.gob.mx"
 date: ""
 # ------------------------------------------

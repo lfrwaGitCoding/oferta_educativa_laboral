@@ -7,7 +7,7 @@ subtitle: "SIAP - IMSS"
 
 **Quincena:** {{< meta quincena >}}
 
-**Responsable:** {{< meta pers_1 >}}
+**Responsable:** {{< meta responsable >}}
 
 **Contacto:** {{< meta contacto_1 >}}
 

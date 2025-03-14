@@ -74,6 +74,8 @@ project_root <- project_root
 data_dir <- data_dir
 results_dir <- results_dir
 data_f <- data_f
+
+# TO DO: needs updating:
 code_dir <- code_dir
 
 all_colnames <- all_colnames
@@ -96,7 +98,7 @@ print(dir(path = normalizePath(project_root), all.files = TRUE))
 # Source functions/scripts/etc
 # TO DO:
 # Source (until I update episcout)
-source(file.path(paste0(code_dir, '/funcs_epi_source.R')))
+source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # ////////////
 
 
@@ -436,7 +438,7 @@ for (i in names(num_list)) {
 
 # Save plots
 # Plot 4 per page or so:
-per_file <- 4
+per_file <- 1
 jumps <- seq(1, length(num_list), per_file)
 length(jumps)
 

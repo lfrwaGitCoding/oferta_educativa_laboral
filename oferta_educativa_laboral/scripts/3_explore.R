@@ -27,6 +27,7 @@ library(ggthemes)
 library(cowplot)
 library(tidyverse)
 library(skimr)
+library(pander)
 library(log4r)
 # library(quarto)
 # library(renv)
@@ -222,7 +223,7 @@ epi_write(na_perc,
 
 
 # ////////////
-# Summary statistics ----
+# Generate summaries for each variable type ----
 epi_clean_count_classes(data_f)
 str(data_f)
 
@@ -235,37 +236,41 @@ epi_head_and_tail(data_f[, date_cols])
 
 summary(data_f[, date_cols])
 
-sum_dates_df <- data.frame('variable' = character(0),
-                           'Min' = numeric(0),
-                           'q25%' = numeric(0),
-                           'Median' = numeric(0),
-                           'q75%' = numeric(0),
-                           'Max' = numeric(0),
-                           'IQR' = numeric(0),
-                           stringsAsFactors = FALSE
-                           )
-for (i in date_cols) {
-    sum_dates <- epi_stats_dates(data_f[[i]])
-    # print(sum_dates)
-    stats_vector <- sum_dates$Value  # Extract the values
+# sum_dates_df <- data.frame('variable' = character(0),
+#                            'Min' = numeric(0),
+#                            'q25%' = numeric(0),
+#                            'Median' = numeric(0),
+#                            'q75%' = numeric(0),
+#                            'Max' = numeric(0),
+#                            'IQR' = numeric(0),
+#                            stringsAsFactors = FALSE
+#                            )
+# for (i in date_cols) {
+#     sum_dates <- epi_stats_dates(data_f[[i]])
+#     # print(sum_dates)
+#     stats_vector <- sum_dates$Value  # Extract the values
+#
+#     # Data frame row to append:
+#     new_row <- data.frame(
+#         Variable = i,
+#         Min = stats_vector[1],
+#         `q25%` = stats_vector[2],
+#         Median = stats_vector[3],
+#         `q75%` = stats_vector[4],
+#         Max = stats_vector[5],
+#         IQR = stats_vector[6]
+#     )
+#     sum_dates_df <- rbind(sum_dates_df,
+#                           new_row)
+# }
+# sum_dates_df
 
-    # Data frame row to append:
-    new_row <- data.frame(
-        Variable = i,
-        Min = stats_vector[1],
-        `q25%` = stats_vector[2],
-        Median = stats_vector[3],
-        `q75%` = stats_vector[4],
-        Max = stats_vector[5],
-        IQR = stats_vector[6]
-    )
-    sum_dates_df <- rbind(sum_dates_df,
-                          new_row)
-}
-sum_dates_df
+epi_stats_dates(data_f$FECHAPROBJUB)
+sum_dates <- epi_stats_dates_multi(data_f)
 
+# Save:
 infile_prefix
-file_n <- 'desc_dates'
+file_n <- 'sum_dates'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
                    results_subdir,
@@ -274,7 +279,7 @@ outfile <- sprintf(fmt = '%s/%s.%s',
                    )
 
 outfile
-epi_write(sum_dates_df, outfile)
+epi_write(sum_dates, outfile)
 # ===
 
 
@@ -373,44 +378,84 @@ epi_write(file_object = stats_num, file_name = outfile)
 
 # ===
 # Factor columns:
-# TO DO: not useful for these as many with too many categories to visualise
 # Set-up as one file per categorical variable with a frequency table and proportions.
-str(data_f)
-fact_cols
+# str(data_f)
+# fact_cols
+#
+# # Get desc stats:
+# stats_fct <- epi_stats_summary(df = data_f[, fact_cols], class_type = 'chr_fct')
+# stats_fct
+# unique(stats_fct$id)
+# # View(stats_fct)
+# dim(data_f)
+# colnames(data_f)
+#
+# # Add total for percentage calculation and order column to tidy up results:
+# perc_n <- nrow(data_f[, fact_cols])
+# order_by <- 'percent'
+# stats_fct_tidy <- epi_stats_tidy(sum_df = stats_fct,
+#                                  order_by = order_by,
+#                                  perc_n = perc_n
+#                                  )
+# stats_fct_tidy
+# # Format them if needed:
+# stats_fct_tidy <- epi_stats_format(stats_fct_tidy, digits = 0)
+# stats_fct_tidy
+#
+# # Save as table
+# file_n <- 'stats_factors'
+# suffix <- 'txt'
+# outfile <- sprintf(fmt = '%s/%s.%s',
+#                    results_subdir,
+#                    file_n,
+#                    suffix
+#                    )
+# outfile
+#
+# epi_write(file_object = stats_fct_tidy,
+#           file_name = outfile
+#           )
+# ===
 
-# Get desc stats:
-stats_fct <- epi_stats_summary(df = data_f[, fact_cols], class_type = 'chr_fct')
-stats_fct
-unique(stats_fct$id)
-# View(stats_fct)
-dim(data_f)
-colnames(data_f)
-
-# Add total for percentage calculation and order column to tidy up results:
-perc_n <- nrow(data_f[, fact_cols])
-order_by <- 'percent'
-stats_fct_tidy <- epi_stats_tidy(sum_df = stats_fct,
-                                 order_by = order_by,
-                                 perc_n = perc_n
-                                 )
-stats_fct_tidy
-# Format them if needed:
-stats_fct_tidy <- epi_stats_format(stats_fct_tidy, digits = 0)
-stats_fct_tidy
+# ===
+# Cleaned up / simple factor cols summary:
+sum_factors <- epi_stats_factors(data_f[, fact_cols])
 
 # Save as table
-file_n <- 'stats_factors'
+file_n <- 'sum_factors'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
                    results_subdir,
                    file_n,
                    suffix
-                   )
+)
 outfile
 
-epi_write(file_object = stats_fct_tidy,
+epi_write(file_object = sum_factors,
           file_name = outfile
-          )
+)
+# ===
+
+# ===
+# Character columns, these are ID
+sum_chars <- epis_stats_chars(data_f[, char_cols])
+sum_chars
+
+# Save as table
+file_n <- 'sum_chars'
+suffix <- 'txt'
+outfile <- sprintf(fmt = '%s/%s.%s',
+                   results_subdir,
+                   file_n,
+                   suffix
+)
+outfile
+
+epi_write(file_object = sum_chars,
+          file_name = outfile
+)
+
+
 # ===
 # ////////////
 
@@ -431,27 +476,37 @@ num_vars
 epi_plot_box(df = data_f, var_y = "EDAD")
 
 # i <- "EDAD"
-num_list <- epi_plot_list(vars_to_plot = num_vars)
-for (i in names(num_list)) {
-  num_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
+var_list <- epi_plot_list(vars_to_plot = num_vars)
+for (i in names(var_list)) {
+  var_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
   }
 
 # Save plots
-# Plot 4 per page or so:
+# Plot 4 per page or so for easier viewing, but if for quarto PDF keep just one per file:
 per_file <- 1
-jumps <- seq(1, length(num_list), per_file)
-length(jumps)
+var_names <- names(var_list)
 
-# i <- 2
-for (i in jumps) {
-  # infile_prefix
-  file_n <- 'plots_box_num'
-  suffix <- 'pdf'
-  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
-  # outfile
-  start_i <- i
-  end_i <- i + 3
-  my_plot_grid <- epi_plots_to_grid(num_list[start_i:end_i])
+# Split into groups of `per_file` variables
+jumps <- seq(1, length(var_names), by = per_file)
+
+for (start_i in jumps) {
+  end_i <- min(start_i + per_file - 1, length(var_names))  # Ensure within bounds
+  selected_vars <- var_names[start_i:end_i]
+
+  # Create a short, safe filename
+  safe_var_part <- paste(selected_vars, collapse = "_")
+  safe_var_part <- substr(safe_var_part, 1, 50)  # Truncate if too long
+  safe_var_part <- gsub("[^[:alnum:]_]", "_", safe_var_part)  # Remove unsafe chars
+
+  # Construct output file path
+  file_n <- sprintf("plots_box_num_%s.pdf", safe_var_part)
+  outfile <- file.path(results_subdir, file_n)
+
+  # Generate plot grid for selected variables
+  selected_plots <- var_list[selected_vars]
+  my_plot_grid <- epi_plots_to_grid(selected_plots)
+
+  # Save the combined plot
   epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
 # ===
@@ -461,34 +516,44 @@ for (i in jumps) {
 # Histograms:
 epi_plot_hist(df = data_f, var_x = "EDAD")
 
-num_list <- NULL
+var_list <- NULL
 i <- NULL
-num_list <- epi_plot_list(vars_to_plot = num_vars)
-for (i in names(num_list)) {
+var_list <- epi_plot_list(vars_to_plot = num_vars)
+for (i in names(var_list)) {
   print(i)
 
   # TO DO for episcout: switch to dplyr::sym() for tidy evaluation and/or clean up column names initially. Can be useful to keep original column names though
   # i <- paste0("`", i, "`") # because of spaces and special characters in column names
-  num_list[[i]] <- epi_plot_hist(df = data_f, var_x = i)
+  var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i)
   }
-num_list
+var_list
 
 # Save plots
-# Plot 4 per page or so:
-per_file <- 4
-jumps <- seq(1, length(num_list), per_file)
-length(jumps)
+# Plot 4 per page or so for easier viewing, but if for quarto PDF keep just one per file:
+per_file <- 1
+var_names <- names(var_list)
 
-# i <- 2
-for (i in jumps) {
-  # results_subdir
-  file_n <- 'plots_hist_num'
-  suffix <- 'pdf'
-  outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
-  # outfile
-  start_i <- i
-  end_i <- i + 3
-  my_plot_grid <- epi_plots_to_grid(num_list[start_i:end_i])
+# Split into groups of `per_file` variables
+jumps <- seq(1, length(var_names), by = per_file)
+
+for (start_i in jumps) {
+  end_i <- min(start_i + per_file - 1, length(var_names))  # Ensure within bounds
+  selected_vars <- var_names[start_i:end_i]
+
+  # Create a short, safe filename
+  safe_var_part <- paste(selected_vars, collapse = "_")
+  safe_var_part <- substr(safe_var_part, 1, 50)  # Truncate if too long
+  safe_var_part <- gsub("[^[:alnum:]_]", "_", safe_var_part)  # Remove unsafe chars
+
+  # Construct output file path
+  file_n <- sprintf("plots_hist_num_%s.pdf", safe_var_part)
+  outfile <- file.path(results_subdir, file_n)
+
+  # Generate plot grid for selected variables
+  selected_plots <- var_list[selected_vars]
+  my_plot_grid <- epi_plots_to_grid(selected_plots)
+
+  # Save the combined plot
   epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
 # ===
@@ -534,39 +599,45 @@ plot_bar <- epi_plot_bar(df = data_f,
                          )
 plot_bar
 
-bar_list <- epi_plot_list(vars_to_plot = fact_cols)
-for (i in names(bar_list)) {
+var_list <- epi_plot_list(vars_to_plot = fact_cols)
+for (i in names(var_list)) {
     # print(i)
-    bar_list[[i]] <- epi_plot_bar(df = data_f,
+    var_list[[i]] <- epi_plot_bar(df = data_f,
                                   var_x = i,
                                   custom_palette = custom_palette
                                   ) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 }
-# bar_list
+# var_list
 
 # Save plots
-# Plot 4 per page or so:
-per_file <- 4
-jumps <- seq(1, length(bar_list), per_file)
-length(jumps)
+# Plot 4 per page or so for easier viewing, but if for quarto PDF keep just one per file:
+per_file <- 1
+var_names <- names(var_list)
 
-# i <- 2
-for (i in jumps) {
-    # results_subdir
-    file_n <- 'plots_bar'
-    suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
-    # outfile
-    start_i <- i
-    end_i <- i + 3
-    my_plot_grid <- epi_plots_to_grid(bar_list[start_i:end_i])
-    epi_plot_cow_save(file_name = outfile,
-                      plot_grid = my_plot_grid,
-                      base_width = 15,
-                      base_height = 15
-    )
-    }
+# Split into groups of `per_file` variables
+jumps <- seq(1, length(var_names), by = per_file)
+
+for (start_i in jumps) {
+  end_i <- min(start_i + per_file - 1, length(var_names))  # Ensure within bounds
+  selected_vars <- var_names[start_i:end_i]
+
+  # Create a short, safe filename
+  safe_var_part <- paste(selected_vars, collapse = "_")
+  safe_var_part <- substr(safe_var_part, 1, 50)  # Truncate if too long
+  safe_var_part <- gsub("[^[:alnum:]_]", "_", safe_var_part)  # Remove unsafe chars
+
+  # Construct output file path
+  file_n <- sprintf("plots_bar_num_%s.pdf", safe_var_part)
+  outfile <- file.path(results_subdir, file_n)
+
+  # Generate plot grid for selected variables
+  selected_plots <- var_list[selected_vars]
+  my_plot_grid <- epi_plots_to_grid(selected_plots)
+
+  # Save the combined plot
+  epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
+}
 # ===
 # ////////////
 
@@ -593,33 +664,42 @@ i <- 'FECHAPROBJUB'
 epi_plot_hist(df = data_f, var_x = i) +
     geom_density(col = 2)
 
-hist_list <- epi_plot_list(vars_to_plot = date_cols)
-for (i in names(hist_list)) {
+var_list <- epi_plot_list(vars_to_plot = date_cols)
+for (i in names(var_list)) {
     print(i)
     # i <- paste0("`", i, "`") # because of spaces and special characters in column names
-    hist_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
+    var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
         geom_density(col = 2)
 }
-hist_list
+var_list
 
 # Save plots
-# Plot 4 per page or so:
-per_file <- 4
-jumps <- seq(1, length(hist_list), per_file)
-length(jumps)
+# Plot 4 per page or so for easier viewing, but if for quarto PDF keep just one per file:
+per_file <- 1
+var_names <- names(var_list)
 
-# i <- 2
-for (i in jumps) {
-    # results_subdir
-    file_n <- 'plots_hist_dates'
-    suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
-    # outfile
+# Split into groups of `per_file` variables
+jumps <- seq(1, length(var_names), by = per_file)
 
-    start_i <- i
-    end_i <- i + 3
-    my_plot_grid <- epi_plots_to_grid(hist_list[start_i:end_i])
-    epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
+for (start_i in jumps) {
+  end_i <- min(start_i + per_file - 1, length(var_names))  # Ensure within bounds
+  selected_vars <- var_names[start_i:end_i]
+
+  # Create a short, safe filename
+  safe_var_part <- paste(selected_vars, collapse = "_")
+  safe_var_part <- substr(safe_var_part, 1, 50)  # Truncate if too long
+  safe_var_part <- gsub("[^[:alnum:]_]", "_", safe_var_part)  # Remove unsafe chars
+
+  # Construct output file path
+  file_n <- sprintf("plots_hist_dates_%s.pdf", safe_var_part)
+  outfile <- file.path(results_subdir, file_n)
+
+  # Generate plot grid for selected variables
+  selected_plots <- var_list[selected_vars]
+  my_plot_grid <- epi_plots_to_grid(selected_plots)
+
+  # Save the combined plot
+  epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
 # ===
 
@@ -629,31 +709,40 @@ for (i in jumps) {
 i <- 'FECHAPROBJUB' # TO DO: need to sort out tidy evaluation in episcout
 epi_plot_box(data_f, var_y = i)
 
-box_list <- epi_plot_list(vars_to_plot = date_cols)
-for (i in names(box_list)) {
+var_list <- epi_plot_list(vars_to_plot = date_cols)
+for (i in names(var_list)) {
     # print(i)
-    box_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
+    var_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
     }
-# box_list
+# var_list
 
 # Save plots
-# Plot 4 per page or so:
-per_file <- 4
-jumps <- seq(1, length(box_list), per_file)
-length(jumps)
+# Plot 4 per page or so for easier viewing, but if for quarto PDF keep just one per file:
+per_file <- 1
+var_names <- names(var_list)
 
-# i <- 2
-for (i in jumps) {
-    # results_subdir
-    file_n <- 'plots_box_dates'
-    suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
-    # outfile
+# Split into groups of `per_file` variables
+jumps <- seq(1, length(var_names), by = per_file)
 
-    start_i <- i
-    end_i <- i + 3
-    my_plot_grid <- epi_plots_to_grid(box_list[start_i:end_i])
-    epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
+for (start_i in jumps) {
+  end_i <- min(start_i + per_file - 1, length(var_names))  # Ensure within bounds
+  selected_vars <- var_names[start_i:end_i]
+
+  # Create a short, safe filename
+  safe_var_part <- paste(selected_vars, collapse = "_")
+  safe_var_part <- substr(safe_var_part, 1, 50)  # Truncate if too long
+  safe_var_part <- gsub("[^[:alnum:]_]", "_", safe_var_part)  # Remove unsafe chars
+
+  # Construct output file path
+  file_n <- sprintf("plots_box_dates_%s.pdf", safe_var_part)
+  outfile <- file.path(results_subdir, file_n)
+
+  # Generate plot grid for selected variables
+  selected_plots <- var_list[selected_vars]
+  my_plot_grid <- epi_plots_to_grid(selected_plots)
+
+  # Save the combined plot
+  epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
 # ===
 
@@ -696,65 +785,49 @@ ggplot(plot_data, aes(x = !!sym(i), y = value)) +
 # ===
 
 # ===
-time_list <- epi_plot_list(vars_to_plot = date_cols)
-for (i in names(time_list)) {
+var_list <- epi_plot_list(vars_to_plot = date_cols)
+for (i in names(var_list)) {
     # Get date, sort it, pass it as vector, add value var for plotting:
     date <- sort(as.Date(data_f[[i]]))
     value <- seq_along(date)
     plot_data <- data.frame(i = date, value = value)
     colnames(plot_data)[1] <- i
     # Plot:
-    time_list[[i]] <- ggplot(plot_data, aes(x = !!sym(i), y = value)) +
+    var_list[[i]] <- ggplot(plot_data, aes(x = !!sym(i), y = value)) +
         geom_line() +
         geom_point()
 }
-# time_list
+# var_list
 
 # Save plots
-# Plot 4 per page or so:
-per_file <- 4
-jumps <- seq(1, length(time_list), per_file)
-length(jumps)
+# Plot 4 per page or so for easier viewing, but if for quarto PDF keep just one per file:
+per_file <- 1
+var_names <- names(var_list)
 
-# i <- 2
-for (i in jumps) {
-    # results_subdir
-    file_n <- 'plots_time'
-    suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s_%s.%s', results_subdir, file_n, i, suffix)
-    # outfile
+# Split into groups of `per_file` variables
+jumps <- seq(1, length(var_names), by = per_file)
 
-    start_i <- i
-    end_i <- i + 3
-    my_plot_grid <- epi_plots_to_grid(time_list[start_i:end_i])
-    epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
+for (start_i in jumps) {
+  end_i <- min(start_i + per_file - 1, length(var_names))  # Ensure within bounds
+  selected_vars <- var_names[start_i:end_i]
+
+  # Create a short, safe filename
+  safe_var_part <- paste(selected_vars, collapse = "_")
+  safe_var_part <- substr(safe_var_part, 1, 50)  # Truncate if too long
+  safe_var_part <- gsub("[^[:alnum:]_]", "_", safe_var_part)  # Remove unsafe chars
+
+  # Construct output file path
+  file_n <- sprintf("plots_time_%s.pdf", safe_var_part)
+  outfile <- file.path(results_subdir, file_n)
+
+  # Generate plot grid for selected variables
+  selected_plots <- var_list[selected_vars]
+  my_plot_grid <- epi_plots_to_grid(selected_plots)
+
+  # Save the combined plot
+  epi_plot_cow_save(file_name = outfile, plot_grid = my_plot_grid)
 }
 # ===
-# ////////////
-
-
-# ////////////
-# Generate the skim summary ----
-skim_summary <- skimr::skim(data_f)
-# TO DO: consider saving this as rdata to then load to qmd for pretty formatting
-skim_summary
-
-# Save as table:
-file_n <- 'skim_summary'
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
-                   file_n,
-                   suffix
-                   )
-outfile
-epi_write(file_object = skim_summary,
-          file_name = outfile
-          )
-
-# For a nicely formatted output run the skim summary in a qmd script.
-# e.g. 2_skim_summary.qmd
-# Running quarto from an R script is problematic as quarto won't take full paths
 # ////////////
 
 

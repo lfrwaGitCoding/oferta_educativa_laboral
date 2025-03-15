@@ -43,7 +43,7 @@ source("funcs.R")
 
 ::: {.cell tbl-cap='Resumen de variables de identificación' tbl-pos=h #tbl-desc_char}
 ```{r, echo = FALSE, results = "asis"}
-epi_table_to_latex("skim_summary_char.txt",
+epi_table_to_latex("sum_chars.txt",
                    caption = NULL  # caption set in tbl-cap above
                    # font = 9
                    )
@@ -65,7 +65,7 @@ epi_table_to_latex("sum_stats.txt",
 
 ::: {.cell tbl-cap='Resumen de variables de tipo fecha' tbl-pos=h #tbl-desc_dates}
 ```{r, echo = FALSE, results = "asis"}
-epi_table_to_latex("desc_dates.txt",
+epi_table_to_latex("sum_dates.txt",
                    caption = NULL,  # caption set in tbl-cap above
                    font = 9
                    )
@@ -76,7 +76,7 @@ epi_table_to_latex("desc_dates.txt",
 
 ::: {.cell tbl-cap='Resumen de variables categóricas' tbl-pos=h #tbl-desc_fact}
 ```{r, echo = FALSE, results = "asis"}
-epi_table_to_latex("skim_summary_fact.txt",
+epi_table_to_latex("sum_factors.txt",
                    caption = NULL  # caption set in tbl-cap above
                    # font = 9
                    )
@@ -91,16 +91,16 @@ epi_table_to_latex("skim_summary_fact.txt",
 
 ### De acuerdo a variables sociodemográficas
 
-![Histograma de Edad](plots_hist_num_1.pdf)
+![Histograma de Edad](plots_hist_num_EDAD.pdf)
 
 <!-- ![Histograma de Edad](plots_hist_num_1.pdf){#fig-hist_edad fig-pos="h" fig-cap="Histograma de Edad"} -->
 <!-- See @fig-hist_edad for yyy -->
 
-![Diagrama de cajas de Edad](plots_box_num_1.pdf)
+![Diagrama de cajas de Edad](plots_box_num_EDAD.pdf)
 
-![Gráfico de barras por Género](plots_bar_9%20copy%202.pdf)
+![Gráfico de barras por Género](plots_bar_num_SEXO.pdf)
 
-![Gráfico de barras por Escolaridad](plots_bar_29.pdf)
+![Gráfico de barras por Escolaridad](plots_bar_num_ESCOLARIDAD.pdf)
 
 ```{r, table_PLZOCU_ESCOLARIDAD, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
@@ -111,6 +111,9 @@ epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
 \clearpage
 
 ### Por persona y plaza
+
+<!-- TO DO: continue here -->
+<!-- Change to outputs of one plot per page with var name -->
 
 ![Histogramas de Fecha de inicio y término](plots_hist_dates_5.pdf)
 

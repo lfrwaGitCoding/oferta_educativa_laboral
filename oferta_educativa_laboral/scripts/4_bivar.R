@@ -228,16 +228,16 @@ epi_write(p_values, outfile)
 
 ### Plot numerical vs numerical ----
 ###  scatterplots with trend lines or smoothing (e.g., LOESS curves).
-# TO DO:
-# Scatter/Pairwise/multi plots for relevant combinations
-# Need to code a convenience function
-scatter.smooth(df_factor$IgA_Lavado, df_factor$IgA_Suero)
-
-ggplot(df_factor, aes(x = IgA_Lavado, y = IgA_Suero)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = TRUE) +  # 'se' controls the confidence interval display
-  theme_minimal() +
-  labs(x = "IgA_Lavado", y = "IgA_Suero", title = "Scatter Plot with Best Fit Line")
+# # TO DO:
+# # Scatter/Pairwise/multi plots for relevant combinations
+# # Need to code a convenience function
+# scatter.smooth(df_factor$IgA_Lavado, df_factor$IgA_Suero)
+#
+# ggplot(df_factor, aes(x = IgA_Lavado, y = IgA_Suero)) +
+#   geom_point() +
+#   geom_smooth(method = "lm", se = TRUE) +  # 'se' controls the confidence interval display
+#   theme_minimal() +
+#   labs(x = "IgA_Lavado", y = "IgA_Suero", title = "Scatter Plot with Best Fit Line")
 # ////////////
 
 
@@ -398,75 +398,75 @@ openxlsx::saveWorkbook(wb, "2x2_tables_vs_Estado.xlsx", overwrite = TRUE)
 
 # ===
 #### Plot/Visualize with mosaic plots or stacked bar charts. ----
-# TO DO: continue here ----
-
-# TO DO: move to episcout
-cont_plot <- function(df, x_var = 'Var1', y_var = 'Var2') {
-  ggplot(df, aes(x = !!sym(x_var), y = Freq, fill = !!sym(y_var))) +
-    geom_bar(stat = "identity", position = "dodge")
-  }
-
-contingency_df <- cont_df(df = col_facts, x_var = 1, y_var = 3)
-contingency_df
-cont_plot(contingency_df, colnames(contingency_df)[1], colnames(contingency_df)[2])
-
-for (i in 1:length(results)) {
-  df <- results[[i]]
-  fact_plot <- cont_plot(df = df, x_var = colnames(df)[1], y_var = colnames(df)[2])
-  file_name <- sprintf('cont_bar_plot_Estado_%s.pdf', names(results)[i])
-  epi_plot_cow_save(file_name = file_name,
-                    # base_height = 12,
-                    # base_width = 12,
-                    plot_grid = fact_plot
-  )
-  }
+# # TO DO: continue here ----
+#
+# # TO DO: move to episcout
+# cont_plot <- function(df, x_var = 'Var1', y_var = 'Var2') {
+#   ggplot(df, aes(x = !!sym(x_var), y = Freq, fill = !!sym(y_var))) +
+#     geom_bar(stat = "identity", position = "dodge")
+#   }
+#
+# contingency_df <- cont_df(df = col_facts, x_var = 1, y_var = 3)
+# contingency_df
+# cont_plot(contingency_df, colnames(contingency_df)[1], colnames(contingency_df)[2])
+#
+# for (i in 1:length(results)) {
+#   df <- results[[i]]
+#   fact_plot <- cont_plot(df = df, x_var = colnames(df)[1], y_var = colnames(df)[2])
+#   file_name <- sprintf('cont_bar_plot_Estado_%s.pdf', names(results)[i])
+#   epi_plot_cow_save(file_name = file_name,
+#                     # base_height = 12,
+#                     # base_width = 12,
+#                     plot_grid = fact_plot
+#   )
+#   }
 # ===
 
 # ===
-# Pair plots of contingency tables, not sure they add much (?)
-# library(GGally)
-colnames(col_facts)
-facts_plot <- GGally::ggpairs(col_facts[, c("Estado", "HAS")],
-                                axisLabels = 'show',
-                                showStrips = TRUE)
-facts_plot
-epi_plot_cow_save(file_name = 'ggpairs_edo_HAS.pdf',
-                  base_height = 6,
-                  base_width = 6,
-                  plot_grid = facts_plot
-                  )
-
-facts_plot_1 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1")],
-                                axisLabels = 'show',
-                                showStrips = TRUE)
-facts_plot_1
-epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno.pdf',
-                  base_height = 6,
-                  base_width = 6,
-                  plot_grid = facts_plot_1
-                  )
-facts_plot_2 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS")],
-                                axisLabels = 'show',
-                                showStrips = TRUE)
-facts_plot_2
-epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno_HAS.pdf',
-                  base_height = 6,
-                  base_width = 6,
-                  plot_grid = facts_plot_2
-                  )
-
-
-facts_plot_3 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS",
-                                              "DM2", "Obesidad", "EPOC", "IRC",
-                                              "BULUT_1")],
-                                axisLabels = 'show',
-                                showStrips = TRUE)
-facts_plot_3
-epi_plot_cow_save(file_name = 'ggpairs_facts.pdf',
-                  base_height = 40,
-                  base_width = 40,
-                  plot_grid = facts_plot_3
-                  )
+# # Pair plots of contingency tables, not sure they add much (?)
+# # library(GGally)
+# colnames(col_facts)
+# facts_plot <- GGally::ggpairs(col_facts[, c("Estado", "HAS")],
+#                                 axisLabels = 'show',
+#                                 showStrips = TRUE)
+# facts_plot
+# epi_plot_cow_save(file_name = 'ggpairs_edo_HAS.pdf',
+#                   base_height = 6,
+#                   base_width = 6,
+#                   plot_grid = facts_plot
+#                   )
+#
+# facts_plot_1 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1")],
+#                                 axisLabels = 'show',
+#                                 showStrips = TRUE)
+# facts_plot_1
+# epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno.pdf',
+#                   base_height = 6,
+#                   base_width = 6,
+#                   plot_grid = facts_plot_1
+#                   )
+# facts_plot_2 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS")],
+#                                 axisLabels = 'show',
+#                                 showStrips = TRUE)
+# facts_plot_2
+# epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno_HAS.pdf',
+#                   base_height = 6,
+#                   base_width = 6,
+#                   plot_grid = facts_plot_2
+#                   )
+#
+#
+# facts_plot_3 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS",
+#                                               "DM2", "Obesidad", "EPOC", "IRC",
+#                                               "BULUT_1")],
+#                                 axisLabels = 'show',
+#                                 showStrips = TRUE)
+# facts_plot_3
+# epi_plot_cow_save(file_name = 'ggpairs_facts.pdf',
+#                   base_height = 40,
+#                   base_width = 40,
+#                   plot_grid = facts_plot_3
+#                   )
 
 # # Create ggpairs plot, remove duplicated plots from diagonal:
 # # Custom function for lower triangle: scatter plot
@@ -500,61 +500,61 @@ epi_plot_cow_save(file_name = 'ggpairs_facts.pdf',
 # Add jitter to scatter plots to display overlapping points.
 
 #### Boxplots / violin Plots
-colnames(col_nums)
-
-epi_plot_box(df = df_factor,
-             var_y = 'Neu_count_1',
-             var_x = 'Estado'
-             )
-
-epi_plot_box(df = df_factor,
-             var_y = 'IFN_g',
-             var_x = 'Estado'
-             )
-
-epi_plot_box(df = df_factor,
-             var_y = 'Lin_count_1',
-             var_x = 'Estado'
-             )
-
-epi_plot_box(df = df_factor,
-             var_y = 'IgA_Lavado',
-             var_x = 'Estado'
-             )
-
-# Plot all numeric variables vs 'Estado'
-colnames(col_nums)
-i <- "Lin_count_1"
-# eval(i)
-# sym(i)
-epi_plot_box(df = df_factor, var_y = i)
-epi_plot_box(df = df_factor, var_y = i, var_x = 'Estado')
-
-box_list <- epi_plot_list(vars_to_plot = colnames(col_nums))
-for (i in names(box_list)) {
-  # print(i)
-  box_list[[i]] <- epi_plot_box(df = df_factor,
-                                var_y = i,
-                                var_x = 'Estado'
-                                )
-  }
-length(box_list)
-names(box_list)
-
-# Save plots
-# Plot 4 per page or so:
-per_file <- 4
-jumps <- seq(1, length(box_list), per_file)
-length(jumps)
-
-# i <- 2
-for (i in jumps) {
-  file_name <- sprintf('plots_box_%s.pdf', i)
-  start_i <- i
-  end_i <- i + 3
-  my_plot_grid <- epi_plots_to_grid(box_list[start_i:end_i])
-  epi_plot_cow_save(file_name = file_name, plot_grid = my_plot_grid)
-}
+# colnames(col_nums)
+#
+# epi_plot_box(df = df_factor,
+#              var_y = 'Neu_count_1',
+#              var_x = 'Estado'
+#              )
+#
+# epi_plot_box(df = df_factor,
+#              var_y = 'IFN_g',
+#              var_x = 'Estado'
+#              )
+#
+# epi_plot_box(df = df_factor,
+#              var_y = 'Lin_count_1',
+#              var_x = 'Estado'
+#              )
+#
+# epi_plot_box(df = df_factor,
+#              var_y = 'IgA_Lavado',
+#              var_x = 'Estado'
+#              )
+#
+# # Plot all numeric variables vs 'Estado'
+# colnames(col_nums)
+# i <- "Lin_count_1"
+# # eval(i)
+# # sym(i)
+# epi_plot_box(df = df_factor, var_y = i)
+# epi_plot_box(df = df_factor, var_y = i, var_x = 'Estado')
+#
+# box_list <- epi_plot_list(vars_to_plot = colnames(col_nums))
+# for (i in names(box_list)) {
+#   # print(i)
+#   box_list[[i]] <- epi_plot_box(df = df_factor,
+#                                 var_y = i,
+#                                 var_x = 'Estado'
+#                                 )
+#   }
+# length(box_list)
+# names(box_list)
+#
+# # Save plots
+# # Plot 4 per page or so:
+# per_file <- 4
+# jumps <- seq(1, length(box_list), per_file)
+# length(jumps)
+#
+# # i <- 2
+# for (i in jumps) {
+#   file_name <- sprintf('plots_box_%s.pdf', i)
+#   start_i <- i
+#   end_i <- i + 3
+#   my_plot_grid <- epi_plots_to_grid(box_list[start_i:end_i])
+#   epi_plot_cow_save(file_name = file_name, plot_grid = my_plot_grid)
+# }
 
 # ===
 # ////////////
@@ -574,70 +574,70 @@ for (i in jumps) {
 # TO DO: significance tests for num vars vs 'Estado'
 # TO DO: create a function and move to episcout
 
-# Wilcoxon Rank-Sum Test
-factor_var <- df_factor[['Estado']]
-num_var <- df_factor$Neu_count_1
-
-if (length(unique(factor_var)) == 2) {
-  group1 <- num_var[factor_var == levels(factor_var)[1]]
-  group2 <- num_var[factor_var == levels(factor_var)[2]]
-  test <- wilcox.test(group1, group2,
-                      exact = TRUE,
-                      correct = TRUE,
-                      conf.int = TRUE,
-                      conf.level = 0.95
-                      )
-  print(test)
-}
-test$statistic
-
-# TO DO: continue here
-wilcoxon_res <- data.frame(Group1 = character(),
-                           Group2 = character(),
-                           Variable = character(),
-                           W = numeric(),
-                           P.Value = numeric(),
-                           CI95_low = numeric(),
-                           CI95_high = numeric(),
-                           stringsAsFactors = FALSE
-                           )
-
-unique_groups <- unique(df_factor[['Estado']])
-combinations <- combn(unique_groups, 2)
-factor_var <- df_factor[['Estado']]
-df <- df_factor
-dim(combinations)
-
-# c <- 'Neu_count_1' #'Peso'
-# # Example manual test for verification
-# test_example <- wilcox.test(df$Edad[df$Estado == "Defuncion"], df$Edad[df$Estado == "Mejoria"])
-# print(test_example)
-
-for (c in colnames(col_nums)) {
-  for (i in 1:ncol(combinations)) {
-    group1_data <- df[factor_var == combinations[1, i], c]
-    group2_data <- df[factor_var == combinations[2, i], c]
-    # print(head(group1_data))  # Check the data
-    # print(head(group2_data))  # Check the data
-    test <- wilcox.test(group1, group2,
-                        exact = TRUE,
-                        correct = TRUE,
-                        conf.int = TRUE,
-                        conf.level = 0.95
-                        )
-    wilcoxon_res <- rbind(wilcoxon_res,
-                          data.frame(Group1 = combinations[1, i],
-                                     Group2 = combinations[2, i],
-                                     Variable = c,
-                                     W = test$statistic,
-                                     P.Value = test$p.value,
-                                     CI95_low = test$conf.int[1],
-                                     CI95_high = test$conf.int[2]
-                                     )
-                          )
-  }
-}
-epi_head_and_tail(wilcoxon_res, cols = 7)
+# # Wilcoxon Rank-Sum Test
+# factor_var <- df_factor[['Estado']]
+# num_var <- df_factor$Neu_count_1
+#
+# if (length(unique(factor_var)) == 2) {
+#   group1 <- num_var[factor_var == levels(factor_var)[1]]
+#   group2 <- num_var[factor_var == levels(factor_var)[2]]
+#   test <- wilcox.test(group1, group2,
+#                       exact = TRUE,
+#                       correct = TRUE,
+#                       conf.int = TRUE,
+#                       conf.level = 0.95
+#                       )
+#   print(test)
+# }
+# test$statistic
+#
+# # TO DO: continue here
+# wilcoxon_res <- data.frame(Group1 = character(),
+#                            Group2 = character(),
+#                            Variable = character(),
+#                            W = numeric(),
+#                            P.Value = numeric(),
+#                            CI95_low = numeric(),
+#                            CI95_high = numeric(),
+#                            stringsAsFactors = FALSE
+#                            )
+#
+# unique_groups <- unique(df_factor[['Estado']])
+# combinations <- combn(unique_groups, 2)
+# factor_var <- df_factor[['Estado']]
+# df <- df_factor
+# dim(combinations)
+#
+# # c <- 'Neu_count_1' #'Peso'
+# # # Example manual test for verification
+# # test_example <- wilcox.test(df$Edad[df$Estado == "Defuncion"], df$Edad[df$Estado == "Mejoria"])
+# # print(test_example)
+#
+# for (c in colnames(col_nums)) {
+#   for (i in 1:ncol(combinations)) {
+#     group1_data <- df[factor_var == combinations[1, i], c]
+#     group2_data <- df[factor_var == combinations[2, i], c]
+#     # print(head(group1_data))  # Check the data
+#     # print(head(group2_data))  # Check the data
+#     test <- wilcox.test(group1, group2,
+#                         exact = TRUE,
+#                         correct = TRUE,
+#                         conf.int = TRUE,
+#                         conf.level = 0.95
+#                         )
+#     wilcoxon_res <- rbind(wilcoxon_res,
+#                           data.frame(Group1 = combinations[1, i],
+#                                      Group2 = combinations[2, i],
+#                                      Variable = c,
+#                                      W = test$statistic,
+#                                      P.Value = test$p.value,
+#                                      CI95_low = test$conf.int[1],
+#                                      CI95_high = test$conf.int[2]
+#                                      )
+#                           )
+#   }
+# }
+# epi_head_and_tail(wilcoxon_res, cols = 7)
 # ////////////
 
 

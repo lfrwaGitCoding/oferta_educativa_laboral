@@ -4,15 +4,10 @@
 execute:
   enabled: true
   # echo: false # this is global, use "#| echo: true" for a given cell
-  warning: true
+  warning: true # false stops rendering on warnings
   message: true
-  error: true
+  error: false # false stops rendering on errors
   debug: false
-
-# margin: 0
-# fig-width: 7.5
-# number-sections: true
-# bibliography: references.bib
 
 project:
   output-dir: _report_outputs/
@@ -26,22 +21,15 @@ metadata:
 
 format:
   pdf:
-    # toc: true # this will mess with preamble.tex though so set it there
-    # toc-depth: 2 # same here
-    # number-sections: false
     documentclass: article
     header-includes:
       - \input{resources/pdf/preamble.tex}
-    # fig-width: 4 # inches, no percentage adjustment, would havr to be in preamble.tex
-    # fig-height: 4  # also inches
-    # fig-align: center
-    fig-pos: "h"
-    # fig-cap-location: margin
-    tbl-pos: "h"
+    tbl-pos: "H"
+    fig-cap-location: bottom
+    fig-prefix: "({{fig}})"  # Auto-generates (a), (b), etc.
+    keep-tex: true  # Helpful for debugging
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):
-#report_title: "Análisis de la administración del personal"
-#report_subtitle: "SIAP - IMSS"
 tipo_plantilla: "Ordinaria"
 quincena: "17 del 2024"
 responsable: "Unidad de Educación e Investigación en Salud"

@@ -111,7 +111,7 @@ epi_table_to_latex_sum2 <- function(file_path, min_total = 10, n_rows = 25, capt
 
     table_df_sum <- table_df %>%
         filter(total >= min_total) %>%
-        arrange(desc(perc_vacante)) %>%
+        arrange(desc(porc_vacante)) %>%
         head(n_rows)
 
     epi_table_to_latex(table_df_sum, caption)
@@ -137,7 +137,7 @@ epi_table_to_latex_sum <- function(file_path,
 
     table_df_sum <- table_df %>%
         filter(total >= min_total) %>%
-        arrange(desc(perc_vacante)) %>%
+        arrange(desc(porc_vacante)) %>%
         head(n_rows)
 
     # Create formatted LaTeX table:

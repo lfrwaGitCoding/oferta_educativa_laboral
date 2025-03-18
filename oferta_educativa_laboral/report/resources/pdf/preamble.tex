@@ -2,8 +2,6 @@
 % “Tamaño oficio” (21.6 cm x 33.0 cm)
 
 \usepackage[paperwidth=216mm, paperheight=279mm, top=25mm, bottom=30mm, left=20mm, right=20mm, includehead, includefoot]{geometry}
-
-\usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 \usepackage{fontspec}
@@ -12,6 +10,12 @@
 \usepackage{float}  % Allows forcing table placement with [H]
 \usepackage{pdflscape}  % Allows landscape pages
 \usepackage{lastpage}  % Enables total page count (\pageref{LastPage})
+\usepackage{graphicx}  % Ensure images are handled properly
+\usepackage{adjustbox}  % Allows advanced image scaling
+\usepackage{subcaption}  % Enables multiple images side-by-side
+\usepackage{caption}    % Improves figure captions
+\usepackage{multicol}   % Enables multi-column layouts for figures
+\usepackage{placeins}   % Ensures figures stay within their section
 
 % Define Colours
 \definecolor{gobmx_maroon}{RGB}{77, 0, 27}
@@ -60,11 +64,6 @@
 % ---- Add page numbers ----
 
 % Keep existing footer images, but add page numbers to the BOTTOM-RIGHT CORNER
-% Works but can't get it further to the right:
-% \fancyfoot[R]{%
-%     \raisebox{-25mm}{\hspace{5mm} \thepage\ de \pageref{LastPage}}  % Move further right & lower, x of xx style
-% }
-
 % Works:
 \fancyfoot[R]{%
     \raisebox{-15mm}{\hspace{5mm} \thepage}  %x only style
@@ -99,7 +98,6 @@
 
 % ---- Customize List of Figures and Tables appearance ----
 
-% \AtBeginDocument{
 %% This doesn't work here, moved to qmd file:
 % \renewcommand{\listfigurename}{"Lista de Figuras"} % Change "List of Figures" to "Lista de Figuras"
 %% This doesn't work here, moved to qmd file:
@@ -108,71 +106,23 @@
 \renewcommand{\cfttabpresnum}{Tabla~} % Add "Tabla" before number in the TOC
 \setlength{\cftfignumwidth}{5em}
 \setlength{\cfttabnumwidth}{5em}
-% }
 
+
+% ---- Customize Figure and Table Captions ----
+
+% Ensure section titles are respected
+\let\origsection\section
+\renewcommand{\section}{\FloatBarrier\origsection}  % Prevent figures from floating past sections
+
+% Automatically scale all images to xx% text width
+\AtBeginDocument{%
+    \setkeys{Gin}{width=0.6\textwidth}  % Force all images to be xx% of text width
+}
+
+% Align figures
+\let\origsection\section
+\renewcommand{\section}{\FloatBarrier\origsection}  % Prevents figures from floating into footer
 
 % ---- Lansdcape pages, rotate header and footer ----
 
-%% Wrap full-page landscape content in:
-% \begin{landscape}
-% ...
-% \end{landscape}
-
-% % Header and footer would need to be manually redefined though, because fancyhdr customises them (above):
-% \begin{landscape}
-% \fancyhead[C]{\includegraphics[width=\textwidth]{resources/pdf/imss_header.pdf}}
-% \fancyfoot[C]{\includegraphics[width=\textwidth]{resources/pdf/imss_footer.pdf}}
-% \begin{table}[h]
-% \centering
-% \caption{Plazas ocupadas por Localidad}
-% \resizebox{\textwidth}{!}{\input{table.tex}}
-% \end{table}
-% \end{landscape}
-
-
-
-
-
-
-% ---- Patria and Merriweather failed loads: ----
-
-% % Load Noto Sans (Correct Font Names from fc-list)
-% \setmainfont{Noto Sans}[
-%     Path=/Users/antoniob/Library/Fonts/, % Adjust if needed
-%     UprightFont = NotoSans-Regular.ttf,
-%     BoldFont = NotoSans-Bold.ttf,
-%     ItalicFont = NotoSans-Italic.ttf,
-%     BoldItalicFont = NotoSans-BoldItalic.ttf
-% ]
-%
-%
-% % % Load Merriweather (Instead of Patria, can't find it)
-% % \newfontfamily\Merriweather{Merriweather}[
-% %     Path=/Users/antoniob/Library/Fonts/,
-% %     UprightFont = "Merriweather-Regular.ttf",
-% %     BoldFont = "Merriweather-Bold.ttf",
-% %     ItalicFont = "Merriweather-Italic.ttf",
-% %     BoldItalicFont = "Merriweather-BoldItalic.ttf"
-% % ]
-%
-% % Set default fonts for document
-% \setmainfont{Noto Sans} % Body text
-% % \setsansfont{Merriweather} % Titles
-% \setsansfont{Noto Sans} % Titles
-
-
-
-% % Title
-% \titleformat{\title}{\Merriweather\bfseries\fontsize{13pt}{15pt}\selectfont}{\thesection}{1em}{}
-%
-% % Subtitle
-% \titleformat{\subtitle}{\Merriweather\bfseries\fontsize{11pt}{13pt}\selectfont}{\thesection}{1em}{}
-%
-% % Section Headers
-% \titleformat{\section}{\Merriweather\bfseries\fontsize{11pt}{13pt}\selectfont}{\thesection}{1em}{}
-% \titleformat{\subsection}{\Merriweather\bfseries\fontsize{10pt}{12pt}\selectfont}{\thesubsection}{1em}{}
-% \titleformat{\subsubsection}{\Merriweather\bfseries\fontsize{10pt}{12pt}\selectfont}{\thesubsubsection}{1em}{}
-%
-% % Body text
-% \renewcommand{\rmdefault}{\sfdefault} % Set Noto Sans as the default
-% \renewcommand{\normalsize}{\fontsize{10pt}{12pt}\selectfont}
+% ---- Patria and Merriweather failed loads ----

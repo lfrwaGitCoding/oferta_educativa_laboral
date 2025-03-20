@@ -1,27 +1,3 @@
----
-title: "Análisis de la administración del personal - primera fase"
-subtitle: "SIAP - IMSS"
----
-
-**Tipo de plantilla:** {{< meta tipo_plantilla >}}
-
-**Quincena:** {{< meta quincena >}}
-
-**Responsable:** {{< meta responsable >}}
-
-**Contacto:** {{< meta contacto_1 >}}
-
-**Fecha de generación:** `r format(Sys.time(), "%d/%m/%Y %H:%M")`
-
-<!-- Location of this qmd script is: -->
-
-<!-- ~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/template_qmd -->
-
-\newpage
-\tableofcontents
-\newpage
-
-
 ## Introducción
 
 -   **Objetivo**: Definir el propósito del análisis (por ejemplo, analizar patrones en el ausentismo laboral y su relación con métricas de salud).

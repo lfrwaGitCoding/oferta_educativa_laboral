@@ -19,6 +19,10 @@ toc-title: "Tabla de contenidos"
 metadata:
   crossref: true  # Enables table and figure cross-referencing
 
+meta:
+  extended_report: true # execute extended report, customised based on basic qmd, see block, needs 'when-meta'
+# https://quarto.org/docs/authoring/conditional.html#matching-against-metadata
+
 format:
   pdf:
     documentclass: article
@@ -30,7 +34,7 @@ format:
     keep-tex: true  # Helpful for debugging
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):
-tipo_plantilla: "Ordinaria"
+tipo_plantilla: "Ordinaria: Médicos"
 quincena: "17 del 2024"
 responsable: "Unidad de Educación e Investigación en Salud"
 contacto_1: "rosana.pelayo@imss.gob.mx; antonio.berlanga@imss.gob.mx"

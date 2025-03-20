@@ -17,3 +17,5 @@ AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
 
 MarkdownWrap: Sentence
+
+SpellingDictionary: es_ES

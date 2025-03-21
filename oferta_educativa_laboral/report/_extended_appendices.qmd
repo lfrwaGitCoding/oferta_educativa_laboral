@@ -1,0 +1,114 @@
+# Apéndices: tablas extendidas
+
+Las siguientes tablas se presentaron en secciones anteriores en forma resumida y filtrada, típicamente ordenadas por porcentaje de vacantes para descripciones ("localidad") con cierto número mínimo de plazas totales. A contiuación se presentan en su totalidad.
+
+```{r, table_PLZOCU_DESCRIP_LOCALIDAD, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_LOCALIDAD.txt",
+                   "Ocupación de plazas por Localidad",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_NOMBREAR, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_NOMBREAR.txt",
+                   "Ocupación de plazas de acuerdo al Área de Responsabilidad",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_ADSCRIPCION, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_ADSCRIPCION.txt",
+                   "Ocupación de plazas de acuerdo a Adscripción",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_CATEGORIA, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_CATEGORIA.txt",
+                   "Ocupación de plazas de acuerdo a Categoría",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_ULTIMACATEGBASE, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_ULTIMACATEGBASE.txt",
+                   "Ocupación de plazas de acuerdo a la última Categoría de Base",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_DESCRIPCION_SERVICIO, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIPCION_SERVICIO.txt",
+                   "Ocupación de plazas de acuerdo al Servicio",
+                   longtable = TRUE,
+                   font_size = 8
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_DEPENDENCIA, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DEPENDENCIA.txt",
+                   "Ocupación de plazas de acuerdo a la Dependencia",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_MCP, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_MCP.txt",
+                   "Ocupación de plazas de acuerdo a la Marca de Creación de Plaza",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_DESCRIP_HORARIO, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_HORARIO.txt",
+                   "Ocupación de plazas de acuerdo a la Descripción del Horario",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_DATOADIC_CATBASE, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DATOADIC_CATBASE.txt",
+                   "Ocupación de plazas de acuerdo a si el trabajador cuenta con una Categoría de Base - Dato Adicional",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+
+```{r, table_PLZOCU_MCABAJA, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_MCABAJA.txt",
+                   "Ocupación de plazas de acuerdo a Marca de Baja",
+                   longtable = TRUE,
+                   font_size = 9
+                   )
+```
+
+\clearpage
+

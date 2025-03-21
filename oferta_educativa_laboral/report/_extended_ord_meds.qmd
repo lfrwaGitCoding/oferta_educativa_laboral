@@ -1,274 +1,367 @@
-## Análisis Exploratorio de Datos: Talento Humano en el IMSS
+# Análisis Exploratorio de Datos: Talento Humano en el IMSS
 
-### Resumen Ejecutivo
+## Resumen Ejecutivo
 
 El Instituto Mexicano del Seguro Social (IMSS) brinda atención médica a aproximadamente 65 millones de mexicanos, lo que hace que la gestión de talento humano sea fundamental para su eficiencia y sostenibilidad.
 
-Este análisis exploratorio de datos se centra en la distribución del personal médico, incluyendo edad, género, especialidades y tasas de vacantes, con el fin de identificar necesidades no cubiertas y orientar decisiones de política pública.
+Este análisis exploratorio de datos se centra en la distribución del personal médico, incluyendo edad, género, especialidades y tasas de vacantes, con el fin de identificar necesidades no cubiertas y orientar decisiones de política pública. Está basado en la quincena 17 del 2024.
 
 El informe sintetiza datos de la fuerza laboral del IMSS, abarcando características demográficas, clasificación de puestos, variables financieras, de rotación y tendencias temporales (análisis de frecuencias de fechas). Los datos provienen del Sistema de Información de Administración del Personal (SIAP) de la Unidad de Personal, Dirección de Administración. 
 
 Principales Observaciones:
 - Demografía: Predominio de profesionales altamente calificados y una fuerza laboral centrada en edades de media carrera (40–50 años). Esto sugiere una ola de jubilaciones que podría intensificar las brechas existentes en la dotación de personal.
 
+- Género: *xxx* % de los puestos ocupados por hombres, con tasas de vacantes más altas para médicas (*xxx* %). Esto plantea interrogantes sobre la equidad de género en la contratación y retención.
+
 - Variabilidad significativa en la dotación de personal en diferentes regiones y especialidades, con mayor concentración en zonas urbanas (por ejemplo, Ciudad de México, Estado de México, Jalisco) en comparación con estados rurales o menos densamente poblados (por ejemplo, Campeche, Zacatecas), sugiriendo posibles brechas en acceso y atención.
 
-- Distribución por Especialidad y Rol: Altos niveles de ocupación en roles de Medicina General, Familiar y Urgencias contrastan con el **xxx** % de vacantes en algunas áreas especializadas (por ejemplo, **xxx** Cirugía Ortopédica, Cardiología, Neurología), lo que indica posibles desafíos de reclutamiento.
+- Distribución por Especialidad y Rol: Altos niveles de ocupación en roles de Medicina General, Familiar y Urgencias contrastan con el *xxx* % de vacantes en algunas áreas especializadas (por ejemplo, *xxx* Cirugía Ortopédica, Cardiología, Neurología), lo que indica posibles desafíos de reclutamiento.
 
 - Clasificación de Puestos y Estabilidad Contractual: Los puestos clave, especialmente aquellos clasificados como “Base” o “Definitiva”, se encuentran casi totalmente ocupados, mientras que las posiciones más provisionales (por ejemplo, “SinP” en PTO o “SIN RJP”) permanecen en gran medida vacantes.
 
-- Tendencias Temporales: Las frecuencias de fechas revelan que la mayoría de los puestos tienen asignada una fecha de finalización muy lejana (“2050-01”), lo que indica una política de dotación a largo plazo. Paralelamente, las fechas de ingreso, inicio, movimiento, nominación y proyección de jubilación ofrecen información sobre la dinámica actual y futura de la fuerza laboral.
+- Tendencias Temporales: Las frecuencias de fechas revelan que la mayoría de los puestos tienen asignada una fecha de finalización muy lejana (*xxx* “2050-01”), lo que indica una política de dotación a largo plazo. Paralelamente, las fechas de ingreso, inicio, movimiento, nominación y proyección de jubilación ofrecen información sobre la dinámica actual y futura de la fuerza laboral.
 
 Principales Recomendaciones:
 - Necesidad de un análisis más profundo: Los datos longitudinales de los últimos 5 años podrían proporcionar información clave sobre tendencias en la fuerza laboral, jubilaciones, rotación y otros factores.
 
 La dirección del IMSS puede desarrollar intervenciones estratégicas, tales como incentivos de contratación para especialidades y regiones con altos niveles de vacantes, mejoras en políticas de retención y planificación estratégica para abordar futuras jubilaciones. Este análisis preliminar constituye la base para estudios más exhaustivos.
 
-### Introducción
+\newpage
 
-<!-- TO DO conitnue here -->
+## Introducción
 
-Este análisis tiene como objetivo apoyar la política nacional de asignación de la fuerza laboral médica mediante el examen de múltiples dimensiones de los datos del personal de salud del IMSS. Los conjuntos de datos incluyen análisis independientes de:
+La fuerza laboral del IMSS es un pilar fundamental para la atención médica en México. Este análisis evalúa la distribución del personal médico, brechas y desafíos. Con un enfoque epidemiológico, examinamos los factores de tiempo, persona y lugar con relación a disponibilidad de plazas.
+
+El objetivo fundamental es apoyar la política nacional de asignación de la fuerza laboral médica mediante el examen de múltiples dimensiones de los datos del personal médico, principalmente:
+
 - La demografía de la fuerza laboral (educación, género, edad)
-- La distribución por especialidad y unidad administrativa
+- La distribución por especialidad, localidad y unidad administrativa
 - La clasificación de puestos y el análisis de vacantes (plazas ocupadas vs. vacantes)
 - Variables financieras y de rotación
 - Tendencias temporales derivadas de las frecuencias de fechas clave
 
-La fuerza laboral del IMSS es un pilar fundamental para la atención médica en México.
-Este análisis evalúa la distribución del personal, brechas y desafíos en el sistema de salud del IMSS.
-Con un enfoque epidemiológico, se examinan los factores de tiempo, persona y lugar que afectan la estabilidad del personal médico.
+Esta primera fase se centra en un análisis exploratorio para proporcionar una visión general, identificando áreas críticas de necesidad y proponiendo recomendaciones para mejorar la distribución y retención del talento humano en el sistema de salud.
 
-El conjunto de datos se centra en plazas en lugar de individuos, proporcionando información sobre tasas de vacantes, carencias en especialidades y distribución geográfica.
-Comprender estos patrones es clave para la contratación, retención y asignación equitativa de recursos.
+En las siguientes fases exploraremos cambios en el tiempo (análisis de múltiples quincenas) y preguntas clave sobre jubilaciones, estabilidad laboral y equidad de género, entre otras. Comprender estos patrones es clave para la contratación, retención y asignación equitativa de recursos. Este análisis es fundamental para la planificación estratégica y la toma de decisiones informadas. 
 
-### Fuentes de Datos y Metodología
+## Fuentes de Datos y Metodología
 
-Los análisis se basan en resultados de análisis exploratorios de datos (EDA) —incluyendo gráficos, tablas y distribuciones de frecuencia— generados a partir del conjunto de datos del IMSS. Se han resumido datos para variables como educación (Escolaridad), género (Sexo), edad (Edad), especialidad (Nombrear), adscripción administrativa y diversos marcadores temporales (por ejemplo, FECHAING, FECHAINI, FECHAFIN). Los análisis bivariados comparan las “plazas ocupadas” frente a las “plazas vacantes” a lo largo de múltiples dimensiones, mientras que las tablas de frecuencia de fechas proporcionan información temporal esencial para la planificación de la fuerza laboral.
+Los análisis se basan en resultados descriptivos incluyendo gráficos, tablas y distribuciones de frecuencia, provenientes de 94 variables del SIAP que son utilizados con frecuencia por la Unidad de Personal. Encontramos que la mayoría de las variables tienen información consistente, de calidad y en general con pocos datos faltantes. La limpieza de datos se centró en la eliminación de columnas redundantes y la estandarización de formatos de fecha, marcadores de valores faltantes, y edades improbables o erróneas (<15 o >95 años). Redujimos el conjunto de datos a 53 variables, removiendo columnas con información redundante o repetitiva, pero manteniendo el mayor número de variables informativas.
 
+Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), edad (EDAD), especialidad (NOMBREAR), adscripción administrativa y diversos marcadores temporales (por ejemplo, FECHAING, FECHAINI, FECHAFIN). El conjunto de datos se centra en las “plazas” (puestos) en lugar de empleados individuales, registrando si cada posición está ocupada o vacante. La mayoría de las tablas se basan en un análisis bivariado de plazas ocupadas vs. vacantes por cada variable adicional disponible.
 
-2.1 Descripción General de los Datos y Metodología
-- Enfoque de Datos: El conjunto de datos se centra en las “plazas” (puestos) en lugar de empleados individuales, registrando si cada posición está ocupada (ocupadas) o vacante (vacantes).
-- Metodología: Ambos análisis emplearon estadísticas descriptivas (conteos, distribuciones, tendencias) para identificar patrones en edad, especialidad y ubicación. Se adoptó una perspectiva epidemiológica, examinando el tiempo, el lugar y la persona para comprender cómo se asignan los recursos humanos en el país.
-- Limitaciones: Ambos análisis se basaron en datos limitados o fragmentados. Para una exploración completa, se requiere un conjunto de datos integral, que incluya los 5 años de observaciones quincenales.
+## Hallazgos Clave: Estadísticas, Demografía y Distribución del Personal Médico
 
-### Hallazgos Clave
+<!-- TO DO review after placeholder check -->
 
-- Déficit en especialidades: *xxx* presenta la tasa de vacantes más alta (*xxx* %), lo que genera preocupaciones sobre el acceso a la *xxx*.
-- Desigualdades regionales: Estados como *xxx* (*xxx* % de vacantes) y *xxx* (*xxx* %) presentan un déficit crítico de personal, mientras que *xxx* tiene la menor tasa de vacantes (*xxx* %).
-- Envejecimiento del personal: La mayoría de los médicos tienen entre *xxx* y *xxx* años, con una menor proporción por encima de *xxx* años, lo que sugiere una próxima ola de jubilaciones.
-- Distribución de género: Los médicos varones ocupan la mayoría de los puestos (*xxx* %), mientras que las vacantes para médicas son proporcionalmente más altas (*xxx* %), lo que sugiere problemas de retención.
-- Ausentismo y antigüedad: La mayoría de los médicos tienen entre *xxx*1,000 y 6,000 días de servicio, pero un pequeño grupo muestra *xxx*altas tasas de ausentismo, lo que podría indicar *xxx* agotamiento, enfermedad o insatisfacción laboral.
+- **Nivel educativo (Escolaridad)**:  
+  La fuerza laboral médica presenta un alto nivel educativo, predominantemente con Licenciatura Completa y una representación significativa de Especialidad Completa. Esto refleja una fuerza laboral altamente calificada, mientras que personal con menor nivel educativo es mínimo, sugiriendo que roles administrativos o de apoyo podrían analizarse separadamente.
 
-1.	Tasas de Vacantes y Regiones con Déficit de Personal
-- Algunas especialidades y ubicaciones muestran tasas de vacantes persistentemente altas. Se recomienda explorar estrategias de contratación focalizadas, como incentivos financieros y desarrollo profesional.
-	2.	Distribución por Edad y Riesgo de Jubilaciones
-- Con una gran parte del personal en mitad de carrera, las jubilaciones futuras podrían generar cuellos de botella en la dotación de personal.
-- Estrategias proactivas pueden incluir programas de mentoría, jubilación escalonada o formación acelerada.
-	3.	Desbalance de Género en Algunas Especialidades
-- Aunque el equilibrio de género general es cercano a 55%–45%, ciertos campos pueden estar dominados por un solo género. Se requieren estudios adicionales sobre barreras en el acceso profesional o factores culturales.
-	4.	Disparidades Regionales
-- La concentración del personal en zonas urbanas significa que las áreas rurales corren el riesgo de carecer de cobertura adecuada.
-- Se recomienda implementar bonos de retención, asistencia para vivienda, o oportunidades de crecimiento profesional para atraer personal a zonas desatendidas.
-	5.	Enfoque Sistémico en “Plazas”
-- Planificar en función de puestos (plazas) en lugar de hacer seguimiento a carreras individuales garantiza una visión más amplia sobre la cobertura del sistema, la asignación presupuestaria y los recursos disponibles.
+- **Distribución por edad y riesgo de jubilaciones**:  
+  La mayoría del personal tiene edades intermedias, principalmente entre *xxx*–*xxx* años, con una reducción significativa después de los 60 años. Esto anticipa una próxima ola de jubilaciones, especialmente relevante en áreas clínicas críticas, subrayando la necesidad de planificación proactiva y reclutamiento estratégico de personal joven para evitar futuros déficits.
 
-### Implicaciones Estratégicas
+- **Distribución por género y desbalances específicos**:  
+  Las mujeres constituyen cerca del 55% del total del personal médico, mostrando equilibrio general de género. No obstante, en algunas especialidades existen desequilibrios extremos (>90% de dominancia de un género), y las vacantes para médicas son proporcionalmente más altas (*xxx*%), sugiriendo potenciales barreras culturales o institucionales que requieren estudios específicos y políticas dirigidas de retención.
 
-1. Abordar urgentemente la escasez de médicos de *xxx*, especialmente en *xxx*.
-2. Aplicar incentivos de reclutamiento específicos en regiones con déficit de personal (*xxx*).
-3. Utilizar análisis predictivo para anticipar jubilaciones y prevenir crisis de personal.
-4. Desarrollar políticas inclusivas de género para mejorar la distribución y retención entre médicas y médicos a través de las diferentes especialidades.
+- **Distribución por especialidad y tipo de servicio**:  
+  Las especialidades más comunes (Medicina General, Pediatría, Gineco-Obstetricia) tienen alta cobertura, mientras que especialidades críticas como Cirugía Ortopédica, Cardiología, Neurología y Psiquiatría presentan tasas elevadas de vacantes (*xxx*%), llegando hasta el 100% en algunos casos (p.ej., PSIQUIATRÍA). Esto implica desafíos importantes para la provisión de servicios médicos especializados y requiere estrategias focalizadas de reclutamiento.
 
-El análisis futuro se enfocará en tendencias a lo largo de los últimos cinco años para identificar dinámicas laborales y respaldar recomendaciones de política basadas en evidencia.
+- **Distribución geográfica y desigualdades regionales**:  
+  Existe una concentración significativa de personal médico en grandes ciudades como Ciudad de México, Jalisco y Nuevo León, en contraste con estados como *xxx* (*xxx*% vacantes) y *xxx* (*xxx*%) que presentan déficits críticos. Aunque localidades como Acapulco o Ciudad Victoria tienen buena cobertura, numerosas zonas rurales o remotas permanecen desatendidas, destacando la necesidad de incentivos específicos (financieros, vivienda) para la redistribución regional del personal médico.
 
-- Reclutamiento Focalizado:
-Enfocarse en las especialidades con menor cobertura (por ejemplo, PSIQUIATRÍA) y en las regiones con mayores tasas de vacantes.
-- Estabilidad Contractual y de la Fuerza Laboral:
-Mantener una alta ocupación en los puestos permanentes, mientras se revisan las estrategias para los puestos provisionales.
-- Redistribución Geográfica:
-Abordar las disparidades regionales implementando incentivos para el reclutamiento en áreas rurales o desatendidas.
-- Planificación de Sucesión:
-Utilizar las proyecciones de jubilación para pronosticar la rotación y ampliar los programas educativos y de residencia.
-- Benchmarking Financiero:
-Investigar las disparidades salariales y alinear los incentivos financieros con los estándares internacionales para garantizar una remuneración competitiva.
-- Estrategia Temporal:
-Analizar las tendencias en las fechas de contratación, movimiento y confirmación para afinar los ciclos de reclutamiento y los ajustes de política.
+- **Antigüedad, ausentismo y estabilidad laboral**:  
+  La mayoría del personal acumula entre 1,000 y 6,000 días de servicio con bajos niveles de ausentismo. No obstante, se observa un grupo reducido con altas tasas de ausentismo, lo cual podría reflejar problemas de agotamiento laboral, enfermedad o insatisfacción laboral. Esto demanda investigaciones específicas para desarrollar políticas efectivas de bienestar y retención.
 
-	1.	Análisis Longitudinal y Predictivo
-- Utilizar los 5 años de datos quincenales para identificar tendencias en vacantes, contrataciones y jubilaciones.
-- Modelos predictivos podrían ayudar a anticipar déficits o excedentes de personal.
-	2.	Reclutamiento y Retención Focalizados
-- Priorizar regiones y especialidades con altas tasas de vacantes (ejemplo, zonas rurales o campos especializados).
-- Ofrecer incentivos competitivos (financieros, vivienda, desarrollo profesional) para atraer personal a áreas con mayor necesidad.
-	3.	Mapeo con Sistemas de Información Geográfica (GIS)
-- Visualizar las plazas ocupadas vs. vacantes en cada estado y municipio.
-- Identificar con precisión las zonas de mayor escasez.
-	4.	Estrategias de Género y Diversidad
-- Investigar barreras para grupos subrepresentados en ciertos campos médicos.
-- Fomentar programas de mentoría, políticas de trabajo flexible y estrategias de equidad de género.
-	5.	Política de Recursos Humanos Basada en Datos
-- Integrar datos de vacantes con indicadores de salud, para evaluar si la falta de personal afecta la calidad del servicio.
-- Desarrollar planes de sucesión, alineados con tendencias de edad y rotación.
+- **Categorías y clasificación de puestos**:  
+  Existe predominancia en la cobertura de puestos básicos (operativos), especialmente médicos generales y familiares, mientras que posiciones especializadas, investigativas o administrativas presentan mayores tasas de vacantes. Estrategias diferenciadas para puestos de alta especialización o confianza podrían optimizar la eficiencia y cobertura.
 
-### Estadísticas Clave y Distribución del Personal
+- **Asignación administrativa y estructura organizacional**:  
+  Las instituciones grandes y hospitales generales tienen mejor dotación de personal, mientras que unidades administrativas pequeñas presentan tasas muy altas de vacantes (hasta 100%). Esto sugiere la necesidad de evaluar y optimizar roles administrativos y redistribuir recursos humanos según las necesidades operativas específicas.
 
-| Variable              | Hallazgos                                                    | Implicaciones          |
-|-----------------------|-------------------------------------------------------------------------------------------|------------------------|
-| Distribución por edad | La mayoría tiene entre *xxx*-*xxx* años, con una marcada disminución después de los *xxx* | Se espera una ola de jubilaciones; se requiere planificación proactiva. |
-| Distribución por género | Los hombres ocupan *xxx* % de las plazas; las vacantes de médicas son *xxx* (*xxx* %). | Posibles barreras de género en la contratación o retención. |
-| Escasez de especialidades | *xxx* (*xxx* % vacantes), seguida de *xxx* y *xxx* | Crisis en atención primaria *xxx*, con impacto en el acceso a la salud. |
-| Distribución geográfica | *xxx* (*xxx* %) y *xxx* (*xxx* %) presentan las tasas más altas de vacantes. | Áreas no urbanas gravemente desatendidas; se necesitan incentivos específicos. |
-| Tendencias de ausentismo | La mayoría de los médicos tienen bajo ausentismo, pero un grupo muestra tasas muy altas. | Puede indicar agotamiento, enfermedades, insatisfacción o malas condiciones laborales. |
+- **Distribución por turnos y horarios laborales**:  
+  Los turnos tradicionales (matutino, vespertino, nocturno) muestran buena ocupación, aunque horarios móviles o especializados tienen mayores vacantes. Una revisión estratégica de asignación horaria podría mitigar estos déficits específicos.
 
+- **Variables financieras e implicaciones salariales**:  
+  Se identifican distribuciones salariales sesgadas hacia valores bajos, con valores atípicos elevados en algunos puestos. Esto podría reflejar disparidades significativas, sugiriendo la importancia de realizar comparaciones con estándares internacionales para mejorar la competitividad salarial.
 
-	1.	Edad:
-- La mayoría del personal se encuentra en el rango de 30 a 50 años.
-- Notable disminución en el número de médicos mayores de 60 años, lo que sugiere que las jubilaciones podrían acelerar la escasez de personal.
-	2.	Género:
-- Las mujeres representan aproximadamente 55% de la fuerza laboral; los hombres, alrededor del 45%.
-- Algunas especialidades pueden mostrar predominio de un género, lo que justificaría estudios adicionales sobre posibles barreras en el acceso o la retención.
-	3.	Especialidades Médicas:
-- Más comunes: Medicina General, Pediatría, Gineco-Obstetricia.
-- Altas Vacantes: Posiblemente en Cirugía Ortopédica, Cardiología y Neurología. Se necesita más información para completar el panorama.
-- Identificar especialidades con tasas de vacantes consistentemente altas es clave para garantizar una cobertura adecuada.
-	4.	Distribución Geográfica:
-- Los centros urbanos (por ejemplo, Ciudad de México, Estado de México, Jalisco) reportan mayor concentración de personal médico.
-- Regiones como Acapulco o Ciudad Victoria (según algunos fragmentos de datos) muestran dotación relativamente robusta, pero muchas áreas rurales o remotas pueden presentar déficits significativos.
-- Necesidad de Mapeo: Un enfoque basado en Sistemas de Información Geográfica (GIS) podría ayudar a visualizar dónde se encuentran las mayores brechas en relación con la demanda de la población.
+- **Fechas clave y dinámicas temporales**:  
+  Las fechas de ingreso y movimiento de personal muestran períodos históricos clave de alta contratación, mientras la mayoría de las plazas tienen una fecha de finalización a largo plazo (2050-01), reflejando políticas estables de contratación. Eventos puntuales (nominación, confirmación, límite de ocupación) revelan ciclos específicos de actividad administrativa que pueden aprovecharse para ajustar políticas laborales estratégicamente.
 
-### Demografía y Distribución de la Fuerza Laboral
+- **Proyección de jubilaciones y planificación futura**:  
+  Aunque relativamente poco frecuente, la fecha de proyección de jubilación es un indicador esencial para la sucesión laboral. Su análisis sistemático podría prever déficits potenciales y guiar planes efectivos de capacitación, reclutamiento y sucesión en puestos clave.
 
-| **Variable** | **Hallazgos Clave** | **Implicaciones** |
-|--------------|---------------------|-------------------|
-| Nivel Educativo (Escolaridad) | La mayoría del personal posee una “Licenciatura Completa”; la “Especialidad Completa” también está bien representada; los niveles educativos inferiores tienen una representación mínima. | Indica una fuerza laboral altamente calificada; los roles no clínicos o de apoyo podrían gestionarse en conjuntos de datos separados. |
-| Distribución por Género (Sexo) | La representación femenina es mayor que la masculina; los datos están completos. | Se mantiene el equilibrio de género, permitiendo la implementación de políticas dirigidas sin preocupaciones significativas de disparidad. |
-| Distribución por Edad (Edad) | La edad se concentra en el rango de 40–50 años, con una proporción notable de empleados mayores de 60 años. | Sugiere la necesidad de una planificación proactiva de la sucesión y el reclutamiento de profesionales más jóvenes. |
-| Especialidad (Nombrear) | Gran variabilidad: por ejemplo, “PSIQUIATRÍA” está 100% vacante, mientras que “MEDICINA INTERNA” muestra aproximadamente un 80% de ocupación. | Se necesita un reclutamiento focalizado en especialidades con altos niveles de vacantes para garantizar una cobertura clínica equilibrada. |
-| Tipo de Servicio (Descripción Servicio) | La mayoría del personal trabaja en hospitales generales y UMFs; los servicios especializados tienen niveles de dotación más bajos. | Las brechas en los servicios especializados pueden requerir estrategias específicas de reclutamiento y retención. |
-| Distribución Geográfica (Delegación & Localidad) | Los centros urbanos (por ejemplo, Ciudad de México, Jalisco, Nuevo León) están bien dotados, mientras que las municipalidades rurales/pequeñas tienen menor presencia de personal. | La redistribución estratégica y el reclutamiento dirigido en regiones desatendidas son necesarios para mejorar la equidad. |
-| Asignación Administrativa (Adscripción & Dependencia) | Las unidades administrativas pequeñas suelen mostrar un 100% de vacantes, mientras que las instituciones más grandes presentan una ocupación mixta. | La optimización de los roles administrativos podría mejorar la asignación general de recursos y la eficiencia operativa. |
-| Categorías y Clasificación de Puestos (CATEGORIA, DESCRIP_CLASCATEG) | Dominio de médicos generales y de medicina familiar; otras categorías (por ejemplo, investigadores, coordinadores) muestran mayores tasas de vacantes. | Es necesario centrar los esfuerzos de reclutamiento y retención en las especialidades con menor ocupación para equilibrar la distribución de la fuerza laboral. |
-| Tipos de Puesto y Niveles de Confianza (DESCRIP_TIPO_DE_PLAZA, TipoConfianza, GrupoTipoPlaza) | Los puestos de rutina “Operativa Base” tienen bajas tasas de vacantes; los puestos especializados o de “Confianza” tienen tasas de vacantes más altas. | Se pueden requerir estrategias de contratación diferenciadas para puestos de rutina en comparación con los especializados o de confianza. |
-| Turnos y Estructura de Horarios de Trabajo (DESCRIP_TURNO, DESCRIP_HORARIO) | La mayoría de los turnos (matutino, vespertino, nocturno) tienen alta ocupación, aunque algunos horarios móviles/especializados muestran tasas de vacantes ligeramente mayores. | Administrar y posiblemente redistribuir la asignación de turnos podría ayudar a cubrir los horarios más difíciles de ocupar. |
-| Códigos Detallados de Puestos (MCABAJA, MCP) | En MCABAJA, la mayoría de los códigos están 100% vacantes, con algunas excepciones; en MCP, los códigos numéricos más bajos presentan mayores vacantes que los más altos. | Estas diferencias pueden identificar puestos priorizados para dotación inmediata frente a aquellos planificados para futuras contrataciones. |
-| Vigencia de la Plaza (VIGENCIAPTO) | Los puestos “VIGENTES” tienen aproximadamente un 8.25% de vacantes; los puestos “NO VIGENTES” están casi totalmente ocupados. | Enfocar los esfuerzos de reclutamiento en los puestos activos (VIGENTES), mientras que los puestos inactivos pueden mantenerse para fines de registro. |
-| Variables Adicionales de Puestos (NOMBREAR, PLZAUT, PLZSOB, PTO, RJP, TipoMcaOcup) | Las clasificaciones por especialidad y tipo de puesto revelan diferencias marcadas en las tasas de vacantes; los puestos permanentes (Definitiva) se priorizan sobre los provisionales. | Estos hallazgos respaldan estrategias dirigidas de reclutamiento y compensación para garantizar la cobertura de los puestos clave. |
-| Antigüedad y Ausentismo (ANT_DIAS, FALTASACUMULADAS) | Muchos nuevos empleados con menor antigüedad promedio; niveles generales de ausentismo bajos, aunque con algunos valores atípicos elevados. | Monitorear la rotación y el ausentismo es esencial para garantizar la estabilidad de la fuerza laboral y abordar posibles problemas. |
-| Indicadores Financieros (IMP_010, IMP_024, IMP_035, IMP_037, IMP_SDO) | Distribuciones sesgadas a la derecha, con la mayoría de los valores bajos y algunos valores atípicos elevados. | La variabilidad puede indicar disparidades salariales; se recomienda una comparación adicional con estándares internacionales. |
-| Fecha de Finalización (FECHAFIN) | La gran mayoría de los puestos tienen asignada la fecha “2050-01” (marcador para contratos a largo plazo); pocos puestos tienen fechas de finalización anteriores. | Refleja una política de dotación de personal a largo plazo, aunque con algunas excepciones para roles temporales. |
-| Fecha de Ingreso (FECHAING) | Las fechas van desde finales de los años 60 hasta proyecciones futuras, con una mayor frecuencia en décadas recientes. | Demuestra el crecimiento organizacional y proporciona contexto sobre la estructura de edad y antigüedad de la fuerza laboral. |
-| Fecha de Inicio Oficial (FECHAINI) | Rango similar al de FECHAING; se observan agrupaciones que indican períodos de alta activación de plazas. | Útil para analizar tendencias históricas de contratación y alinear futuras estrategias de reclutamiento con patrones pasados. |
-| Fecha de Límite de Ocupación (FECHALIMOCU) | Frecuencias esporádicas que indican ajustes intermitentes en los límites de ocupación. | Probablemente asociados con procesos de reestructuración o revisiones de la capacidad de personal; informan el momento oportuno para ajustes de política. |
-| Fecha de Movimiento (FECHAMOV) | Frecuencias variables con picos que corresponden a períodos de reasignaciones o reorganizaciones internas. | Proporciona información sobre la movilidad de la fuerza laboral y los cambios internos dinámicos. |
-| Fecha de Nominación (FECHANOMINACION) | Concentrada en años recientes, reflejando los ciclos modernos de reclutamiento y nominación. | Indica la puntualidad de los procesos de contratación y puede alinearse con cambios en la política de dotación. |
-| Fecha de Ocupación (FECHAOCUP) | Se registra de forma dispersa como un evento único por puesto, abarcando fechas históricas y proyectadas. | Sirve como un registro histórico de cuándo se ocuparon los puestos, lo que ayuda en el análisis de tendencias de dotación. |
-| Fecha de Primera Confirmación (FECHAPRIMERCONFZA) | Eventos únicos de confirmación por puesto, distribuidos en un amplio rango de fechas. | Ayuda a identificar cuándo se validaron inicialmente los puestos, lo que puede vincularse con cambios en las políticas de contratación y confirmación. |
-| Fecha de Proyección de Jubilación (FECHAPROBJUB) | Frecuencias bajas pero esenciales para la planificación de la sucesión; las fechas van desde mediados de los años 90 hasta proyecciones futuras. | Fundamental para la planificación de la sucesión y la anticipación de la rotación futura de personal. |
+## Implicaciones Estratégicas: Perspectivas y Áreas de Mejora
 
-### Perspectivas sobre la Fuerza Laboral y Áreas de Mejora
+El análisis exploratorio identificó desafíos estratégicos prioritarios que demandan acciones inmediatas para asegurar la sostenibilidad operativa y mejorar la cobertura sanitaria del IMSS. Las áreas clave y recomendaciones asociadas son:
 
-#### Brechas Regionales de Personal
+### 1. Reclutamiento y Retención Focalizados en Especialidades y Regiones
+- Especialidades críticas como PSIQUIATRÍA, Cirugía Ortopédica, Cardiología y *xxx* presentan altas tasas de vacantes. En contraste, Medicina General y *xxx* muestran relativa estabilidad.
+- Regiones rurales (*xxx*, *xxx*) sufren una grave falta de personal, mientras que zonas urbanas tienen mejor cobertura, lo que sugiere una distribución inequitativa.
 
-- Las tasas de vacantes más altas se encuentran en *xxx* y otros estados rurales, lo que compromete el acceso a la salud.
-- Las zonas urbanas (*xxx*) tienen mejor cobertura, lo que sugiere desbalances en la asignación de recursos.
+**Recomendaciones:**  
+- Implementar incentivos financieros específicos, asistencia para vivienda, oportunidades de desarrollo profesional y becas de formación para atraer personal especializado a regiones con mayores vacantes.
+- Explorar la telemedicina como solución complementaria para extender el acceso a servicios médicos especializados en áreas remotas.
 
-Sugerencia de Política:\
-- Implementar incentivos financieros y de carrera (mejores salarios, apoyo para vivienda, becas) para atraer médicos a regiones desatendidas.
-- Fortalecer programas de formación en áreas no urbanas para desarrollar una fuerza laboral local.
+### 2. Planificación Proactiva de Jubilaciones y Sucesión Laboral
+- Una proporción significativa del personal médico tiene entre *xxx* y *xxx* años. Las jubilaciones previstas después de los *xxx* años podrían crear cuellos de botella críticos en algunas especialidades y regiones.
 
-#### Escasez en Especialidades
+**Recomendaciones:**  
+- Desarrollar modelos predictivos con datos longitudinales (últimos cinco años) para anticipar jubilaciones y ajustar planes de sucesión.
+- Implementar programas específicos como jubilación escalonada, formación acelerada y mentoría para asegurar transiciones efectivas y mantener continuidad en la atención médica.
 
-- La atención primaria está en riesgo, con *xxx* entre las más afectadas.
-- En contraste, *xxx* presentan estabilidad relativa.
+### 3. Equidad de Género y Promoción de Diversidad
+- Aunque las mujeres constituyen aproximadamente el 55% de la fuerza laboral médica, presentan tasas de vacantes proporcionalmente mayores en algunas especialidades (*xxx*%), sugiriendo barreras relacionadas con políticas laborales, interrupciones de carrera o factores culturales.
 
-Sugerencia de Política:\
-- Aumentar cupos de formación y becas en *xxx*.
-- Explorar soluciones de telemedicina para ampliar el acceso a especialistas en zonas remotas.
+**Recomendaciones:**  
+- Desarrollar políticas inclusivas, implementar horarios laborales flexibles y ofrecer programas de mentoría específicamente dirigidos a médicas.
+- Realizar análisis específicos sobre tendencias de género en contratación, promoción y retención.
 
-#### Planificación de Jubilaciones y Reemplazos
+### 4. Redistribución Geográfica Mediante Tecnología GIS
+- Se observa una marcada concentración de personal médico en áreas urbanas (Ciudad de México, Jalisco, *xxx*), en contraste con graves déficits en áreas rurales o remotas.
 
-- La mayoría de los médicos están en mitad de carrera (*xxx* años), pero las jubilaciones después de los *xxx* podrían agravar la escasez de personal.
-- Anticipar las jubilaciones es clave para prevenir brechas de personal.
+**Recomendaciones:**  
+- Utilizar tecnologías de Sistemas de Información Geográfica (GIS) para mapear y visualizar claramente las áreas con mayor déficit, permitiendo una asignación más precisa y estratégica de los recursos humanos.
+- Fortalecer programas locales de formación médica para desarrollar una fuerza laboral sostenible en zonas desatendidas.
 
-Sugerencia de Política:\
-- Desarrollar modelos predictivos para proyectar tendencias de jubilación.
-- Crear planes de sucesión para garantizar transiciones laborales sin crisis.
+### 5. Estabilidad Contractual y Gestión Estratégica por Plazas
+- Se observa alta ocupación en plazas permanentes, pero una tasa elevada de vacantes en puestos provisionales o administrativos menores.
 
-#### Disparidades de Género
+**Recomendaciones:**  
+- Priorizar la ocupación permanente en plazas críticas, revisando y optimizando regularmente contratos provisionales.
+- Centrar la planificación estratégica en plazas (puestos), en lugar de individuos específicos, para lograr mayor eficiencia en la gestión del presupuesto y recursos.
 
-- Las mujeres ocupan un alto porcentaje de plazas médicas, pero las tasas de vacantes para médicas son más altas. *xxx*
-- Posibles barreras: políticas laborales, interrupciones de carrera (ej. maternidad), o factores culturales.
+### 6. Optimización Temporal de Reclutamiento y Contratación
+- Las fechas clave de contratación, nominación y movimiento muestran patrones históricos que podrían aprovecharse para mejorar ciclos de reclutamiento y gestión de recursos humanos.
 
-Sugerencia de Política:\
-- Implementar horarios flexibles y programas de mentoría para médicas.
-- Analizar tendencias de género en contratación y promoción profesional.
+**Recomendaciones:**  
+- Analizar datos históricos y tendencias recientes para ajustar y optimizar calendarios de reclutamiento y contratación.
+- Mejorar la planificación anticipada y la comunicación interna para reducir tiempos muertos y mejorar la eficiencia operativa.
+
+Este enfoque integral permitirá al IMSS traducir hallazgos analíticos en acciones estratégicas concretas, mejorando significativamente la sostenibilidad del sistema de salud y optimizando la distribución del talento humano.
 
 ### Preguntas de Seguimiento e Hipótesis de Investigación
 
-Este análisis plantea preguntas clave para futuras investigaciones:
+Este análisis genera interrogantes clave que orientarán futuras investigaciones, ayudando a optimizar las políticas de recursos humanos en el IMSS y mejorar la atención sanitaria. Las principales líneas de investigación y preguntas específicas incluyen:
 
-1. ¿Qué factores contribuyen a las vacantes en *xxx*?
-    - ¿Son los bajos salarios, alta carga laboral o falta de capacitación las causas principales?
-2. ¿Se pueden predecir las jubilaciones en función de la antigüedad en el servicio?
-    - ¿Cómo afectará esto a los niveles de personal en los próximos 5-10 años?
-3. ¿Qué intervenciones pueden mejorar la retención de médicos en zonas no urbanas?
-    - ¿Son más efectivos los incentivos financieros o los programas de desarrollo profesional?
-4. ¿Cómo se relacionan los patrones de ausentismo con la insatisfacción laboral?
-    - ¿Podría una alta tasa de ausencias indicar agotamiento o malas condiciones laborales?
+**1. Factores Asociados a Altas Tasas de Vacantes**
+- ¿Qué elementos específicos (salarios bajos, alta carga laboral, falta de capacitación, ubicación geográfica) explican las altas tasas de vacantes en especialidades críticas (*xxx*) y regiones específicas?
 
-Estas preguntas guiarán futuras investigaciones y políticas para optimizar la fuerza laboral del IMSS y mejorar la atención médica en México.
+**2. Predicción de Jubilaciones y Gestión Proactiva**
+- ¿Es posible desarrollar modelos predictivos, basados en antigüedad y edad, para anticipar futuras jubilaciones en un horizonte de 5-10 años?
+- ¿Qué impacto tendrán estas jubilaciones previstas sobre la cobertura en distintas especialidades y regiones?
 
-1.	Predicción de Jubilaciones
-- ¿Podemos crear modelos que anticipen olas de jubilaciones según edad y años de servicio?
-- ¿Cómo impactará esto a cada especialidad o región?
-	2.	Factores que Impulsan las Vacantes
-- ¿Cuáles son los principales factores que influyen en altas tasas de vacantes? (salario, ubicación, carga laboral, etc.)
-	3.	Impacto de los Incentivos de Contratación
-- ¿Qué tipo de incentivos resultan más efectivos para atraer profesionales a zonas desatendidas?
-	4.	Dinámicas de Género
-- ¿Existen sesgos en la representación de género en ciertas especialidades?
-- ¿Qué estrategias pueden mejorar la equidad de género?
+**3. Efectividad de Incentivos en Reclutamiento y Retención**
+- ¿Qué tipo de incentivos (económicos, vivienda, desarrollo profesional) resultan más efectivos para atraer y retener personal en áreas rurales o especialidades con alta demanda?
+
+**4. Dinámicas y Barreras de Género**
+- ¿Existen sesgos sistemáticos que afecten la representación y retención de médicas en ciertas especialidades?
+- ¿Qué intervenciones (horarios flexibles, mentorías, políticas inclusivas) podrían mejorar la equidad de género en la fuerza laboral médica?
+
+**5. Relación entre Ausentismo e Insatisfacción Laboral**
+- ¿Pueden los patrones elevados de ausentismo laboral indicar problemas profundos de agotamiento, insatisfacción o condiciones laborales adversas?
+
+**6. Análisis Espacial con Sistemas de Información Geográfica (GIS)**
+- ¿Cómo podría la visualización precisa de vacantes y ocupación mediante GIS facilitar la redistribución estratégica de personal hacia regiones desatendidas?
+
+**7. Políticas Basadas en Datos**
+- ¿Qué relación existe entre las vacantes y los indicadores de calidad del servicio de salud? 
+- ¿Podrían planes de sucesión basados en datos mejorar la estabilidad y cobertura a largo plazo?
+
+**8. Enfoque Sistémico en Plazas vs. Trayectorias Individuales**
+- ¿De qué manera la planificación centrada en puestos ("plazas") en lugar de individuos específicos permitiría una asignación más eficiente y efectiva de los recursos humanos y presupuestarios?
+
+Estas preguntas guiarán estudios posteriores y fortalecerán la toma de decisiones basada en evidencia.
+
+### Limitaciones y Consideraciones
+
+Este análisis exploratorio se basa en datos de una quincena específica (17 del 2024) y no abarca tendencias temporales a largo plazo. Se recomienda un análisis longitudinal para evaluar cambios en la fuerza laboral a lo largo del tiempo. Además, la calidad de los datos y la consistencia de las variables pueden variar, lo que podría afectar la precisión de los resultados. Se sugiere una validación adicional de los datos y la inclusión de fuentes adicionales.
 
 ### Conclusión
 
-Este análisis integrado proporciona una visión completa de la fuerza laboral del IMSS, abarcando desde las características demográficas y la clasificación de puestos hasta los indicadores financieros y las tendencias temporales. Al combinar estos conocimientos, los responsables de formular políticas pueden diseñar intervenciones focalizadas para mejorar el reclutamiento, la retención y la asignación de recursos. Los hallazgos también respaldan la planificación estratégica para abordar la escasez de personal, asegurar una distribución geográfica equitativa y optimizar las estructuras contractuales.
+El análisis exploratorio revela desafíos clave en la gestión del talento humano del IMSS, particularmente en áreas críticas como atención primaria (*xxx*), regiones rurales y desatendidas (ej. Chiapas, Guerrero), equidad en la retención de médicas, y la próxima ola de jubilaciones. La integración de datos demográficos, financieros, geográficos y laborales permite identificar claramente estas brechas, proporcionando evidencia robusta para la toma de decisiones.
 
-Este análisis exploratorio de datos revela deficiencias *xxx* en el personal médico del IMSS, particularmente en:
-- *xxx* Atención primaria *xxx*
-- *xxx* Regiones desatendidas (Chiapas, Guerrero)
-- *xxx* Retención de médicas
-- *xxx* Olas de jubilación inminentes
+Para abordar estos desafíos estratégicos, se recomiendan acciones específicas:
 
-Para fortalecer la estabilidad del personal, el IMSS debe:
-1. Expandir programas de formación y becas para *xxx*.
-2. Implementar incentivos para que médicos trabajen en zonas de alta necesidad.
-3. Usar análisis predictivo para anticipar jubilaciones.
-4. Apoyar la equidad de género en contratación y retención.
+1. **Fortalecer programas formativos y becas** en especialidades y áreas críticas identificadas (*xxx*).
 
+2. **Aplicar incentivos concretos** para atraer y retener personal en regiones prioritarias con déficit severo.
 
-Los análisis preliminares destacan desigualdades regionales, escasez en ciertas especialidades y tendencias demográficas que podrían afectar la dotación futura de personal. Un enfoque basado en datos es clave para garantizar una distribución eficiente y equitativa del personal médico en el IMSS.
+3. **Implementar modelos predictivos** que permitan anticipar jubilaciones y planificar sucesiones laborales sin afectar la calidad del servicio.
 
-## Próximos Pasos: Plan de Análisis
+4. **Desarrollar políticas inclusivas de género** que aseguren condiciones equitativas de contratación y retención para médicas en especialidades afectadas.
 
-- Análisis de Tendencias Temporales:
-Examinar cómo han evolucionado estas variables en los últimos cinco años.
-- Modelado Multivariado:
-Investigar las interacciones entre las variables demográficas, financieras y de ocupación de puestos.
-- Comparaciones Internacionales:
-Comparar los principales indicadores con los estándares de entidades como NHS England, la OCDE y la OMS.
-- Análisis en Profundidad:
-Descodificar de manera más detallada los códigos categóricos (por ejemplo, MCABAJA, MCP) para comprender mejor sus implicaciones en la remuneración y en la dotación de personal.
+Estas estrategias facilitarán una asignación más equitativa, sostenible y efectiva del personal médico, garantizando una mejor cobertura y calidad en los servicios del IMSS.
 
-1. Análisis de tendencias: Evaluar cambios en la fuerza laboral en los últimos 5 años (datos quincenales).
-2. Modelado estadístico: Predecir vacantes futuras y simular el impacto de políticas.
-3. Análisis de correlación: Evaluar como la falta de personal afecta los resultados en salud.
-4. Encuestas y entrevistas: Integrar datos cualitativos sobre motivaciones y desafíos del personal.
-
-Este informe ofrece una base estructurada y accionable para que el IMSS optimice su fuerza laboral, asegurando un sistema de salud sostenible y equitativo.
-
-## Referencias
+### Referencias
 
 - OCDE (2020). *Health Workforce Policies: Remuneration and Employment Practices.*
 
 - OMS (2016). *Global Strategy on Human Resources for Health: Workforce Remuneration and Retention.*
+
+# Próximos Pasos: Plan de Análisis
+
+Para continuar profundizando en el entendimiento y optimización de la fuerza laboral del IMSS, se proponen las siguientes líneas estratégicas de análisis:
+
+**1. Análisis Longitudinal y de Tendencias**
+- Examinar los cambios en las variables demográficas, financieras, ocupacionales y regionales usando datos quincenales de los últimos cinco años, para identificar tendencias clave y anticipar futuros desafíos.
+
+**2. Modelado Estadístico Multivariado**
+- Realizar análisis avanzados para evaluar interacciones entre factores demográficos (edad, género), financieros (remuneración), y de ocupación (plazas ocupadas vs. vacantes).
+- Desarrollar modelos predictivos que anticipen vacantes futuras, jubilaciones y posibles impactos de diferentes intervenciones políticas.
+
+**3. Análisis Cualitativo de la Fuerza Laboral**
+- Llevar a cabo entrevistas y encuestas dirigidas al personal médico para profundizar en causas subyacentes del ausentismo, desigualdades de género, motivaciones profesionales y problemas específicos en retención regional.
+
+**4. Comparación Internacional y Benchmarking**
+- Comparar indicadores clave (dotación, vacantes, remuneración) con referentes internacionales como NHS England, OCDE y OMS para identificar estándares y mejores prácticas aplicables al contexto del IMSS.
+
+**5. Análisis en Profundidad de Variables Específicas**
+- Realizar un análisis detallado de códigos categóricos internos (p. ej. MCABAJA, MCP) para clarificar implicaciones específicas sobre remuneración, estabilidad contractual y asignación efectiva del personal.
+
+**6. Evaluación del Impacto sobre Resultados en Salud**
+- Investigar mediante análisis de correlación si las tasas elevadas de vacantes o rotación están asociadas a deterioros en la calidad de los servicios o resultados en salud.
+
+Este enfoque integral permitirá generar evidencia sólida y aplicable para fortalecer la gestión estratégica del personal médico del IMSS, asegurando sostenibilidad, equidad y calidad del sistema de salud.
+
+\newpage
+
+# Descripción Detallada de Resultados
+
+## Oferta General de Plazas Médicas
+
+El Instituto cuenta con un total de 88,733 plazas médicas. De estas, 82,930 están ocupadas y 7,448 permanecen vacantes para médicos de nuevo ingreso. De las plazas ocupadas, 40,708 corresponden a mujeres (48.88%) y 40,642 a hombres (45.8%), reflejando una ligera predominancia femenina.
+
+(TABLE_PLZOCU_DESCRIP_CLASCATEGE)
+Se reportan 7,383 vacantes específicas para médicos de nuevo ingreso, con 81,350 plazas ocupadas bajo diferentes tipos de contratación dentro del IMSS.
+
+(TABLE_PLZOCU_VIGENCIAPTO.)
+Se especifica claramente la vigencia de 7,446 plazas, con un 91.75% de ocupación del total ofertado.
+
+(TABLE_PLZOCU_PTO)
+- El 99.03% (82,928) de las plazas ocupadas tienen presupuesto asignado.
+- 6,572 vacantes cuentan con presupuesto disponible.
+- 878 plazas no tienen recursos asignados.
+Se destaca la necesidad de aclarar cómo se cubren esas plazas sin presupuesto.
+
+(TABLE_PLZOCU_PLZSOB, TABLE_PLZOCU_PLZAUT)
+- Se mencionan explícitamente 7,448 plazas sobrantes.
+- Se reportan oficialmente 7,448 plazas autorizadas para oferta laboral.
+
+
+## Distribución del Personal Médico por Especialidad
+
+Se presenta una distribución desglosada por género en las 10 especialidades médicas más representativas, según el número total de empleados.
+
+Observaciones destacadas:
+- Medicina Familiar tiene el mayor personal total (23,336), con predominancia femenina (55.76%).
+- Traumatología y Ortopedia presenta la mayor diferencia de género, dominada por hombres (85.57%).
+
+Tendencias generales:
+- Especialidades como Cirugía General y Traumatología y Ortopedia muestran predominancia masculina.
+- Especialidades relacionadas con atención a mujeres y niños (Ginecología, Pediatría) tienen mayor presencia femenina.
+- Especialidades administrativas (p.ej., “N.Cent.Reg”) muestran un equilibrio relativo.
+
+(TABLE_PLZOCU_NOMBREAR2)
+- Especialidades clínicas con mayor demanda: medicina interna, medicina familiar, urgencias.
+- Especialidades quirúrgicas más demandadas: cirugía general, anestesiología, ginecología.
+- La segunda descripción añade específicamente Radiodiagnóstico, Urgencias Pediátricas y Salud en el Trabajo dentro del top 10 para 2024, información no incluida previamente.
+- Se detallan las cinco principales especialidades por áreas clínicas y quirúrgicas con mayor disponibilidad de vacantes para 2025.
+
+
+## Tipo de Contratación y Ocupación de Plazas
+
+(TABLE_PLZOCU_GRUPOTIPOPLAZA)
+- Se dispone de 6,400 plazas para médico operativo y 983 para puestos de confianza, estatuto o áreas administrativas.
+
+(TABLE_PLZOCU_TIPOMCAOCUP)
+- En 2024, 71,627 médicos cuentan con puesto definitivo, mientras que 9,723 son personal suplente en diferentes niveles de atención.
+- Total general de 7,448 plazas vacantes.
+
+(TABLE_PLZOCU_DESCRIPCIONTC)
+- Actualmente, 72,356 médicos tienen plazas de base, 7,537 en puestos de confianza, 53 bajo estatuto ordinario y 389 en áreas temporales.
+- 1,015 médicos becados apoyan al primer y segundo nivel de atención.
+- Para 2024, se ofrecen 6,454 plazas ofertables de base y 897 puestos de confianza.
+
+(TABLE_PLZOCU_TIPOCONFIANZA)
+- Existen 7,685 plazas ocupadas por personal de confianza (Tipo A y B), con 1,009 vacantes disponibles: 109 Tipo A y 900 Tipo B.
+
+(TABLE_PLZOCU_COMSIN)
+- 202 médicos se encuentran en puestos sindicales o comisionados, dato adicional especificado.
+
+
+## Nivel Educativo del Personal Médico
+
+(TABLE_PLZOCU_ESCOLARIDAD)
+- 48,529 médicos cuentan con especialidad completa.
+- 2,757 médicos tienen maestría completa.
+- 1,375 médicos cuentan con doctorado.
+Se cuestiona por qué existe un número reducido con solo educación primaria y preparatoria.
+
+
+## Jornadas Laborales y Turnos
+
+(TABLE_PLZOCU_DESCRIP_TURNO)
+- Existen cinco turnos fijos (matutino, vespertino, nocturno A, nocturno B, jornada acumulada) y un turno móvil para cubrir ausencias.
+- Los turnos matutino y vespertino concentran la mayor cantidad de personal, seguidos por los nocturnos.
+
+(TABLE_PLZOCU_DESCRIP_HORARIO)
+- Horarios disponibles varían entre 8 horas (matutino, vespertino), 12 horas (nocturnos), hasta 15 horas con 45 minutos (fin de semana).
+- Los 5 horarios con mayor número de vacantes se detallan.
+
+
+## Distribución por Clasificación y Tipo de Unidad
+
+(TABLE_PLZOCU_DEPENDENCIAE)
+- La mayor oferta de vacantes está concentrada en hospitales generales de zona (segundo nivel), seguidos por unidades de medicina familiar.
+
+(TABLE_PLZOCU_CLASIF_UNIDAD)
+- El segundo nivel concentra el mayor número de plazas ocupadas (44,933), seguido por primer nivel (25,941).
+- El tercer nivel (UMAE) y áreas administrativas mantienen números inferiores.
+
+(TABLE_PLZOCU_DESCRIPCION_SERVICIO)
+- Distribución por servicio muestra mayor disponibilidad de vacantes en áreas hospitalarias: consulta médica, quirófano, terapia intensiva, hospitalización y urgencias.
+
+(TABLE_PLZOCU_CATEGORIA, TABLE_PLZOCU_ADSCRIPCION)
+- Las categorías Médico Familiar, No Familiar y Médico General tienen la mayor demanda.
+- Las plazas adscritas a Coordinación Clínica Médica y de Cirugía, así como Jefatura de Medicina Familiar, presentan alta demanda.
+
+
+## Distribución Geográfica de Plazas Médicas
+
+(TABLE_PLZOCU_DELEGACIONE)
+GRÁFICO 7. PLAZAS PARA PERSONAL MÉDICO POR DELEGACIÓN
+- Estados con mayor número de plazas ocupadas: Jalisco, Nuevo León, México Oriente (subtabla a).
+- Mayor número absoluto de vacantes: Chihuahua, México Oriente, Jalisco (subtabla b).
+- Priorizar distribución en Chihuahua, Michoacán, Tabasco, Sonora, Tamaulipas.
+
+
+## Déficit Crítico en Relación con Densidad Poblacional
+
+(Fuente: INEGI, 2020)
+- Mayor déficit crítico (índice <0.05): Tlaxcala, Querétaro, Aguascalientes, Nayarit, Guanajuato, Nuevo León, Oaxaca.
+- Menor déficit (índice >0.1): Ciudad de México, Estado de México, Coahuila, Puebla, Guerrero, Tamaulipas, Veracruz, Sonora y Tabasco.
+- Potencial beneficiarios al cubrir vacantes: Estado de México (7,831.66 personas), Ciudad de México (2,723.89 personas).
+- Recomendaciones: Priorizar reclutamiento en estados críticos e incentivos en estados muy poblados.
+
+
+## Jubilación del Personal Médico
+
+(GRÁFICO 10. DISTRIBUCIÓN POR FECHA DE INGRESO)
+- Aumento significativo en contratación cerca del año 2010, repunte por COVID en 2020.
+
+(GRÁFICO 10. FRECUENCIA ESTIMADA POR FECHA PROBABLE DE JUBILACIÓN DE PERSONAL MÉDICO IMSS.)
+- Incremento progresivo de jubilaciones desde 2024, pico entre 2031-2032, disminución en 2034 y nuevo aumento significativo desde 2040, hasta 856 jubilaciones en 2042.
+
+(TABLE_PLZOCU_JUBILA)
+- Se estima que 25,719 trabajadores culminarán bajo régimen de jubilación.
+- Actualmente, 1,787 médicos están en trámite o proceso de jubilación.
+
+(TABLE_PLZOCU_RJP)
+- Régimen actual de jubilación y pensiones del personal médico.
+
+
+## Cuota Sindical
+
+(TABLE_PLZOCU_CPTO180)
+- Actualmente, 82,320 médicos contribuyen con una cuota sindical, reflejando una relación institucional robusta.
+

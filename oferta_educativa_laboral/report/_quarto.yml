@@ -22,6 +22,7 @@ metadata:
 meta:
   extended_report: true # execute extended report, customised based on basic qmd, see block, needs 'when-meta'
 # https://quarto.org/docs/authoring/conditional.html#matching-against-metadata
+  extended_appendices: false
 
 format:
   pdf:

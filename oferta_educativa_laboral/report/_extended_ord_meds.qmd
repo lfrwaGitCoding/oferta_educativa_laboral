@@ -1,5 +1,10 @@
 # Análisis Exploratorio de Datos: Talento Humano en el IMSS
 
+<!-- TO DO: Revisar y completar placeholders -->
+<!-- TO DO: Revisar recomendaciones, hallazgos,  plan, pregs, etc -->
+<!-- TO DO: Checar concordancia en jose/djaine-->
+<!-- TO DO: arreglar cross-ref con qmd principal -->
+
 ## Resumen Ejecutivo
 
 El Instituto Mexicano del Seguro Social (IMSS) brinda atención médica a aproximadamente 65 millones de mexicanos, lo que hace que la gestión de talento humano sea fundamental para su eficiencia y sostenibilidad.
@@ -11,11 +16,11 @@ El informe sintetiza datos de la fuerza laboral del IMSS, abarcando característ
 Principales Observaciones:
 - Demografía: Predominio de profesionales altamente calificados y una fuerza laboral centrada en edades de media carrera (40–50 años). Esto sugiere una ola de jubilaciones que podría intensificar las brechas existentes en la dotación de personal.
 
-- Género: *xxx* % de los puestos ocupados por hombres, con tasas de vacantes más altas para médicas (*xxx* %). Esto plantea interrogantes sobre la equidad de género en la contratación y retención.
+- Equidad global de género en especialidades: 48.9% de los puestos ocupados por mujeres y 45.8% por hombres, con tasas de vacantes similares en ambos géneros. *xxx*
 
 - Variabilidad significativa en la dotación de personal en diferentes regiones y especialidades, con mayor concentración en zonas urbanas (por ejemplo, Ciudad de México, Estado de México, Jalisco) en comparación con estados rurales o menos densamente poblados (por ejemplo, Campeche, Zacatecas), sugiriendo posibles brechas en acceso y atención.
 
-- Distribución por Especialidad y Rol: Altos niveles de ocupación en roles de Medicina General, Familiar y Urgencias contrastan con el *xxx* % de vacantes en algunas áreas especializadas (por ejemplo, *xxx* Cirugía Ortopédica, Cardiología, Neurología), lo que indica posibles desafíos de reclutamiento.
+- Distribución por Especialidad y Rol: Altos niveles de ocupación en roles de Medicina General, Familiar y Urgencias contrastan con el *xxx* % de vacantes en algunas áreas especializadas (por ejemplo, *xxx* Cirugía Ortopédica, Cardiología, Neurología), lo que indica posibles desafíos de reclutamiento. Priorizar distribución en Chihuahua, Michoacán, Tabasco, Sonora, Tamaulipas
 
 - Clasificación de Puestos y Estabilidad Contractual: Los puestos clave, especialmente aquellos clasificados como “Base” o “Definitiva”, se encuentran casi totalmente ocupados, mientras que las posiciones más provisionales (por ejemplo, “SinP” en PTO o “SIN RJP”) permanecen en gran medida vacantes.
 
@@ -51,8 +56,6 @@ Los análisis se basan en resultados descriptivos incluyendo gráficos, tablas y
 Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), edad (EDAD), especialidad (NOMBREAR), adscripción administrativa y diversos marcadores temporales (por ejemplo, FECHAING, FECHAINI, FECHAFIN). El conjunto de datos se centra en las “plazas” (puestos) en lugar de empleados individuales, registrando si cada posición está ocupada o vacante. La mayoría de las tablas se basan en un análisis bivariado de plazas ocupadas vs. vacantes por cada variable adicional disponible.
 
 ## Hallazgos Clave: Estadísticas, Demografía y Distribución del Personal Médico
-
-<!-- TO DO review after placeholder check -->
 
 - **Nivel educativo (Escolaridad)**:  
   La fuerza laboral médica presenta un alto nivel educativo, predominantemente con Licenciatura Completa y una representación significativa de Especialidad Completa. Esto refleja una fuerza laboral altamente calificada, mientras que personal con menor nivel educativo es mínimo, sugiriendo que roles administrativos o de apoyo podrían analizarse separadamente.
@@ -198,6 +201,8 @@ Estas estrategias facilitarán una asignación más equitativa, sostenible y efe
 
 - OMS (2016). *Global Strategy on Human Resources for Health: Workforce Remuneration and Retention.*
 
+- INEGI (2020). *xxx*
+
 # Próximos Pasos: Plan de Análisis
 
 Para continuar profundizando en el entendimiento y optimización de la fuerza laboral del IMSS, se proponen las siguientes líneas estratégicas de análisis:
@@ -229,139 +234,88 @@ Este enfoque integral permitirá generar evidencia sólida y aplicable para fort
 
 ## Oferta General de Plazas Médicas
 
-El Instituto cuenta con un total de 88,733 plazas médicas. De estas, 82,930 están ocupadas y 7,448 permanecen vacantes para médicos de nuevo ingreso. De las plazas ocupadas, 40,708 corresponden a mujeres (48.88%) y 40,642 a hombres (45.8%), reflejando una ligera predominancia femenina.
+- El Instituto cuenta con un total de 88,733 plazas médicas. De estas, 82,930 están ocupadas y 7,448 permanecen vacantes para médicos de nuevo ingreso. De las plazas ocupadas, 40,708 corresponden a mujeres (48.88%) y 40,642 a hombres (45.8%), reflejando una ligera predominancia femenina.
+- Se reportan 7,383 vacantes específicas para médicos de nuevo ingreso, con 81,350 plazas ocupadas bajo diferentes tipos de contratación dentro del IMSS (ver @tbl-table_PLZOCU_DESCRIP_CLASCATEGE)
+- 7,446 plazas vigentes, con un 91.75% de ocupación del total ofertado
+- 99.03% (82,928) de las plazas ocupadas tienen presupuesto asignado
+- 6,572 vacantes cuentan con presupuesto disponible
+- 878 plazas no tienen recursos asignados
+- 7,448 plazas sobrantes
+(Ver @tbl-table_PLZOCU_VIGENCIAPTO, @tbl-table_PLZOCU_PTO, @tbl-table_PLZOCU_PLZSOB y @tbl-table_PLZOCU_PLZAUT)
 
-(TABLE_PLZOCU_DESCRIP_CLASCATEGE)
-Se reportan 7,383 vacantes específicas para médicos de nuevo ingreso, con 81,350 plazas ocupadas bajo diferentes tipos de contratación dentro del IMSS.
-
-(TABLE_PLZOCU_VIGENCIAPTO.)
-Se especifica claramente la vigencia de 7,446 plazas, con un 91.75% de ocupación del total ofertado.
-
-(TABLE_PLZOCU_PTO)
-- El 99.03% (82,928) de las plazas ocupadas tienen presupuesto asignado.
-- 6,572 vacantes cuentan con presupuesto disponible.
-- 878 plazas no tienen recursos asignados.
-Se destaca la necesidad de aclarar cómo se cubren esas plazas sin presupuesto.
-
-(TABLE_PLZOCU_PLZSOB, TABLE_PLZOCU_PLZAUT)
-- Se mencionan explícitamente 7,448 plazas sobrantes.
-- Se reportan oficialmente 7,448 plazas autorizadas para oferta laboral.
-
-
-## Distribución del Personal Médico por Especialidad
-
-Se presenta una distribución desglosada por género en las 10 especialidades médicas más representativas, según el número total de empleados.
+## Distribución del Personal Médico por Especialidad y Género
 
 Observaciones destacadas:
-- Medicina Familiar tiene el mayor personal total (23,336), con predominancia femenina (55.76%).
-- Traumatología y Ortopedia presenta la mayor diferencia de género, dominada por hombres (85.57%).
-
-Tendencias generales:
-- Especialidades como Cirugía General y Traumatología y Ortopedia muestran predominancia masculina.
-- Especialidades relacionadas con atención a mujeres y niños (Ginecología, Pediatría) tienen mayor presencia femenina.
-- Especialidades administrativas (p.ej., “N.Cent.Reg”) muestran un equilibrio relativo.
-
-(TABLE_PLZOCU_NOMBREAR2)
-- Especialidades clínicas con mayor demanda: medicina interna, medicina familiar, urgencias.
-- Especialidades quirúrgicas más demandadas: cirugía general, anestesiología, ginecología.
-- La segunda descripción añade específicamente Radiodiagnóstico, Urgencias Pediátricas y Salud en el Trabajo dentro del top 10 para 2024, información no incluida previamente.
-- Se detallan las cinco principales especialidades por áreas clínicas y quirúrgicas con mayor disponibilidad de vacantes para 2025.
-
+- Medicina Familiar tiene el mayor personal total (23,336), con predominancia femenina (55.76%)
+- Traumatología y Ortopedia presenta la mayor diferencia de género, dominada por hombres (85.57%)
+- Especialidades como Cirugía General y Traumatología y Ortopedia muestran predominancia masculina
+- Especialidades relacionadas con atención a mujeres y niños (Ginecología, Pediatría) tienen mayor presencia femenina
+- Especialidades administrativas (p.ej., “N.Cent.Reg”) muestran un equilibrio relativo
+- Especialidades clínicas con mayor demanda: medicina interna, medicina familiar, urgencias
+- Especialidades quirúrgicas más demandadas: cirugía general, anestesiología, ginecología
+- Radiodiagnóstico, Urgencias Pediátricas y Salud en el Trabajo *xxx*
+(Ver @tbl-table_PLZOCU_NOMBREAR y reporte interactivo)
 
 ## Tipo de Contratación y Ocupación de Plazas
 
-(TABLE_PLZOCU_GRUPOTIPOPLAZA)
-- Se dispone de 6,400 plazas para médico operativo y 983 para puestos de confianza, estatuto o áreas administrativas.
-
-(TABLE_PLZOCU_TIPOMCAOCUP)
-- En 2024, 71,627 médicos cuentan con puesto definitivo, mientras que 9,723 son personal suplente en diferentes niveles de atención.
-- Total general de 7,448 plazas vacantes.
-
-(TABLE_PLZOCU_DESCRIPCIONTC)
-- Actualmente, 72,356 médicos tienen plazas de base, 7,537 en puestos de confianza, 53 bajo estatuto ordinario y 389 en áreas temporales.
-- 1,015 médicos becados apoyan al primer y segundo nivel de atención.
-- Para 2024, se ofrecen 6,454 plazas ofertables de base y 897 puestos de confianza.
-
-(TABLE_PLZOCU_TIPOCONFIANZA)
-- Existen 7,685 plazas ocupadas por personal de confianza (Tipo A y B), con 1,009 vacantes disponibles: 109 Tipo A y 900 Tipo B.
-
-(TABLE_PLZOCU_COMSIN)
-- 202 médicos se encuentran en puestos sindicales o comisionados, dato adicional especificado.
-
+- Se dispone de 6,400 plazas para médico operativo y 983 para puestos de confianza, estatuto o áreas administrativas (ver @tbl-table_PLZOCU_GRUPOTIPOPLAZA)
+- 73,637 médicos cuentan con puesto definitivo, mientras que 9,293 son personal suplente en diferentes niveles de atención
+- Total general de 7,448 plazas vacantes (ver @tbl-table_PLZOCU_TIPOMCAOCUP)
+- 73,876 médicos tienen plazas de base, 7,575 en puestos de confianza, 57 bajo estatuto ordinario y 379 en áreas temporales
+- 1,043 médicos becados apoyan al primer y segundo nivel de atención (ver @tbl-table_PLZOCU_DESCRIPCIONTC)
+- Existen 7,685 plazas ocupadas por personal de confianza (Tipo A y B), con 1,009 vacantes disponibles: 109 Tipo A y 900 Tipo B (ver @tbl-table_PLZOCU_TIPOCONFIANZA)
+- 202 médicos se encuentran en puestos sindicales o comisionados, dato adicional especificado (ver @tbl-table_PLZOCU_COMSIN)
 
 ## Nivel Educativo del Personal Médico
 
-(TABLE_PLZOCU_ESCOLARIDAD)
-- 48,529 médicos cuentan con especialidad completa.
-- 2,757 médicos tienen maestría completa.
-- 1,375 médicos cuentan con doctorado.
-Se cuestiona por qué existe un número reducido con solo educación primaria y preparatoria.
-
+- 48,529 médicos cuentan con especialidad completa
+- 2,757 médicos tienen maestría completa
+- 1,375 médicos cuentan con doctorado
+(Ver @tbl-table_PLZOCU_ESCOLARIDAD)
 
 ## Jornadas Laborales y Turnos
 
-(TABLE_PLZOCU_DESCRIP_TURNO)
-- Existen cinco turnos fijos (matutino, vespertino, nocturno A, nocturno B, jornada acumulada) y un turno móvil para cubrir ausencias.
-- Los turnos matutino y vespertino concentran la mayor cantidad de personal, seguidos por los nocturnos.
-
-(TABLE_PLZOCU_DESCRIP_HORARIO)
-- Horarios disponibles varían entre 8 horas (matutino, vespertino), 12 horas (nocturnos), hasta 15 horas con 45 minutos (fin de semana).
-- Los 5 horarios con mayor número de vacantes se detallan.
-
+- Existen cinco turnos fijos (matutino, vespertino, nocturno A, nocturno B, jornada acumulada) y un turno móvil para cubrir ausencias
+- Los turnos matutino y vespertino concentran la mayor cantidad de personal, seguidos por los nocturnos 
+- Horarios disponibles varían entre 8 horas (matutino, vespertino), 12 horas (nocturnos), hasta 15 horas con 45 minutos (fin de semana)
+- Los 5 horarios con mayor número de vacantes se detallan en la tablas anexas
+(Ver @tbl-table_PLZOCU_DESCRIP_TURNO y @tbl-table_PLZOCU_DESCRIP_HORARIO)
 
 ## Distribución por Clasificación y Tipo de Unidad
 
-(TABLE_PLZOCU_DEPENDENCIAE)
-- La mayor oferta de vacantes está concentrada en hospitales generales de zona (segundo nivel), seguidos por unidades de medicina familiar.
-
-(TABLE_PLZOCU_CLASIF_UNIDAD)
-- El segundo nivel concentra el mayor número de plazas ocupadas (44,933), seguido por primer nivel (25,941).
-- El tercer nivel (UMAE) y áreas administrativas mantienen números inferiores.
-
-(TABLE_PLZOCU_DESCRIPCION_SERVICIO)
-- Distribución por servicio muestra mayor disponibilidad de vacantes en áreas hospitalarias: consulta médica, quirófano, terapia intensiva, hospitalización y urgencias.
-
-(TABLE_PLZOCU_CATEGORIA, TABLE_PLZOCU_ADSCRIPCION)
-- Las categorías Médico Familiar, No Familiar y Médico General tienen la mayor demanda.
-- Las plazas adscritas a Coordinación Clínica Médica y de Cirugía, así como Jefatura de Medicina Familiar, presentan alta demanda.
-
+- La mayor oferta de vacantes está concentrada en hospitales generales de zona (segundo nivel), seguidos por unidades de medicina familiar (ver @tbl-table_PLZOCU_DEPENDENCIAE)
+- El segundo nivel concentra el mayor número de plazas ocupadas (44,933), seguido por primer nivel (25,941)
+- El tercer nivel (UMAE) y áreas administrativas mantienen números inferiores
+(Ver @tbl-table_PLZOCU_CLASIF_UNIDAD)
+- Distribución por servicio muestra mayor disponibilidad de vacantes en áreas hospitalarias: consulta médica, quirófano, terapia intensiva, hospitalización y urgencias (ver @tbl-table_PLZOCU_DESCRIPCION_SERVICIO)
+- Las categorías Médico Familiar, No Familiar y Médico General tienen la mayor demanda
+- Las plazas adscritas a Coordinación Clínica Médica y de Cirugía, así como Jefatura de Medicina Familiar, presentan alta demanda
+(Ver @tbl-table_PLZOCU_CATEGORIA y @tbl-table_PLZOCU_ADSCRIPCION)
 
 ## Distribución Geográfica de Plazas Médicas
 
-(TABLE_PLZOCU_DELEGACIONE)
-GRÁFICO 7. PLAZAS PARA PERSONAL MÉDICO POR DELEGACIÓN
-- Estados con mayor número de plazas ocupadas: Jalisco, Nuevo León, México Oriente (subtabla a).
-- Mayor número absoluto de vacantes: Chihuahua, México Oriente, Jalisco (subtabla b).
-- Priorizar distribución en Chihuahua, Michoacán, Tabasco, Sonora, Tamaulipas.
-
+- Estados con mayor número de plazas ocupadas: Jalisco, Nuevo León, México Oriente
+- Mayor número absoluto de vacantes: Chihuahua, México Oriente, Jalisco
+(Ver @tbl-table_PLZOCU_DELEGACIONE y @fig-xxx_ "PLAZAS PARA PERSONAL MÉDICO POR DELEGACIÓN")
 
 ## Déficit Crítico en Relación con Densidad Poblacional
 
-(Fuente: INEGI, 2020)
-- Mayor déficit crítico (índice <0.05): Tlaxcala, Querétaro, Aguascalientes, Nayarit, Guanajuato, Nuevo León, Oaxaca.
-- Menor déficit (índice >0.1): Ciudad de México, Estado de México, Coahuila, Puebla, Guerrero, Tamaulipas, Veracruz, Sonora y Tabasco.
-- Potencial beneficiarios al cubrir vacantes: Estado de México (7,831.66 personas), Ciudad de México (2,723.89 personas).
-- Recomendaciones: Priorizar reclutamiento en estados críticos e incentivos en estados muy poblados.
-
+- Mayor déficit crítico (índice <0.05): Tlaxcala, Querétaro, Aguascalientes, Nayarit, Guanajuato, Nuevo León, Oaxaca
+- Menor déficit (índice >0.1): Ciudad de México, Estado de México, Coahuila, Puebla, Guerrero, Tamaulipas, Veracruz, Sonora y Tabasco
+- Potencial beneficiarios al cubrir vacantes: Estado de México (7,831.66 personas), Ciudad de México (2,723.89 personas)
+- Recomendaciones: Priorizar reclutamiento en estados críticos e incentivos en estados muy poblados
+(Ver reporte interactivo)
 
 ## Jubilación del Personal Médico
 
-(GRÁFICO 10. DISTRIBUCIÓN POR FECHA DE INGRESO)
-- Aumento significativo en contratación cerca del año 2010, repunte por COVID en 2020.
-
-(GRÁFICO 10. FRECUENCIA ESTIMADA POR FECHA PROBABLE DE JUBILACIÓN DE PERSONAL MÉDICO IMSS.)
-- Incremento progresivo de jubilaciones desde 2024, pico entre 2031-2032, disminución en 2034 y nuevo aumento significativo desde 2040, hasta 856 jubilaciones en 2042.
-
-(TABLE_PLZOCU_JUBILA)
-- Se estima que 25,719 trabajadores culminarán bajo régimen de jubilación.
-- Actualmente, 1,787 médicos están en trámite o proceso de jubilación.
-
-(TABLE_PLZOCU_RJP)
-- Régimen actual de jubilación y pensiones del personal médico.
-
+- Aumento significativo en contratación cerca del año 2010, repunte por COVID en 2020 (ver @fig-xxx_ "DISTRIBUCIÓN POR FECHA DE INGRESO")
+- Incremento progresivo de jubilaciones desde 2024, pico entre 2031-2032, disminución en 2034 y nuevo aumento significativo desde 2040, hasta 856 jubilaciones en 2042 (ver @fig-xxx_ "FRECUENCIA ESTIMADA POR FECHA PROBABLE DE JUBILACIÓN DE PERSONAL MÉDICO IMSS")
+- Se estima que 25,719 trabajadores culminarán bajo régimen de jubilación
+- Actualmente, 1,787 médicos están en trámite o proceso de jubilación
+(Ver @tbl-table_PLZOCU_JUBILA)
+- Régimen actual de jubilación y pensiones del personal médico (ver @tbl-table_PLZOCU_RJP)
 
 ## Cuota Sindical
 
-(TABLE_PLZOCU_CPTO180)
-- Actualmente, 82,320 médicos contribuyen con una cuota sindical, reflejando una relación institucional robusta.
+- Actualmente, 82,320 médicos contribuyen con una cuota sindical, reflejando una relación institucional robusta (ver @tbl-table_PLZOCU_CPTO180)
 

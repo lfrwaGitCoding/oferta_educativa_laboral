@@ -51,18 +51,16 @@ source("_scripts/funcs.R")
 ```{r, echo = FALSE, results = "asis"}
 epi_table_to_latex("sum_chars.txt",
                    caption = NULL  # caption set in tbl-cap above
-                   # font = 9
                    )
 ```
 :::
 
-<!-- Ver @tbl-desc_dates para xxx -->
+<!-- Ver @tbl-sum_chars para xxx -->
 
 ::: {.cell tbl-cap='Resumen de variables numéricas' tbl-pos=h #tbl-sum_stats}
 ```{r, echo = FALSE, results = "asis"}
 epi_table_to_latex("sum_stats.txt",
                    caption = NULL  # caption set in tbl-cap above
-                   # "Resumen de variables numéricas"
                    )
 ```
 :::
@@ -111,7 +109,7 @@ epi_table_to_latex("sum_factors.txt",
 \FloatBarrier
 \clearpage
 
-::: {.cell tbl-cap="Ocupación de plazas por Escolaridad" #tbl-table_PLZOCU_SEXO}
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a género" #tbl-table_PLZOCU_SEXO}
 ```{r, table_PLZOCU_SEXO, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_SEXO.txt",
                    caption = NULL  # caption set in tbl-cap above

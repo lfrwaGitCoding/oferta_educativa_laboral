@@ -11,7 +11,7 @@ execute:
 
 project:
   output-dir: _report_outputs/
-  resources: _report_outputs/
+  # resources: _report_outputs/ # makes tatic copies of images and external files, not needed for PDF only outputs
 
 lang: es
 toc-title: "Tabla de contenidos"
@@ -21,8 +21,8 @@ metadata:
 
 meta:
   extended_report: true # execute extended report, customised based on basic qmd, see block, needs 'when-meta'
-# https://quarto.org/docs/authoring/conditional.html#matching-against-metadata
-  extended_appendices: false
+                         # https://quarto.org/docs/authoring/conditional.html#matching-against-metadata
+  extended_appendices: true
 
 format:
   pdf:
@@ -30,8 +30,6 @@ format:
     header-includes:
       - \input{resources/pdf/preamble.tex}
     tbl-pos: "H"
-    fig-cap-location: bottom
-    fig-prefix: "({{fig}})"  # Auto-generates (a), (b), etc.
     keep-tex: true  # Helpful for debugging
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):

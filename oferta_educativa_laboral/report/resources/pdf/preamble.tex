@@ -19,6 +19,8 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{booktabs} % Better table aesthetics
+\usepackage{unicode-math}
+\setmathfont{STIX Two Math}
 
 % Define Colours
 \definecolor{gobmx_maroon}{RGB}{77, 0, 27}
@@ -122,10 +124,21 @@
     \setkeys{Gin}{width=0.6\textwidth}  % Force all images to be xx% of text width
 }
 
-% Align figures
-\let\origsection\section
-\renewcommand{\section}{\FloatBarrier\origsection}  % Prevents figures from floating into footer
+% This causes the current version to hang when compiling tex to pdf:
+%%%%%%%%%%%%%%%%%
+% % Align figures
+% \let\origsection\section
+% \renewcommand{\section}{\FloatBarrier\origsection}  % Prevents figures from floating into footer
 
-% ---- Lansdcape pages, rotate header and footer ----
 
-% ---- Patria and Merriweather failed loads ----
+% This tries to redefine the \section command to insert a \FloatBarrier (from the placeins package) before every section heading. While the idea is sound (to stop floats from spilling into the next section), this breaks LaTeX’s internal command handling because:
+% 	\FloatBarrier is not robust and can cause issues when used inside sectioning commands.
+% 	Redefining section commands globally like this interferes with the internal document structure, including the table of contents, PDF bookmarks, and cross-references.
+% 	Some environments (like longtable, landscape, or those introduced by fancyhdr or hyperref) might be active at the time this redefinition kicks in, causing infinite loops or fatal errors.
+
+% Use the \FloatBarrier command manually in the document body where needed, or consider using the \section* command to create unnumbered sections that don’t interfere with the float placement.
+%%%%%%%%%%%%%%%%%
+
+% % ---- Lansdcape pages, rotate header and footer ----
+%
+% % ---- Patria and Merriweather failed loads ----

@@ -2,8 +2,6 @@
 
 <!-- TO DO: Revisar y completar placeholders -->
 <!-- TO DO: Revisar recomendaciones, hallazgos,  plan, pregs, etc -->
-<!-- TO DO: Checar concordancia en jose/djaine-->
-<!-- TO DO: arreglar cross-ref con qmd principal -->
 
 ## Resumen Ejecutivo
 
@@ -14,6 +12,7 @@ Este análisis exploratorio de datos se centra en la distribución del personal 
 El informe sintetiza datos de la fuerza laboral del IMSS, abarcando características demográficas, clasificación de puestos, variables financieras, de rotación y tendencias temporales (análisis de frecuencias de fechas). Los datos provienen del Sistema de Información de Administración del Personal (SIAP) de la Unidad de Personal, Dirección de Administración. 
 
 Principales Observaciones:
+
 - Demografía: Predominio de profesionales altamente calificados y una fuerza laboral centrada en edades de media carrera (40–50 años). Esto sugiere una ola de jubilaciones que podría intensificar las brechas existentes en la dotación de personal.
 
 - Equidad global de género en especialidades: 48.9% de los puestos ocupados por mujeres y 45.8% por hombres, con tasas de vacantes similares en ambos géneros. *xxx*
@@ -26,7 +25,6 @@ Principales Observaciones:
 
 - Tendencias Temporales: Las frecuencias de fechas revelan que la mayoría de los puestos tienen asignada una fecha de finalización muy lejana (*xxx* “2050-01”), lo que indica una política de dotación a largo plazo. Paralelamente, las fechas de ingreso, inicio, movimiento, nominación y proyección de jubilación ofrecen información sobre la dinámica actual y futura de la fuerza laboral.
 
-Principales Recomendaciones:
 - Necesidad de un análisis más profundo: Los datos longitudinales de los últimos 5 años podrían proporcionar información clave sobre tendencias en la fuerza laboral, jubilaciones, rotación y otros factores.
 
 La dirección del IMSS puede desarrollar intervenciones estratégicas, tales como incentivos de contratación para especialidades y regiones con altos niveles de vacantes, mejoras en políticas de retención y planificación estratégica para abordar futuras jubilaciones. Este análisis preliminar constituye la base para estudios más exhaustivos.
@@ -97,89 +95,104 @@ Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), ed
 
 El análisis exploratorio identificó desafíos estratégicos prioritarios que demandan acciones inmediatas para asegurar la sostenibilidad operativa y mejorar la cobertura sanitaria del IMSS. Las áreas clave y recomendaciones asociadas son:
 
-### 1. Reclutamiento y Retención Focalizados en Especialidades y Regiones
+### Reclutamiento y Retención Focalizados en Especialidades y Regiones
+
 - Especialidades críticas como PSIQUIATRÍA, Cirugía Ortopédica, Cardiología y *xxx* presentan altas tasas de vacantes. En contraste, Medicina General y *xxx* muestran relativa estabilidad.
 - Regiones rurales (*xxx*, *xxx*) sufren una grave falta de personal, mientras que zonas urbanas tienen mejor cobertura, lo que sugiere una distribución inequitativa.
 
-**Recomendaciones:**  
+**Recomendaciones:**
+
 - Implementar incentivos financieros específicos, asistencia para vivienda, oportunidades de desarrollo profesional y becas de formación para atraer personal especializado a regiones con mayores vacantes.
 - Explorar la telemedicina como solución complementaria para extender el acceso a servicios médicos especializados en áreas remotas.
 
-### 2. Planificación Proactiva de Jubilaciones y Sucesión Laboral
+### Planificación Proactiva de Jubilaciones y Sucesión Laboral
 - Una proporción significativa del personal médico tiene entre *xxx* y *xxx* años. Las jubilaciones previstas después de los *xxx* años podrían crear cuellos de botella críticos en algunas especialidades y regiones.
 
-**Recomendaciones:**  
+**Recomendaciones:**
+
 - Desarrollar modelos predictivos con datos longitudinales (últimos cinco años) para anticipar jubilaciones y ajustar planes de sucesión.
 - Implementar programas específicos como jubilación escalonada, formación acelerada y mentoría para asegurar transiciones efectivas y mantener continuidad en la atención médica.
 
-### 3. Equidad de Género y Promoción de Diversidad
+### Equidad de Género y Promoción de Diversidad
 - Aunque las mujeres constituyen aproximadamente el 55% de la fuerza laboral médica, presentan tasas de vacantes proporcionalmente mayores en algunas especialidades (*xxx*%), sugiriendo barreras relacionadas con políticas laborales, interrupciones de carrera o factores culturales.
 
-**Recomendaciones:**  
+**Recomendaciones:**
+
 - Desarrollar políticas inclusivas, implementar horarios laborales flexibles y ofrecer programas de mentoría específicamente dirigidos a médicas.
 - Realizar análisis específicos sobre tendencias de género en contratación, promoción y retención.
 
-### 4. Redistribución Geográfica Mediante Tecnología GIS
+### Redistribución Geográfica Mediante Tecnología GIS
 - Se observa una marcada concentración de personal médico en áreas urbanas (Ciudad de México, Jalisco, *xxx*), en contraste con graves déficits en áreas rurales o remotas.
 
-**Recomendaciones:**  
+**Recomendaciones:**
+
 - Utilizar tecnologías de Sistemas de Información Geográfica (GIS) para mapear y visualizar claramente las áreas con mayor déficit, permitiendo una asignación más precisa y estratégica de los recursos humanos.
 - Fortalecer programas locales de formación médica para desarrollar una fuerza laboral sostenible en zonas desatendidas.
 
-### 5. Estabilidad Contractual y Gestión Estratégica por Plazas
+### Estabilidad Contractual y Gestión Estratégica por Plazas
 - Se observa alta ocupación en plazas permanentes, pero una tasa elevada de vacantes en puestos provisionales o administrativos menores.
 
-**Recomendaciones:**  
+**Recomendaciones:**
+
 - Priorizar la ocupación permanente en plazas críticas, revisando y optimizando regularmente contratos provisionales.
 - Centrar la planificación estratégica en plazas (puestos), en lugar de individuos específicos, para lograr mayor eficiencia en la gestión del presupuesto y recursos.
 
-### 6. Optimización Temporal de Reclutamiento y Contratación
+### Optimización Temporal de Reclutamiento y Contratación
 - Las fechas clave de contratación, nominación y movimiento muestran patrones históricos que podrían aprovecharse para mejorar ciclos de reclutamiento y gestión de recursos humanos.
 
-**Recomendaciones:**  
+**Recomendaciones:**
+
 - Analizar datos históricos y tendencias recientes para ajustar y optimizar calendarios de reclutamiento y contratación.
 - Mejorar la planificación anticipada y la comunicación interna para reducir tiempos muertos y mejorar la eficiencia operativa.
 
 Este enfoque integral permitirá al IMSS traducir hallazgos analíticos en acciones estratégicas concretas, mejorando significativamente la sostenibilidad del sistema de salud y optimizando la distribución del talento humano.
 
-### Preguntas de Seguimiento e Hipótesis de Investigación
+## Preguntas de Seguimiento e Hipótesis de Investigación
 
 Este análisis genera interrogantes clave que orientarán futuras investigaciones, ayudando a optimizar las políticas de recursos humanos en el IMSS y mejorar la atención sanitaria. Las principales líneas de investigación y preguntas específicas incluyen:
 
 **1. Factores Asociados a Altas Tasas de Vacantes**
+
 - ¿Qué elementos específicos (salarios bajos, alta carga laboral, falta de capacitación, ubicación geográfica) explican las altas tasas de vacantes en especialidades críticas (*xxx*) y regiones específicas?
 
 **2. Predicción de Jubilaciones y Gestión Proactiva**
+
 - ¿Es posible desarrollar modelos predictivos, basados en antigüedad y edad, para anticipar futuras jubilaciones en un horizonte de 5-10 años?
 - ¿Qué impacto tendrán estas jubilaciones previstas sobre la cobertura en distintas especialidades y regiones?
 
 **3. Efectividad de Incentivos en Reclutamiento y Retención**
+
 - ¿Qué tipo de incentivos (económicos, vivienda, desarrollo profesional) resultan más efectivos para atraer y retener personal en áreas rurales o especialidades con alta demanda?
 
 **4. Dinámicas y Barreras de Género**
+
 - ¿Existen sesgos sistemáticos que afecten la representación y retención de médicas en ciertas especialidades?
 - ¿Qué intervenciones (horarios flexibles, mentorías, políticas inclusivas) podrían mejorar la equidad de género en la fuerza laboral médica?
 
 **5. Relación entre Ausentismo e Insatisfacción Laboral**
+
 - ¿Pueden los patrones elevados de ausentismo laboral indicar problemas profundos de agotamiento, insatisfacción o condiciones laborales adversas?
 
 **6. Análisis Espacial con Sistemas de Información Geográfica (GIS)**
+
 - ¿Cómo podría la visualización precisa de vacantes y ocupación mediante GIS facilitar la redistribución estratégica de personal hacia regiones desatendidas?
 
 **7. Políticas Basadas en Datos**
+
 - ¿Qué relación existe entre las vacantes y los indicadores de calidad del servicio de salud? 
 - ¿Podrían planes de sucesión basados en datos mejorar la estabilidad y cobertura a largo plazo?
 
 **8. Enfoque Sistémico en Plazas vs. Trayectorias Individuales**
+
 - ¿De qué manera la planificación centrada en puestos ("plazas") en lugar de individuos específicos permitiría una asignación más eficiente y efectiva de los recursos humanos y presupuestarios?
 
 Estas preguntas guiarán estudios posteriores y fortalecerán la toma de decisiones basada en evidencia.
 
-### Limitaciones y Consideraciones
+## Limitaciones y Consideraciones
 
 Este análisis exploratorio se basa en datos de una quincena específica (17 del 2024) y no abarca tendencias temporales a largo plazo. Se recomienda un análisis longitudinal para evaluar cambios en la fuerza laboral a lo largo del tiempo. Además, la calidad de los datos y la consistencia de las variables pueden variar, lo que podría afectar la precisión de los resultados. Se sugiere una validación adicional de los datos y la inclusión de fuentes adicionales.
 
-### Conclusión
+## Conclusión
 
 El análisis exploratorio revela desafíos clave en la gestión del talento humano del IMSS, particularmente en áreas críticas como atención primaria (*xxx*), regiones rurales y desatendidas (ej. Chiapas, Guerrero), equidad en la retención de médicas, y la próxima ola de jubilaciones. La integración de datos demográficos, financieros, geográficos y laborales permite identificar claramente estas brechas, proporcionando evidencia robusta para la toma de decisiones.
 
@@ -195,35 +208,43 @@ Para abordar estos desafíos estratégicos, se recomiendan acciones específicas
 
 Estas estrategias facilitarán una asignación más equitativa, sostenible y efectiva del personal médico, garantizando una mejor cobertura y calidad en los servicios del IMSS.
 
-### Referencias
+## Referencias
 
 - OCDE (2020). *Health Workforce Policies: Remuneration and Employment Practices.*
 
 - OMS (2016). *Global Strategy on Human Resources for Health: Workforce Remuneration and Retention.*
 
-- INEGI (2020). *xxx*
+- [INEGI (2020). Población con afiliación a servicios de salud por entidad federativa según institución, 2020.](https://www.inegi.org.mx/app/tabulados/interactivos/?pxq=Derechohabiencia_Derechohabiencia_02_822ebcc5-ef41-40c1-9901-22e397025c64) (accesado 25 de Febrero de 2024).
+
+\newpage
 
 # Próximos Pasos: Plan de Análisis
 
 Para continuar profundizando en el entendimiento y optimización de la fuerza laboral del IMSS, se proponen las siguientes líneas estratégicas de análisis:
 
 **1. Análisis Longitudinal y de Tendencias**
+
 - Examinar los cambios en las variables demográficas, financieras, ocupacionales y regionales usando datos quincenales de los últimos cinco años, para identificar tendencias clave y anticipar futuros desafíos.
 
 **2. Modelado Estadístico Multivariado**
+
 - Realizar análisis avanzados para evaluar interacciones entre factores demográficos (edad, género), financieros (remuneración), y de ocupación (plazas ocupadas vs. vacantes).
 - Desarrollar modelos predictivos que anticipen vacantes futuras, jubilaciones y posibles impactos de diferentes intervenciones políticas.
 
 **3. Análisis Cualitativo de la Fuerza Laboral**
+
 - Llevar a cabo entrevistas y encuestas dirigidas al personal médico para profundizar en causas subyacentes del ausentismo, desigualdades de género, motivaciones profesionales y problemas específicos en retención regional.
 
 **4. Comparación Internacional y Benchmarking**
+
 - Comparar indicadores clave (dotación, vacantes, remuneración) con referentes internacionales como NHS England, OCDE y OMS para identificar estándares y mejores prácticas aplicables al contexto del IMSS.
 
 **5. Análisis en Profundidad de Variables Específicas**
+
 - Realizar un análisis detallado de códigos categóricos internos (p. ej. MCABAJA, MCP) para clarificar implicaciones específicas sobre remuneración, estabilidad contractual y asignación efectiva del personal.
 
 **6. Evaluación del Impacto sobre Resultados en Salud**
+
 - Investigar mediante análisis de correlación si las tasas elevadas de vacantes o rotación están asociadas a deterioros en la calidad de los servicios o resultados en salud.
 
 Este enfoque integral permitirá generar evidencia sólida y aplicable para fortalecer la gestión estratégica del personal médico del IMSS, asegurando sostenibilidad, equidad y calidad del sistema de salud.
@@ -234,88 +255,88 @@ Este enfoque integral permitirá generar evidencia sólida y aplicable para fort
 
 ## Oferta General de Plazas Médicas
 
-- El Instituto cuenta con un total de 88,733 plazas médicas. De estas, 82,930 están ocupadas y 7,448 permanecen vacantes para médicos de nuevo ingreso. De las plazas ocupadas, 40,708 corresponden a mujeres (48.88%) y 40,642 a hombres (45.8%), reflejando una ligera predominancia femenina.
-- Se reportan 7,383 vacantes específicas para médicos de nuevo ingreso, con 81,350 plazas ocupadas bajo diferentes tipos de contratación dentro del IMSS (ver @tbl-table_PLZOCU_DESCRIP_CLASCATEGE)
-- 7,446 plazas vigentes, con un 91.75% de ocupación del total ofertado
-- 99.03% (82,928) de las plazas ocupadas tienen presupuesto asignado
-- 6,572 vacantes cuentan con presupuesto disponible
-- 878 plazas no tienen recursos asignados
-- 7,448 plazas sobrantes
-(Ver @tbl-table_PLZOCU_VIGENCIAPTO, @tbl-table_PLZOCU_PTO, @tbl-table_PLZOCU_PLZSOB y @tbl-table_PLZOCU_PLZAUT)
+- El Instituto cuenta con un total de 90,378 plazas médicas. De estas, 82,930 están ocupadas y 7,448 (8.24%) vacantes. De las plazas ocupadas, 41,723 corresponden a mujeres (50.31%) y 41,207 a hombres (49.69%), reflejando una ligera predominancia femenina (ver @tbl-PLZOCU_DESCRIP_CLASCATEG).
+- 7,446 plazas vigentes, con un 91.75% de ocupación del total
+- 89,500 plazas cuentan con presupuesto, de las cuales 82,928 se encuentran ocupadas. De 878 sin presupuesto, 2 se encuentran ocupadas y 876 vacantes.
+- Existen 1,609 plazas marcadas como sobrantes, con cero vacantes
+- La edad promedio de los médicos es de 42.5 años, con una desviación estándar de 8 años. La edad mínima es de 26 años y la máxima de 84 años.
+- La distribución por edad muestra un pico en el rango de 30-39 años, con una disminución progresiva en rangos mayores (ver @tbl-sum_stats)
+- La distribución por edad y género muestra un mayor número de mujeres hasta los 40-49 años y más hombres a partir de este rango.
+- La antigüedad promedio es de 12.3 años con 25% de los médicos con más de 17 años de servicio
 
 ## Distribución del Personal Médico por Especialidad y Género
 
-Observaciones destacadas:
-- Medicina Familiar tiene el mayor personal total (23,336), con predominancia femenina (55.76%)
-- Traumatología y Ortopedia presenta la mayor diferencia de género, dominada por hombres (85.57%)
-- Especialidades como Cirugía General y Traumatología y Ortopedia muestran predominancia masculina
-- Especialidades relacionadas con atención a mujeres y niños (Ginecología, Pediatría) tienen mayor presencia femenina
-- Especialidades administrativas (p.ej., “N.Cent.Reg”) muestran un equilibrio relativo
-- Especialidades clínicas con mayor demanda: medicina interna, medicina familiar, urgencias
-- Especialidades quirúrgicas más demandadas: cirugía general, anestesiología, ginecología
-- Radiodiagnóstico, Urgencias Pediátricas y Salud en el Trabajo *xxx*
-(Ver @tbl-table_PLZOCU_NOMBREAR y reporte interactivo)
+- Medicina Familiar tiene el mayor personal total (23,345 total de plazas con 3.55% vacantes), con predominancia femenina (55.76%), seguida de Urgencias (12,215 totales, 49.05% mujeres y 6.57% vacantes) y Anestesiología (6,752 plazas, 61.23% mujeres, 4.49% vacantes)
+- Urología, Hemodinamia, Neurocirugía y Traumatología y Ortopedia tienen cerca de 90% de hombres
+- Endocrinología Pediátrica, Atención Y Orientación Al D.H., Medicina Paliativa, Hematología Pediátrica, Dermatología, Audiología y Nefrología Pediátrica tienen >70% de mujeres 
+- Especialidades con al menos 10 plazas y >25% de vacantes: Neurocirugía Pediátrica, Traslado De Enfermos, Dermatología, Pediatra En Servicios De Urgencias, Cirugía Plástica Y Reconstructiva, Gastroenterología (ver @tbl-top_PLZOCU_NOMBREAR, tabla extendida en Apéndices y reporte interactivo)
 
 ## Tipo de Contratación y Ocupación de Plazas
 
-- Se dispone de 6,400 plazas para médico operativo y 983 para puestos de confianza, estatuto o áreas administrativas (ver @tbl-table_PLZOCU_GRUPOTIPOPLAZA)
-- 73,637 médicos cuentan con puesto definitivo, mientras que 9,293 son personal suplente en diferentes niveles de atención
-- Total general de 7,448 plazas vacantes (ver @tbl-table_PLZOCU_TIPOMCAOCUP)
-- 73,876 médicos tienen plazas de base, 7,575 en puestos de confianza, 57 bajo estatuto ordinario y 379 en áreas temporales
-- 1,043 médicos becados apoyan al primer y segundo nivel de atención (ver @tbl-table_PLZOCU_DESCRIPCIONTC)
-- Existen 7,685 plazas ocupadas por personal de confianza (Tipo A y B), con 1,009 vacantes disponibles: 109 Tipo A y 900 Tipo B (ver @tbl-table_PLZOCU_TIPOCONFIANZA)
-- 202 médicos se encuentran en puestos sindicales o comisionados, dato adicional especificado (ver @tbl-table_PLZOCU_COMSIN)
+- 73,876 médicos tienen plazas de base, 7,575 en puestos de confianza, 57 bajo estatuto ordinario y 379 en áreas temporales (puestos ocupados). Ningún tipo tiene más de 12% de vacancia (ver @tbl-top_PLZOCU_CATEGORIA y Apéndice).
+- Existen 7,685 plazas ocupadas por personal de confianza (Tipo A y B), con 1,009 vacantes disponibles: 109 Tipo A y 900 Tipo B (ver @tbl-PLZOCU_TipoConfianza)
+- 202 médicos se encuentran en puestos sindicales o comisionados
+- Actualmente, 82,320 médicos contribuyen con una cuota sindical
 
 ## Nivel Educativo del Personal Médico
+
+Por lo menos (ver @tbl-PLZOCU_ESCOLARIDAD):
 
 - 48,529 médicos cuentan con especialidad completa
 - 2,757 médicos tienen maestría completa
 - 1,375 médicos cuentan con doctorado
-(Ver @tbl-table_PLZOCU_ESCOLARIDAD)
 
 ## Jornadas Laborales y Turnos
 
-- Existen cinco turnos fijos (matutino, vespertino, nocturno A, nocturno B, jornada acumulada) y un turno móvil para cubrir ausencias
-- Los turnos matutino y vespertino concentran la mayor cantidad de personal, seguidos por los nocturnos 
+- Existen cinco turnos fijos (matutino, vespertino, nocturno A, nocturno B, jornada acumulada) y un turno móvil para cubrir ausencias. Ningún tipo tiene más de 11% de vacancia global aunque existen decenas de subtipos de horarios (ver tabla extendida en Apéndices).
+- Los turnos matutino y vespertino concentran la mayor cantidad de personal, seguidos por el nocturno 
 - Horarios disponibles varían entre 8 horas (matutino, vespertino), 12 horas (nocturnos), hasta 15 horas con 45 minutos (fin de semana)
-- Los 5 horarios con mayor número de vacantes se detallan en la tablas anexas
-(Ver @tbl-table_PLZOCU_DESCRIP_TURNO y @tbl-table_PLZOCU_DESCRIP_HORARIO)
-
-## Distribución por Clasificación y Tipo de Unidad
-
-- La mayor oferta de vacantes está concentrada en hospitales generales de zona (segundo nivel), seguidos por unidades de medicina familiar (ver @tbl-table_PLZOCU_DEPENDENCIAE)
-- El segundo nivel concentra el mayor número de plazas ocupadas (44,933), seguido por primer nivel (25,941)
-- El tercer nivel (UMAE) y áreas administrativas mantienen números inferiores
-(Ver @tbl-table_PLZOCU_CLASIF_UNIDAD)
-- Distribución por servicio muestra mayor disponibilidad de vacantes en áreas hospitalarias: consulta médica, quirófano, terapia intensiva, hospitalización y urgencias (ver @tbl-table_PLZOCU_DESCRIPCION_SERVICIO)
-- Las categorías Médico Familiar, No Familiar y Médico General tienen la mayor demanda
-- Las plazas adscritas a Coordinación Clínica Médica y de Cirugía, así como Jefatura de Medicina Familiar, presentan alta demanda
-(Ver @tbl-table_PLZOCU_CATEGORIA y @tbl-table_PLZOCU_ADSCRIPCION)
+- Los 5 horarios con mayor número de vacantes se detallan en la tablas anexas. El matutino de 7 a 15h tiene cerca de 17% de vacancia, seguido por jornadas mixtas y otros subtipos (ver @tbl-PLZOCU_DESCRIP_TURNO y @tbl-PLZOCU_DESCRIP_HORARIO).
 
 ## Distribución Geográfica de Plazas Médicas
 
-- Estados con mayor número de plazas ocupadas: Jalisco, Nuevo León, México Oriente
-- Mayor número absoluto de vacantes: Chihuahua, México Oriente, Jalisco
-(Ver @tbl-table_PLZOCU_DELEGACIONE y @fig-xxx_ "PLAZAS PARA PERSONAL MÉDICO POR DELEGACIÓN")
+- OOADs con mayor número de plazas ocupadas por porcentaje: Querétaro, Aguascalientes, Tlaxcala (todas con >97% de plazas ocupadas)
+- OOADs con mayor número de vacantes por porcentaje: Chihuahua, Michoacán, Tabasco, Sonora (20, 13, 12 y 11% de vacantes respectivamente; ver @tbl-PLZOCU_DELEGACION, @fig-bar_DELEGACION y @fig-bar_CLASIF_UNIDAD)
+- Como ejemplo, Michoacán tiene 343 vacantes, de las cuales:
 
-## Déficit Crítico en Relación con Densidad Poblacional
+| Puesto                                      | Total |
+|---------------------------------------------|-------|
+| MEDICO NO FAMILIAR 80                       | 276   |
+| MEDICO GENERAL 80                           | 26    |
+| MEDICO FAMILIAR 80                          | 18    |
+| N51 JEFE SERVICIO UMH 80                    | 16    |
+| N49 INVEST ASOCIADO A 80                    | 1     |
+| N51 JEF SPPSTIMSS UMH 2NIV 80               | 2     |
+| N51 COORD HOSP DON ORG Y TEJ UMH            | 1     |
+| N52 COORD CLINICO UMH 80                    | 1     |
+| N54 DIRECTOR UMF 1 80                       | 1     |
+| N55 INVEST TITULAR A 80                     | 1     |
 
-- Mayor déficit crítico (índice <0.05): Tlaxcala, Querétaro, Aguascalientes, Nayarit, Guanajuato, Nuevo León, Oaxaca
-- Menor déficit (índice >0.1): Ciudad de México, Estado de México, Coahuila, Puebla, Guerrero, Tamaulipas, Veracruz, Sonora y Tabasco
-- Potencial beneficiarios al cubrir vacantes: Estado de México (7,831.66 personas), Ciudad de México (2,723.89 personas)
-- Recomendaciones: Priorizar reclutamiento en estados críticos e incentivos en estados muy poblados
-(Ver reporte interactivo)
+- Las localidades con mayor vacancia son Juárez, Nacozari y Tulla de Allende (>50% de vacantes con más de 50 plazas médicas cada una; ver @tbl-top_PLZOCU_DESCRIP_LOCALIDAD y tabla extendida en Apéndice).
+- Dependencias con más del 50% de plazas vacantes inluyen Hospital General Regional 02, Hospital General De Zona 86, Hosp Gral Subzona/Mf 23 (Nacozari), Hosp Gral Zona /Mf 5, y la Unidad Medicina Fam 14 Sta Rosa (ver @tbl-top_PLZOCU_DEPENDENCIA)
+
+## Distribución por Clasificación y Tipo de Unidad
+
+- El segundo nivel concentra el mayor número de plazas ocupadas (50,326, 10.72% de estas con vacantes), seguido por primer nivel (27,039, 4.06% de estas con vacantes, ver @tbl-PLZOCU_CLASIF_UNIDAD)
+- Los servicios con mayores vacantes son G1-Unidad De Quemados, 4C-Unidad De Investigación De Salud En El Trabajo, 4B-Unidad De Invest Médica En Epidemiología Clínica (51.90%, 27.84% y 27.08% respectivamente; ver @tbl-top_PLZOCU_DESCRIPCION_SERVICIO).
+- Las siguientes categorías tienen más de 10 plazas y más de 30% de puestos vacantes: MED TRAS PAC TERAP INT 80, MED TRAS PAC URGENCIA 80, N52 SUBD MED UM C 80, N51 JEF SPPSTIMSS UMH 2NIV 80, N52 JEFE DIVISION UMH 80 (ver @tbl-top_PLZOCU_CATEGORIA y reporte interactivo).
 
 ## Jubilación del Personal Médico
 
-- Aumento significativo en contratación cerca del año 2010, repunte por COVID en 2020 (ver @fig-xxx_ "DISTRIBUCIÓN POR FECHA DE INGRESO")
-- Incremento progresivo de jubilaciones desde 2024, pico entre 2031-2032, disminución en 2034 y nuevo aumento significativo desde 2040, hasta 856 jubilaciones en 2042 (ver @fig-xxx_ "FRECUENCIA ESTIMADA POR FECHA PROBABLE DE JUBILACIÓN DE PERSONAL MÉDICO IMSS")
+- Aumento significativo en contratación cerca del año 2010, repunte en 2020 (ver @fig-hist_FECHAINI)
+- Incremento progresivo de jubilaciones desde 2024, pico entre 2031-2032, disminución en 2034 y nuevo aumento significativo desde 2040, hasta 856 jubilaciones en 2042 (ver @fig-hist_FECHAPROBJUB)
 - Se estima que 25,719 trabajadores culminarán bajo régimen de jubilación
-- Actualmente, 1,787 médicos están en trámite o proceso de jubilación
-(Ver @tbl-table_PLZOCU_JUBILA)
-- Régimen actual de jubilación y pensiones del personal médico (ver @tbl-table_PLZOCU_RJP)
+- 1,787 médicos tienen opción de jubilación inmediata (ver @fig-bar_JUBILA)
+- Régimen actual de jubilación y pensiones del personal médico (ver @tbl-PLZOCU_RJP)
 
-## Cuota Sindical
+## Número de Plazas Médicas por Derechohabientes
 
-- Actualmente, 82,320 médicos contribuyen con una cuota sindical, reflejando una relación institucional robusta (ver @tbl-table_PLZOCU_CPTO180)
+- Estados con más derechohabientes: Estado de México (5,983,389), Jalisco (4,149,528) y Ciudad de México (3,381,545)
+- Estados con menos derechohabientes: Campeche (288,186), Tlaxcala (322,989) y Colima (362,244).
+- Número de derechohabientes por plaza ocupada:
+  - Mejor relación: Ciudad de México (300 personas/plaza)
+  - Peor relación: Estado de México (757 personas/plaza)
+- Chihuahua, Michoacán, Tabasco, Sonora y Tamaulipas con mayor potencial de beneficio si se ocuparan todas las vacantes (por porcentaje de beneficiarios):
+- Querétaro, Aguascalientes, Tlaxcala, Nuevo León y Yucatán con menor impacto *relativo*.
 
+(**Ver reporte interactivo**)

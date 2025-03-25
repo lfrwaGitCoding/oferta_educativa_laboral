@@ -138,18 +138,22 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
 ```
 :::
 
+
+<!-- TO DO: Separate script, will not regenerate with batch processing -->
+![Gráfico de barras de Especialidades más Frecuentes por OOAD](ordinario_plot_bar_med_esp_OOAD_top.pdf)
+
 ::: {.cell tbl-cap="Áreas de Responsabilidad con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_NOMBREAR}
 ```{r, table_PLZOCU_NOMBREAR_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_NOMBREAR.txt",
-                                   caption = NULL
-                                   )
+                       caption = NULL
+                       )
 ```
 :::
 
 ```{r, table_PLZOCU_ADSCRIPCION_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_ADSCRIPCION.txt",
-                                   caption = "Lugares de Adscripción con más de diez plazas y mayor vacancia"
-                                   )
+                       caption = "Lugares de Adscripción con más de diez plazas y mayor vacancia"
+                       )
 ```
 
 ::: {.cell tbl-cap="Categorías con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_CATEGORIA}

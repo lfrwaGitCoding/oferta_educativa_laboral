@@ -69,10 +69,10 @@ Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), ed
 - **Reclutamiento y Retención Focalizados en Especialidades y Regiones**: 
   Un análisis más detallado de especialidades críticas con altas tasas de vacantes o deserción al igual que por OOAD y localidad podría informar la implementación de incentivos financieros específicos, asistencia para vivienda, oportunidades de desarrollo profesional y becas de formación, entre otros, para atraer personal. Otras medidas en conjunto con otras direcciones, tales como servicios de telemedicina podrían complementar y extender el acceso a servicios médicos especializados en áreas de difícil cobertura.
 
-- **Planificación Proactiva de Jubilaciones y Sucesión Laboral**
+- **Planificación Proactiva de Jubilaciones y Sucesión Laboral**:
   Existe una necesidad de predecir de mejor manera jubilaciones y bajas por cualquier razón para garantizar servicios continuos, en particular en localidades y/o áreas con números bajos de médicos. A primera instancia, las distribuciones de edad y antigüedad indican cierta estabilidad con una cuarta parte del personal médico con más de 48 años, y de manera independiente, una cuarta parte con 17 o más años de antigüedad. Aun así, dadas las contrataciones masivas en 2010 y 2020, existen periodos críticos en donde un alto número del personal médico estaría en posición de jubilarse. Existe la posibilidad de desarrollar modelos predictivos con datos longitudinales y de trayectoria del empleado/empleada del SIAP para anticipar jubilaciones y bajas y ajustar planes de sucesión. Otras estrategias podrían incluir programas como jubilación escalonada, formación acelerada y mentoría para asegurar transiciones efectivas en áreas críticas.
 
-- **Equidad de Género y Promoción de Diversidad**
+- **Equidad de Género y Promoción de Diversidad**:
   En promedio existe un balance en género con aproximadamente 50%. A pesar de esto, existen especialidades con desbalances notables, las principales siendo:
 
 | Área de Responsabilidad      | Hombres | Mujeres | Total | H%     | M%     |
@@ -93,11 +93,35 @@ Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), ed
 
   Desequilibrios de género pueden generar problemas importantes en la atención médica, acceso diferenciado, retención y cultura laboral. Políticas inclusivas, horarios laborales flexibles, programas de mentoría, y demás incentivos dirigidos a los géneros subrepresentados podrían aminorar problemas y mejorar acceso equitativo educativo y laboral. Análisis más detallados sobre tendencias de género en contratación, promoción y retención, y factores de influencia en selección de especialidad podrán dar un mejor entendimiento.
 
-- **Distribución Geográfica**
+- **Distribución Geográfica**:
   En un análisis preliminar, observamos diferencias importantes en el número de personas atendidas por cada plaza médica por OOAD. Es posible que la asignación vaya de acuerdo con la carga epidemiológica local y otros factores  (infraestructura, acceso, densidad poblacional, entre otros). Sin embargo, es posible que existan discrepancias en la asignación de recursos.
 
+- **Lugar de Adscripción vs Lugar de Origen**:
+   En un primer acercamiento, investigamos el porcentaje de personal médico que trabaja en donde es originario. Observamos que a diferencia del personal total, el personal médico tiene mucha mayor movilidad. En las siguientes tablas mostramos los totales para médicos y por OOAD (tres mayores y tres menores por porcentaje).
 
-## Preguntas de Seguimiento e Hipótesis de Investigación
+Distribución de Frecuencias por Lugar de Nacimiento y Trabajo:
+
+| Descripción                 | Cantidad | Porcentaje |
+|-----------------------------|----------|------------|
+| Total Personal              | 82,930   | 100%       |
+| Personal Dentro del Origen  | 43,978   | 53.03%     |
+| Personal Fuera del Origen   | 38,952   | 46.97%     |
+
+
+Distribución por OOAD:
+
+| Origen      | Total Nacidos | Trabajan en el Origen | Trabajan Fuera del Origen | % Trabajan en el Origen | % Trabajan Fuera del Origen |
+|-------------|---------------|------------------------|----------------------------|--------------------------|------------------------------|
+| Chihuahua   | 2,023         | 1,660                  | 363                        | 82.06%                   | 17.94%                       |
+| Nuevo León  | 3,029         | 2,477                  | 552                        | 81.78%                   | 18.22%                       |
+| Yucatán     | 1,154         | 871                    | 283                        | 75.48%                   | 24.52%                       |
+| Tlaxcala    | 941           | 285                    | 656                        | 30.29%                   | 69.71%                       |
+| Oaxaca      | 2,687         | 875                    | 1,812                      | 32.56%                   | 67.44%                       |
+| Guerrero    | 2,786         | 932                    | 1,854                      | 33.45%                   | 66.55%                       |
+
+Una comparación por edades promedio de cada grupo mostró diferencias mínimas (ver reporte interactivo), sugiriendo que un análisis más detallado podría arrojar observaciones útiles sobre la movilidad de médicos a lo largo del país y de acuerdo a su trayectoria profesional.
+
+## Preguntas de Seguimiento
 
 Este análisis genera interrogantes que pueden profundizar recomendaciones y el desarrollo de políticas basadas en evidencia. Las principales líneas y preguntas específicas que identificamos incluyen:
 
@@ -219,7 +243,7 @@ Este enfoque integral permitirá generar evidencia sólida y aplicable para fort
 - La edad promedio de los médicos es de 42.5 años, con una desviación estándar de 8 años. La edad mínima es de 26 años y la máxima de 84 años.
 - La distribución por edad muestra un pico en el rango de 30-39 años, con una disminución progresiva en rangos mayores (ver @tbl-sum_stats)
 - La distribución por edad y género muestra un mayor número de mujeres hasta los 40-49 años y más hombres a partir de este rango.
-- La antigüedad promedio es de 12.3 años con 25% de los médicos con más de 17 años de servicio
+- La antigüedad promedio es de 12.3 años, con 25% de los médicos con más de 17 años de servicio.
 
 ## Distribución del Personal Médico por Especialidad y Género
 

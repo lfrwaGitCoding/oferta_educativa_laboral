@@ -257,7 +257,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_DATOADIC_CATBASE.txt",
 
 ### De acuerdo a ubicación y clasificación del lugar
 
-::: {.cell tbl-cap=caption="Dependencias con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DEPENDENCIA}
+::: {.cell tbl-cap="Dependencias con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DEPENDENCIA}
 ```{r, table_PLZOCU_DEPENDENCIA_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_DEPENDENCIA.txt",
                        caption = NULL

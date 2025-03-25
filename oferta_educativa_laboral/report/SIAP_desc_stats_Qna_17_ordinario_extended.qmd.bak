@@ -42,6 +42,7 @@ source("_scripts/funcs.R")
 :::
 
 \clearpage
+\FloatBarrier
 
 # Gráficas y tablas
 
@@ -106,36 +107,202 @@ epi_table_to_latex("sum_factors.txt",
 ![Gráfico de barras por Género](plots_bar_num_SEXO.pdf){#fig-bar_sexo width=50%}
 :::
 
-\FloatBarrier
-\clearpage
+::: {layout="[[50,50]]"}
+![Histograma de Antigüedad en días](plots_hist_num_ANT_DIAS.pdf){#fig-hist_ANT_DIAS}
 
-::: {.cell tbl-cap="Ocupación de plazas de acuerdo a género" #tbl-table_PLZOCU_SEXO}
-```{r, table_PLZOCU_SEXO, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_SEXO.txt",
-                   caption = NULL  # caption set in tbl-cap above
-                   )
-```
+![Diagrama de caja de Antigüedad en días](plots_box_num_ANT_DIAS.pdf){#fig-box_ANT_DIAS}
 :::
 
 ![Gráfico de barras por Escolaridad](plots_bar_num_ESCOLARIDAD.pdf){#fig-bar_escolaridad}
 
-<!-- See @fig-hist_edad for yyy -->
-
-<!-- TO DO: would need to add the following to all tables in order to reference them: -->
-<!-- ::: {.cell tbl-cap="xxx" #tbl-sum_factors} -->
-<!-- caption = NULL  # caption set in tbl-cap above -->
-<!-- ::: -->
-<!-- eg See @tbl-sum_factors for yyy -->
-
+::: {.cell tbl-cap="Ocupación de plazas por Escolaridad" tbl-pos=h #tbl-PLZOCU_ESCOLARIDAD}
 ```{r, table_PLZOCU_ESCOLARIDAD, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
-                   "Ocupación de plazas por Escolaridad"
+                   caption = NULL
+                   )
+```
+:::
+
+\clearpage
+
+### Por tipo de plaza y clasificación
+
+<!-- Exclude if filtered by profession: -->
+<!-- ![Gráfico de barras de Clasificación por Categoría](plots_bar_num_DESCRIP_CLASCATEG.pdf) -->
+
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Categoría" tbl-pos=h #tbl-PLZOCU_DESCRIP_CLASCATEG}
+```{r, table_PLZOCU_DESCRIP_CLASCATEG, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
+                   caption = NULL
+                   )
+```
+:::
+
+::: {.cell tbl-cap="Áreas de Responsabilidad con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_NOMBREAR}
+```{r, table_PLZOCU_NOMBREAR_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_NOMBREAR.txt",
+                                   caption = NULL
+                                   )
+```
+:::
+
+```{r, table_PLZOCU_ADSCRIPCION_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_ADSCRIPCION.txt",
+                                   caption = "Lugares de Adscripción con más de diez plazas y mayor vacancia"
+                                   )
+```
+
+::: {.cell tbl-cap="Categorías con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_CATEGORIA}
+```{r, table_PLZOCU_CATEGORIA_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_CATEGORIA.txt",
+                       caption = NULL
+                       )
+```
+:::
+
+::: {.cell tbl-cap="Servicios con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DESCRIPCION_SERVICIO}
+```{r, table_PLZOCU_DESCRIPCION_SERVICIO_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIPCION_SERVICIO.txt",
+                       caption = NULL
+                       )
+```
+:::
+
+\clearpage
+\FloatBarrier
+
+![Gráfico de barras al Tipo de Contrato](plots_bar_num_DescripcionTC.pdf)
+
+```{r, table_PLZOCU_DescripcionTC, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DescripcionTC.txt",
+                   "Ocupación de plazas de acuerdo al Tipo de Contrato"
                    )
 ```
 
 \clearpage
+\FloatBarrier
 
-### Por persona y plaza
+::: {layout="[[50,50]]"}
+![Gráfico de barras de acuerdo al Tipo de Confianza](plots_bar_num_TipoConfianza.pdf){#fig-bar_TipoConfianza}
+
+![Gráfico de barras de acuerdo al Grupo de Tipo de Plaza](plots_bar_num_GrupoTipoPlaza.pdf){#fig-bar_GrupoTipoPlaza}
+:::
+
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo al Tipo de Confianza" tbl-pos=h #tbl-PLZOCU_TipoConfianza}
+```{r, table_PLZOCU_TipoConfianza, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_TipoConfianza.txt",
+                   caption = NULL
+                   )
+```
+:::
+
+\clearpage
+
+```{r, table_PLZOCU_GrupoTipoPlaza, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_GrupoTipoPlaza.txt",
+                   "Ocupación de plazas agrupadas de acuerdo al Tipo de Plaza"
+                   )
+```
+
+\clearpage
+\FloatBarrier
+
+<!-- TO DO: re-do as onlyif occupied, so no vacants -->
+<!-- ```{r, table_PLZOCU_COMSIN, echo = FALSE, results = "asis"} -->
+<!-- epi_table_to_latex("table_PLZOCU_COMSIN.txt", -->
+<!--                    "Ocupación de plazas por Comisión sindical" -->
+<!--                    ) -->
+<!-- ``` -->
+
+![Gráfico de barras por Comisión sindical](plots_bar_num_COMSIN.pdf){#fig-bar_COMSIN}
+
+\clearpage
+
+```{r, table_PLZOCU_DESCRIP_TIPO_DE_PLAZA, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_TIPO_DE_PLAZA.txt",
+                   "Ocupación de plazas agrupadas de acuerdo a la Descripción del Tipo de Plaza"
+                   )
+```
+
+![Gráfico de barras de acuerdo a la Descripción del Turno](plots_bar_num_DESCRIP_TURNO.pdf)
+
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a la Descripción del Turno" tbl-pos=h #tbl-PLZOCU_DESCRIP_TURNO}
+```{r, table_PLZOCU_DESCRIP_TURNO, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DESCRIP_TURNO.txt",
+                   caption = NULL
+                   )
+```
+:::
+
+\clearpage
+
+::: {.cell tbl-cap="Horarios con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-PLZOCU_DESCRIP_HORARIO}
+```{r, table_PLZOCU_DESCRIP_HORARIO_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIP_HORARIO.txt",
+                       caption = NULL
+                       )
+```
+:::
+
+```{r, table_PLZOCU_DATOADIC_CATBASE_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_DATOADIC_CATBASE.txt",
+                                   # min_total = 10,
+                                   # n_rows = 25,
+                                   caption = "Categorías de Base con más de diez plazas y mayor vacancia - Dato Adicional"
+                                   )
+```
+
+\clearpage
+\FloatBarrier
+
+### De acuerdo a ubicación y clasificación del lugar
+
+::: {.cell tbl-cap="Dependencias con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DEPENDENCIA}
+```{r, table_PLZOCU_DEPENDENCIA_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_DEPENDENCIA.txt",
+                       caption = NULL
+                       )
+```
+:::
+
+\clearpage
+\FloatBarrier
+
+![Gráfico de barras por Delegación](plots_bar_num_DELEGACION.pdf){#fig-bar_DELEGACION}
+
+::: {.cell tbl-cap="Ocupación de plazas por Delegación" tbl-pos=h #tbl-PLZOCU_DELEGACION}
+```{r, table_PLZOCU_DELEGACION, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_DELEGACION.txt",
+                   caption = NULL
+                   )
+```
+:::
+
+![Gráfico de barras por Unidad](plots_bar_num_CLASIF_UNIDAD.pdf){#fig-bar_CLASIF_UNIDAD}
+
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Unidad" tbl-pos=h #tbl-PLZOCU_CLASIF_UNIDAD}
+```{r, table_PLZOCU_CLASIF_UNIDAD, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_CLASIF_UNIDAD.txt",
+                   caption = NULL
+                   )
+```
+:::
+
+\clearpage
+\FloatBarrier
+
+::: {.cell tbl-cap="Localidades con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DESCRIP_LOCALIDAD}
+```{r, table_PLZOCU_DESCRIP_LOCALIDAD_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIP_LOCALIDAD.txt",
+                       caption = NULL
+                       )
+```
+:::
+
+\clearpage
+\FloatBarrier
+
+### Por fechas de movimiento por plaza
 
 <!-- Adds some space between the table and figure -->
 \vspace{3em}
@@ -150,72 +317,6 @@ epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
 ![Histograma de Fecha de nominación](plots_hist_dates_FECHANOMINACION.pdf){#fig-hist_FECHANOMINACION}
 :::
 
-::: {layout="[[50,50]]"}
-![Histograma de Antigüedad en días](plots_hist_num_ANT_DIAS.pdf){#fig-hist_ANT_DIAS}
-
-![Diagrama de caja de Antigüedad en días](plots_box_num_ANT_DIAS.pdf){#fig-box_ANT_DIAS}
-:::
-
-\clearpage
-
-<!-- Forces to stay in section: -->
-\FloatBarrier
-
-```{r, table_PLZOCU_COMSIN, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_COMSIN.txt",
-                   "Ocupación de plazas por Comisión sindical"
-                   )
-```
-
-![Gráfico de barras por Comisión sindical](plots_bar_num_COMSIN.pdf){#fig-bar_COMSIN}
-
-\FloatBarrier
-\clearpage
-
-### De acuerdo a ubicación de la plaza
-
-![Gráfico de barras por Delegación](plots_bar_num_DELEGACION.pdf)
-
-![Gráfico de barras por Unidad](plots_bar_num_CLASIF_UNIDAD.pdf)
-
-```{r, table_PLZOCU_DELEGACION, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_DELEGACION.txt",
-                   "Ocupación de plazas por Delegación"
-                   )
-```
-
-\clearpage
-
-```{r, table_PLZOCU_DESCRIP_LOCALIDAD_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIP_LOCALIDAD.txt",
-                       # min_total = 10,
-                       # # n_rows = 25,
-                       caption = "Localidaes con más de diez plazas y mayor vacancia"
-                       )
-```
-
-\clearpage
-
-### De acuerdo al tipo de plaza
-
-![Gráfico de barras de Clasificación por Categoría](plots_bar_num_DESCRIP_CLASCATEG.pdf)
-
-```{r, table_PLZOCU_DESCRIP_CLASCATEG, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
-                   "Ocupación de plazas de acuerdo a Clasificación por Categoría"
-                   )
-```
-
-```{r, table_PLZOCU_CLASIF_UNIDAD, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_CLASIF_UNIDAD.txt",
-                   "Ocupación de plazas de acuerdo a Clasificación por Unidad"
-                   )
-```
-
-\clearpage
-
-### Por fechas de movimiento por plaza
-
 ::: {layout="[[50,50], [50, 50]]"}
 ![Fechas de movimiento por plaza: Ingreso](plots_hist_dates_FECHAING.pdf){#fig-hist_FECHAING}
 
@@ -227,116 +328,11 @@ epi_table_to_latex("table_PLZOCU_CLASIF_UNIDAD.txt",
 :::
 
 \clearpage
+\FloatBarrier
 
-```{r, table_PLZOCU_NOMBREAR_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_NOMBREAR.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Áreas de Responsabilidad con más de diez plazas y mayor vacancia"
-                                   )
-```
+### De acuerdo a bajas y jubilaciones
 
-\clearpage
-
-```{r, table_PLZOCU_ADSCRIPCION_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_ADSCRIPCION.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Lugares de Adscripción con más de diez plazas y mayor vacancia"
-                                   )
-```
-
-\clearpage
-
-```{r, table_PLZOCU_CATEGORIA_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_CATEGORIA.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Categorías con más de diez plazas y mayor vacancia"
-                                   )
-```
-
-\clearpage
-
-```{r, table_PLZOCU_DESCRIPCION_SERVICIO_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIPCION_SERVICIO.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Servicios con más de diez plazas y mayor vacancia"
-                                   )
-```
-
-\clearpage
-
-```{r, table_PLZOCU_DEPENDENCIA_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_DEPENDENCIA.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Dependencias con más de diez plazas y mayor vacancia"
-                                   )
-```
-
-\clearpage
-
-![Gráfico de barras al Tipo de Contrato](plots_bar_num_DescripcionTC.pdf)
-
-```{r, table_PLZOCU_DescripcionTC, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_DescripcionTC.txt",
-                   "Ocupación de plazas de acuerdo al Tipo de Contrato"
-                   )
-```
-
-::: {layout="[[50,50]]"}
-![Gráfico de barras de acuerdo al Tipo de Confianza](plots_bar_num_TipoConfianza.pdf){#fig-bar_TipoConfianza}
-
-![Gráfico de barras de acuerdo al Grupo de Tipo de Plaza](plots_bar_num_GrupoTipoPlaza.pdf){#fig-bar_GrupoTipoPlaza}
-:::
-
-```{r, table_PLZOCU_TipoConfianza, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_TipoConfianza.txt",
-                   "Ocupación de plazas de acuerdo al Tipo de Confianza"
-                   )
-```
-
-\clearpage
-
-```{r, table_PLZOCU_GrupoTipoPlaza, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_GrupoTipoPlaza.txt",
-                   "Ocupación de plazas agrupadas de acuerdo al Tipo de Plaza"
-                   )
-```
-
-![Gráfico de barras por Delegación](plots_bar_num_DELEGACION.pdf)
-
-![Gráfico de barras por Unidad](plots_bar_num_CLASIF_UNIDAD.pdf)
-
-```{r, table_PLZOCU_DESCRIP_TIPO_DE_PLAZA, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_DESCRIP_TIPO_DE_PLAZA.txt",
-                   "Ocupación de plazas agrupadas de acuerdo a la Descripción del Tipo de Plaza"
-                   )
-```
-
-\clearpage
-
-![Gráfico de barras de acuerdo al Tipo de Marca de Baja](plots_bar_num_MCABAJA.pdf)
-
-```{r, table_PLZOCU_TipoMcaOcup, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_TipoMcaOcup.txt",
-                   "Ocupación de plazas de acuerdo al Tipo de Marca de Baja"
-                   )
-```
-
-\clearpage
-
-```{r, table_PLZOCU_MCP_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_MCP.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Marcas de Creación con más de diez plazas y mayor vacancia"
-                                   )
-```
-
-::: {layout="[[50,50], [50,50]]"}
+::: {layout="[[-10,40,40,-10], [-10,40,40,-10]]"}
 ![Gráfico de barras de acuerdo a Autorización](plots_bar_num_PLZAUT.pdf){#fig-bar_PLZAUT}
 
 ![Gráfico de barras de acuerdo a Ocupación](plots_bar_num_PLZOCU.pdf){#fig-bar_PLZOCU}
@@ -346,6 +342,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_MCP.txt",
 ![Gráfico de barras por Plaza con Presupuesto](plots_bar_num_PTO.pdf){#fig-bar_PTO}
 :::
 
+\clearpage
 
 ```{r, table_PLZOCU_PLZAUT, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_PLZAUT.txt",
@@ -354,7 +351,6 @@ epi_table_to_latex("table_PLZOCU_PLZAUT.txt",
 ```
 
 \clearpage
-
 
 ```{r, table_PLZOCU_PLZSOB, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_PLZSOB.txt",
@@ -368,8 +364,6 @@ epi_table_to_latex("table_PLZOCU_PTO.txt",
                    )
 ```
 
-\clearpage
-
 ![Gráfico de barras de acuerdo a la Vigencia del Puesto](plots_bar_num_VIGENCIAPTO.pdf)
 
 ```{r, table_PLZOCU_VIGENCIAPTO, echo = FALSE, results = "asis"}
@@ -379,36 +373,30 @@ epi_table_to_latex("table_PLZOCU_VIGENCIAPTO.txt",
 ```
 
 \clearpage
+\FloatBarrier
 
-![Gráfico de barras de acuerdo a la Descripción del Turno](plots_bar_num_DESCRIP_TURNO.pdf)
+![Gráfico de barras de acuerdo al Tipo de Marca de Baja](plots_bar_num_MCABAJA.pdf)
 
-```{r, table_PLZOCU_DESCRIP_TURNO, echo = FALSE, results = "asis"}
-epi_table_to_latex("table_PLZOCU_DESCRIP_TURNO.txt",
-                   "Ocupación de plazas de acuerdo a la Descripción del Turno"
+```{r, table_PLZOCU_TipoMcaOcup, echo = FALSE, results = "asis"}
+epi_table_to_latex("table_PLZOCU_TipoMcaOcup.txt",
+                   "Ocupación de plazas de acuerdo al Tipo de Marca de Baja"
                    )
 ```
 
-\clearpage
-
-```{r, table_PLZOCU_DESCRIP_HORARIO_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIP_HORARIO.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Horarios con más de diez plazas y mayor vacancia"
-                                   )
+```{r, table_PLZOCU_MCABAJA_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_MCABAJA.txt",
+                       caption = "Marcas de Baja con más de diez plazas y mayor vacancia"
+                       )
 ```
 
-```{r, table_PLZOCU_DATOADIC_CATBASE_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_DATOADIC_CATBASE.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Categorías de Base con más de diez plazas y mayor vacancia - Dato Adicional"
-                                   )
+```{r, table_PLZOCU_MCP_corta, echo = FALSE, results = "asis"}
+epi_table_to_latex_sum(file_path = "table_PLZOCU_MCP.txt",
+                       caption = "Marcas de Creación con más de diez plazas y mayor vacancia"
+                       )
 ```
 
 \clearpage
-
-### De acuerdo a bajas y jubilaciones
+\FloatBarrier
 
 ::: {layout="[[50,50]]"}
 ![Histograma de la Fecha Probable de Jubilación](plots_hist_dates_FECHAPROBJUB.pdf){#fig-hist_FECHAPROBJUB}
@@ -419,23 +407,15 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_DATOADIC_CATBASE.txt",
 <!-- Forces tables to stay in section: -->
 \FloatBarrier
 
+<!-- TO DO: re-do as onlyif occupied, so no vacants -->
 ```{r, table_PLZOCU_JUBILA, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_JUBILA.txt",
-                   "Ocupación de plazas de acuerdo a si el trabajador se encuentra próximo a Jubilación"
+                   "Proyección de Jubilación"
                    )
 ```
 
 \clearpage
-
-![Gráfico de barras de acuerdo a la Marca de Baja](plots_bar_num_MCABAJA.pdf)
-
-```{r, table_PLZOCU_MCABAJA_corta, echo = FALSE, results = "asis"}
-epi_table_to_latex_sum(file_path = "table_PLZOCU_MCABAJA.txt",
-                                   # min_total = 10,
-                                   # n_rows = 25,
-                                   caption = "Marcas de Baja con más de diez plazas y mayor vacancia"
-                                   )
-```
+\FloatBarrier
 
 ::: {layout="[[50,50]]"}
 ![Gráfico de barras de acuerdo al Régimen de Jubilación de Pensiones (RJP)](plots_bar_num_RJP.pdf){#fig-bar_RJP}
@@ -443,19 +423,23 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_MCABAJA.txt",
 ![Gráfico de barras de acuerdo al Régimen de Jubilación de Pensiones (MY)](plots_bar_num_MY.pdf){#fig-bar_MY}
 :::
 
+<!-- TO DO: re-do as onlyif occupied, so no vacants -->
 ```{r, table_PLZOCU_MY, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_MY.txt",
                    "Ocupación de plazas de acuerdo al Régimen de Jubilación"
                    )
 ```
 
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo al Régimen de Jubilación de Pensiones" tbl-pos=h #tbl-PLZOCU_RJP}
 ```{r, table_PLZOCU_RJP, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_RJP.txt",
-                   "Ocupación de plazas de acuerdo al Régimen de Jubilación de Pensiones"
+                   caption = NULL
                    )
 ```
+:::
 
 \clearpage
+\FloatBarrier
 
 ### De acuerdo a sueldo y conceptos
 

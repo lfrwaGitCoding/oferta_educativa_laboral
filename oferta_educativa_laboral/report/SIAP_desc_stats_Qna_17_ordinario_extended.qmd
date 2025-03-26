@@ -44,11 +44,18 @@ source("_scripts/funcs.R")
 \clearpage
 \FloatBarrier
 
+<!-- Next section is for landscape pages: -->
+\afterpage{
+  \thispagestyle{empty}
+}
+
+::: {.landscape}
+
 # Gráficas y tablas
 
 ## Análisis descriptivo de acuerdo al tipo de variable
 
-::: {.cell tbl-cap='Resumen de variables de identificación' tbl-pos=h #tbl-sum_chars}
+::: {.cell tbl-cap="Resumen de variables de identificación" tbl-pos="h" id="tbl-sum_chars"}
 ```{r, echo = FALSE, results = "asis"}
 epi_table_to_latex("sum_chars.txt",
                    caption = NULL  # caption set in tbl-cap above
@@ -56,9 +63,7 @@ epi_table_to_latex("sum_chars.txt",
 ```
 :::
 
-<!-- Ver @tbl-sum_chars para xxx -->
-
-::: {.cell tbl-cap='Resumen de variables numéricas' tbl-pos=h #tbl-sum_stats}
+::: {.cell tbl-cap="Resumen de variables numéricas" tbl-pos="h" id="tbl-sum_stats"}
 ```{r, echo = FALSE, results = "asis"}
 epi_table_to_latex("sum_stats.txt",
                    caption = NULL  # caption set in tbl-cap above
@@ -66,9 +71,7 @@ epi_table_to_latex("sum_stats.txt",
 ```
 :::
 
-<!-- Ver @tbl-sum_stats para xxx -->
-
-::: {.cell tbl-cap='Resumen de variables de tipo fecha' tbl-pos=h #tbl-sum_dates}
+::: {.cell tbl-cap="Resumen de variables de tipo fecha" tbl-pos="h" id="tbl-sum_dates"}
 ```{r, echo = FALSE, results = "asis"}
 epi_table_to_latex("sum_dates.txt",
                    caption = NULL,  # caption set in tbl-cap above
@@ -76,10 +79,16 @@ epi_table_to_latex("sum_dates.txt",
                    )
 ```
 :::
+:::
 
-<!-- Ver @tbl-desc_dates para xxx -->
+<!-- Next table gets placed in a new page, which then gets rendered with header and footer, so repeat landscpae div: -->
+\clearpage
+\afterpage{
+  \thispagestyle{empty}
+}
 
-::: {.cell tbl-cap='Resumen de variables categóricas' tbl-pos=h #tbl-sum_factors}
+::: {.landscape}
+::: {.cell tbl-cap="Resumen de variables categóricas" tbl-pos="h" id="tbl-sum_factors"}
 ```{r, echo = FALSE, results = "asis"}
 epi_table_to_latex("sum_factors.txt",
                    caption = NULL  # caption set in tbl-cap above
@@ -87,11 +96,11 @@ epi_table_to_latex("sum_factors.txt",
                    )
 ```
 :::
-
-<!-- Ver @tbl-desc_dates para xxx -->
+:::
 
 \clearpage
 \FloatBarrier
+
 
 ## Análisis descriptivo por ocupación de plaza
 
@@ -115,7 +124,7 @@ epi_table_to_latex("sum_factors.txt",
 
 ![Gráfico de barras por Escolaridad](plots_bar_num_ESCOLARIDAD.pdf){#fig-bar_escolaridad}
 
-::: {.cell tbl-cap="Ocupación de plazas por Escolaridad" tbl-pos=h #tbl-PLZOCU_ESCOLARIDAD}
+::: {.cell tbl-cap="Ocupación de plazas por Escolaridad" tbl-pos="h" id="tbl-PLZOCU_ESCOLARIDAD"}
 ```{r, table_PLZOCU_ESCOLARIDAD, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
                    caption = NULL
@@ -130,7 +139,7 @@ epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
 <!-- Exclude if filtered by profession: -->
 <!-- ![Gráfico de barras de Clasificación por Categoría](plots_bar_num_DESCRIP_CLASCATEG.pdf) -->
 
-::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Categoría" tbl-pos=h #tbl-PLZOCU_DESCRIP_CLASCATEG}
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Categoría" tbl-pos="h" id="tbl-PLZOCU_DESCRIP_CLASCATEG"}
 ```{r, table_PLZOCU_DESCRIP_CLASCATEG, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
                    caption = NULL
@@ -142,7 +151,7 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
 <!-- TO DO: Separate script, will not regenerate with batch processing -->
 ![Gráfico de barras de Especialidades más Frecuentes por OOAD](ordinario_plot_bar_med_esp_OOAD_top.pdf)
 
-::: {.cell tbl-cap="Áreas de Responsabilidad con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_NOMBREAR}
+::: {.cell tbl-cap="Áreas de Responsabilidad con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_NOMBREAR"}
 ```{r, table_PLZOCU_NOMBREAR_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_NOMBREAR.txt",
                        caption = NULL
@@ -156,7 +165,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_ADSCRIPCION.txt",
                        )
 ```
 
-::: {.cell tbl-cap="Categorías con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_CATEGORIA}
+::: {.cell tbl-cap="Categorías con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_CATEGORIA"}
 ```{r, table_PLZOCU_CATEGORIA_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_CATEGORIA.txt",
                        caption = NULL
@@ -164,7 +173,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_CATEGORIA.txt",
 ```
 :::
 
-::: {.cell tbl-cap="Servicios con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DESCRIPCION_SERVICIO}
+::: {.cell tbl-cap="Servicios con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_DESCRIPCION_SERVICIO"}
 ```{r, table_PLZOCU_DESCRIPCION_SERVICIO_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIPCION_SERVICIO.txt",
                        caption = NULL
@@ -192,7 +201,7 @@ epi_table_to_latex("table_PLZOCU_DescripcionTC.txt",
 ![Gráfico de barras de acuerdo al Grupo de Tipo de Plaza](plots_bar_num_GrupoTipoPlaza.pdf){#fig-bar_GrupoTipoPlaza}
 :::
 
-::: {.cell tbl-cap="Ocupación de plazas de acuerdo al Tipo de Confianza" tbl-pos=h #tbl-PLZOCU_TipoConfianza}
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo al Tipo de Confianza" tbl-pos="h" id="tbl-PLZOCU_TipoConfianza"}
 ```{r, table_PLZOCU_TipoConfianza, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_TipoConfianza.txt",
                    caption = NULL
@@ -230,7 +239,7 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_TIPO_DE_PLAZA.txt",
 
 ![Gráfico de barras de acuerdo a la Descripción del Turno](plots_bar_num_DESCRIP_TURNO.pdf)
 
-::: {.cell tbl-cap="Ocupación de plazas de acuerdo a la Descripción del Turno" tbl-pos=h #tbl-PLZOCU_DESCRIP_TURNO}
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a la Descripción del Turno" tbl-pos="h" id="tbl-PLZOCU_DESCRIP_TURNO"}
 ```{r, table_PLZOCU_DESCRIP_TURNO, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_DESCRIP_TURNO.txt",
                    caption = NULL
@@ -240,7 +249,7 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_TURNO.txt",
 
 \clearpage
 
-::: {.cell tbl-cap="Horarios con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-PLZOCU_DESCRIP_HORARIO}
+::: {.cell tbl-cap="Horarios con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-PLZOCU_DESCRIP_HORARIO"}
 ```{r, table_PLZOCU_DESCRIP_HORARIO_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIP_HORARIO.txt",
                        caption = NULL
@@ -261,7 +270,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_DATOADIC_CATBASE.txt",
 
 ### De acuerdo a ubicación y clasificación del lugar
 
-::: {.cell tbl-cap="Dependencias con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DEPENDENCIA}
+::: {.cell tbl-cap="Dependencias con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_DEPENDENCIA"}
 ```{r, table_PLZOCU_DEPENDENCIA_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_DEPENDENCIA.txt",
                        caption = NULL
@@ -274,7 +283,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_DEPENDENCIA.txt",
 
 ![Gráfico de barras por Delegación](plots_bar_num_DELEGACION.pdf){#fig-bar_DELEGACION}
 
-::: {.cell tbl-cap="Ocupación de plazas por Delegación" tbl-pos=h #tbl-PLZOCU_DELEGACION}
+::: {.cell tbl-cap="Ocupación de plazas por Delegación" tbl-pos="h" id="tbl-PLZOCU_DELEGACION"}
 ```{r, table_PLZOCU_DELEGACION, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_DELEGACION.txt",
                    caption = NULL
@@ -284,7 +293,7 @@ epi_table_to_latex("table_PLZOCU_DELEGACION.txt",
 
 ![Gráfico de barras por Unidad](plots_bar_num_CLASIF_UNIDAD.pdf){#fig-bar_CLASIF_UNIDAD}
 
-::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Unidad" tbl-pos=h #tbl-PLZOCU_CLASIF_UNIDAD}
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Unidad" tbl-pos="h" id="tbl-PLZOCU_CLASIF_UNIDAD"}
 ```{r, table_PLZOCU_CLASIF_UNIDAD, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_CLASIF_UNIDAD.txt",
                    caption = NULL
@@ -295,7 +304,7 @@ epi_table_to_latex("table_PLZOCU_CLASIF_UNIDAD.txt",
 \clearpage
 \FloatBarrier
 
-::: {.cell tbl-cap="Localidades con más de diez plazas y mayor vacancia" tbl-pos=h #tbl-top_PLZOCU_DESCRIP_LOCALIDAD}
+::: {.cell tbl-cap="Localidades con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_DESCRIP_LOCALIDAD"}
 ```{r, table_PLZOCU_DESCRIP_LOCALIDAD_corta, echo = FALSE, results = "asis"}
 epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIP_LOCALIDAD.txt",
                        caption = NULL
@@ -434,7 +443,7 @@ epi_table_to_latex("table_PLZOCU_MY.txt",
                    )
 ```
 
-::: {.cell tbl-cap="Ocupación de plazas de acuerdo al Régimen de Jubilación de Pensiones" tbl-pos=h #tbl-PLZOCU_RJP}
+::: {.cell tbl-cap="Ocupación de plazas de acuerdo al Régimen de Jubilación de Pensiones" tbl-pos="h" id="tbl-PLZOCU_RJP"}
 ```{r, table_PLZOCU_RJP, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_RJP.txt",
                    caption = NULL

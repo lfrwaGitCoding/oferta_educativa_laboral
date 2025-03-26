@@ -4,7 +4,7 @@
 execute:
   enabled: true
   # echo: false # this is global, use "#| echo: true" for a given cell
-  warning: true # false stops rendering on warnings
+  warning: false # false stops rendering on warnings
   message: true
   error: false # false stops rendering on errors
   debug: false

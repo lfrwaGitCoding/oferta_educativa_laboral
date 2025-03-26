@@ -102,43 +102,6 @@ results_subdir <- epi_create_dir(base_path = results_dir,
 # ////////////
 
 
-# # ////////////
-# # Capture output / log ----
-#
-# # ===
-# # Redirect standard output
-# if (!interactive()) { # TRUE if not interactive, will then log output
-#     script_n <- '2_clean_dups_col_types'
-#     sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
-#     sink(sink_stdout, split = TRUE)
-#
-#     # Redirect messages and warnings
-#     sink_msg <- file(paste0(results_subdir, '/', script_n, '.sink_msg.log'), open = "wt")
-#     sink(sink_msg, type = "message")
-#
-#     # Example outputs
-#     cat("Test: This is standard output.\n")
-#     message("Test: This is a message.")
-#     warning("Test: This is a warning.")
-#     }
-# # ===
-#
-# # ===
-# # Create a logger
-# if (!interactive()) { # TRUE if not interactive, will then log output
-#     logger <- create.logger()
-#     log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
-#     logfile(logger) <- log_n # Log file location
-#     level(logger) <- "INFO"  # Set logging level (DEBUG, INFO, WARN, ERROR)
-#
-#     # Add log messages
-#     # info(logger, "Script started")
-#     # debug(logger, "This is a debug message")
-#     # warn(logger, "This is a warning")
-#     # error(logger, "This is an error")
-#     }
-# # ////////////
-
 
 # ////////////
 # Check column types ----

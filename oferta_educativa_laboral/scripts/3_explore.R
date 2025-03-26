@@ -43,6 +43,33 @@ getwd()
 
 
 # ////////////
+# Global options for plotting, generally need larger fot size:
+# If rendering at 60% of linewidth ({ width=60% }) in qmd for PDF output,
+# scale base_size accordingly. e.g. for fonts to appear ~12 pt in the final PDF, set:
+
+font_size <- 12 / 0.6 # =20
+my_theme <- theme_minimal(base_size = font_size) +
+  theme(
+    plot.title = element_text(size = font_size, face = "bold"),
+    axis.text = element_text(size = font_size),
+    axis.title = element_text(size = font_size),
+    panel.grid = element_blank(),       # Remove gridlines
+    panel.background = element_rect(fill = "white", colour = NA),  # Clean white panel
+    plot.background = element_rect(fill = "white", colour = NA),   # White around the plot
+    axis.line = element_blank(),        # No axis lines
+    axis.ticks = element_blank(),       # No axis ticks
+    legend.key = element_blank()        # Clean legend background
+  )
+
+theme_set(my_theme)
+
+# cowplot::ggsave2 has dpi = 300 as default
+# epi_plot_cow_save has base_height = 11.69, base_width = 8.27, default units is "in"
+# these are good options for high quality images
+# ////////////
+
+
+# ////////////
 # Load rdata file ----
 
 # ===
@@ -478,7 +505,8 @@ epi_plot_box(df = data_f, var_y = "EDAD")
 # i <- "EDAD"
 var_list <- epi_plot_list(vars_to_plot = num_vars)
 for (i in names(var_list)) {
-  var_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
+  var_list[[i]] <- epi_plot_box(df = data_f, var_y = i) +
+    epi_plot_theme_2(base_size = font_size)
   }
 
 # Save plots
@@ -524,7 +552,8 @@ for (i in names(var_list)) {
 
   # TO DO for episcout: switch to dplyr::sym() for tidy evaluation and/or clean up column names initially. Can be useful to keep original column names though
   # i <- paste0("`", i, "`") # because of spaces and special characters in column names
-  var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i)
+  var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
+    epi_plot_theme_2(base_size = font_size)
   }
 var_list
 
@@ -662,14 +691,16 @@ table(data_f$FECHAPROBJUB)
 
 i <- 'FECHAPROBJUB'
 epi_plot_hist(df = data_f, var_x = i) +
-    geom_density(col = 2)
+    geom_density(col = 2) +
+  epi_plot_theme_2(base_size = font_size)
 
 var_list <- epi_plot_list(vars_to_plot = date_cols)
 for (i in names(var_list)) {
     print(i)
     # i <- paste0("`", i, "`") # because of spaces and special characters in column names
     var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
-        geom_density(col = 2)
+        geom_density(col = 2) +
+      epi_plot_theme_2(base_size = font_size)
 }
 var_list
 
@@ -712,7 +743,8 @@ epi_plot_box(data_f, var_y = i)
 var_list <- epi_plot_list(vars_to_plot = date_cols)
 for (i in names(var_list)) {
     # print(i)
-    var_list[[i]] <- epi_plot_box(df = data_f, var_y = i)
+    var_list[[i]] <- epi_plot_box(df = data_f, var_y = i) +
+      epi_plot_theme_2(base_size = font_size)
     }
 # var_list
 

@@ -507,3 +507,207 @@ epis_stats_chars <- function(df) {
     ungroup()
 }
 
+
+
+
+#' @title Send a list of plots to a grid object
+#'
+#' @description A light wrapper for cowplot::plot_grid().
+#' Send a list of plots to a grid for multi-plot figures.
+#' Makes assumptions and hard-codes preferences. All options are passed to
+#' plot_grid().
+#'
+#' @param plot_list List of plots to be arranged into the grid.
+#' @param align cowplot vertical and/or horizontal alignment. Default is 'hv'.
+#' @param axis Align left, right, top or bottom and order. Default is 'lrtb'.
+#' @param labels Default is 'AUTO'.
+#' @param label_size Default is 12.
+#' @param ncol Number of columns in the plot grid.
+#' @param nrow Number of rows in the plot grid.
+#' @param ... Pass any other parameter from plot_grid()
+#'
+#' @return a cowplot grid object
+#'
+#' @author Antonio Berlanga-Taylor <\url{https://github.com/AntonioJBT/episcout}>
+#'
+#' @seealso \code{\link{epi_plot_list}},
+#' \code{\link{epi_plot_cow_save}},
+#' \code{\link[cowplot]{plot_grid}},
+#' \code{\link[cowplot]{save_plot}}.
+#'
+#' @note See example in \code{\link{epi_plot_cow_save}} and ggplot2 wrappers epi_plot_*().
+#'
+#' @export
+#'
+
+epi_plots_to_grid <- function(plot_list = NULL,
+                              align = 'hv',
+                              axis = 'lrtb',
+                              label_size = 12, # for the panel "A", "B", etc. labels only, does not affect axis or other plot text
+                              ncol = NULL,
+                              nrow = NULL,
+                              ...) {
+  if (!requireNamespace('cowplot', quietly = TRUE)) {
+    stop("Package cowplot needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  # Disable labels if there's only one plot
+  labels <- if (length(plot_list) > 1) "AUTO" else NULL
+
+  my_plot_grid <- cowplot::plot_grid(plotlist = plot_list,
+                                     align = align,
+                                     axis = axis,
+                                     labels = labels,
+                                     label_size = label_size,
+                                     ncol = ncol,
+                                     nrow = nrow,
+                                     ...
+  )
+  return(my_plot_grid)
+}
+
+
+#' @title Save a grid of plots
+#'
+#' @description epi_plot_cow_save() A light wrapper to save plots to disk with
+#' cowplot::save_plot()
+#'
+#' @param file_name Name of the file to save
+#' @param plot_grid plot to save, more often expecting a grid.
+#' @param base_height Height in inches of the plot. Default is 11.69 (A4 size)
+#' @param base_width Width in inches of the plot. Default is 8.27 (A4 size)
+#' @param ... Pass any other parameter from cowplot::save_plot()
+#'
+#' @return None, file saved to disk.
+#'
+#' @author Antonio Berlanga-Taylor <\url{https://github.com/AntonioJBT/episcout}>
+#'
+#' @seealso \code{\link{epi_plot_list}},
+#' \code{\link{epi_plots_to_grid}},
+#' \code{\link[cowplot]{plot_grid}},
+#' \code{\link[cowplot]{save_plot}}.
+#'
+#' @note height and width are for A4 size.
+#' See also ggplot2 wrappers epi_plot_*().
+#'
+#' @examples
+#'
+#' \dontrun{
+#' set.seed(12345)
+#' n <- 20
+#' df <- data.frame(var_id = rep(1:(n / 2), each = 2),
+#'                  var_to_rep = rep(c("Pre", "Post"), n / 2),
+#'                  x = rnorm(n),
+#'                  y = rbinom(n, 1, 0.50),
+#'                  z = rpois(n, 2)
+#' )
+#' df
+#' df[, 'var_id'] <- as.character(df[, 'var_id'])
+#' vars_to_plot <- df %>%
+#'   select_if(epi_clean_cond_numeric) %>%
+#'   names()
+#' my_plot_list <- epi_plot_list(vars_to_plot)
+#' my_plot_list
+#' # Generate plots:
+#' for (i in names(my_plot_list)) {
+#'   print(i)
+#'   my_plot_list[[i]] <- ggplot2::ggplot(df, aes_string(y = i)) + geom_boxplot()
+#' }
+#' # Pass to a grid and save to file:
+#' # length(my_plot_list)
+#' my_plot_grid <- epi_plots_to_grid(my_plot_list[1:length(my_plot_list)])
+#' epi_plot_cow_save(file_name = 'plots_1.pdf', plot_grid = my_plot_grid)
+#'
+#' }
+#'
+#' @export
+#'
+
+epi_plot_cow_save <- function(file_name = NULL,
+                              plot_grid = NULL,
+                              base_height = 11.69, # A4
+                              base_width = 8.27, # A4
+                              ...) {
+  if (!requireNamespace('cowplot', quietly = TRUE)) {
+    stop("Package cowplot needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  print(class(plot_grid))  # Debugging line
+
+  # Check if plot_grid is a single ggplot plot, avoids adding "A" to figure:
+  if (inherits(plot_grid, "ggplot")) {
+    message("Saving a single ggplot object.")
+    cowplot::save_plot(filename = file_name,
+                       plot = plot_grid,
+                       base_height = base_height,
+                       base_width = base_width,
+                       ...)
+  } else {
+    message("Saving a multi-plot grid.")
+    cowplot::save_plot(filename = file_name,
+                       plot = cowplot::plot_grid(plot_grid),  # Force grid rendering
+                       base_height = base_height,
+                       base_width = base_width,
+                       ...)
+  }
+}
+
+
+epi_plot_theme_2 <- function(base_size = 13,
+                             base_family = 'Times'
+) {
+  # Use this instead or library or require inside functions:
+  if (!requireNamespace('scales', quietly = TRUE)) {
+    stop('Package scales needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  if (!requireNamespace('grid', quietly = TRUE)) {
+    stop('Package grid needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  if (!requireNamespace('ggplot2', quietly = TRUE)) {
+    stop('Package ggplot2 needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  if (!requireNamespace('ggthemes', quietly = TRUE)) {
+    stop('Package ggthemes needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  # The following is modified from:
+  # https://rpubs.com/Koundy/71792
+  (ggthemes::theme_foundation(base_size = base_size, base_family = base_family) +
+      ggplot2::theme(plot.title = ggplot2::element_text(face = "bold",
+                                                        size = ggplot2::rel(1.2),
+                                                        hjust = 0.5),
+                     text = ggplot2::element_text(),
+                     panel.background = ggplot2::element_rect(colour = NA),
+                     plot.background = ggplot2::element_rect(colour = NA),
+                     panel.border = ggplot2::element_rect(colour = NA),
+                     axis.title = ggplot2::element_text(face = "bold", size = ggplot2::rel(1)),
+                     axis.title.y = ggplot2::element_text(angle = 90, vjust = 2),
+                     axis.title.x = ggplot2::element_text(vjust = -0.2),
+                     axis.text = ggplot2::element_text(),
+                     axis.line = ggplot2::element_line(colour = "black"),
+                     axis.ticks = ggplot2::element_line(),
+                     # panel.grid.major = element_line(colour = "#f0f0f0"),
+                     # this is like grey90 roughly
+                     panel.grid.major = ggplot2::element_blank(),
+                     panel.grid.minor = ggplot2::element_blank(),
+                     # legend.key = element_rect(fill = "white", colour = " light grey"),
+                     legend.key = ggplot2::element_rect(colour = NA),
+                     # legend.position = "bottom",
+                     # legend.direction = "horizontal",
+                     legend.key.size = ggplot2::unit(0.5, "cm"),
+                     # legend.key.width = unit(0.2, "cm"),
+                     # legend.margin = margin(0, 0, 0, 0),
+                     # legend.title = element_text(face = "italic"),
+                     # plot.margin = unit(c(10, 5, 5, 5),"mm"),
+                     # plot.margin = unit(c(3, 5, 2, 2), "mm"), #t, r, b, l
+                     strip.background = ggplot2::element_rect(colour = "#f0f0f0",
+                                                              fill = "#f0f0f0"),
+                     strip.text = ggplot2::element_text(face = "bold")
+      )
+  )
+}

@@ -326,398 +326,398 @@ for (i in cols_to_loop) {
 # ===
 # ////////////
 
-# TO DO: continue here
-# epi stats table needs updating in episcout, now called epi_stats_contingency_nxn
-# also sort out funcs epi source R
-
-# ////////////
-# ===
-### Generate contingency tables 2x2 ----
-# Generate a contingency table for two variables
-fact_cols
-
-contingency_2x2_df <- epi_stats_contingency_2x2_df(data_f[, fact_cols], x_var = "PLZOCU", y_var = "SEXO")
-print(contingency_2x2_df)
-
-# Generate contingency tables for all variables
-contingency_2x2_list <- epi_stats_contingency_2x2_tables(data_f[, fact_cols], x_var = "PLZOCU")
-print(contingency_2x2_list[[1]])
-
-# Rename columns in contingency tables
-# TO DO: not sure what this is actually doing
-# renamed_list <- rename_contingency_2x2_cols(contingency_2x2_list, data_f[, fact_cols], x_var = "Plaza_ocupada")
-# print(renamed_list[[1]])
-
-# Perform a single 2x2 test
-result <- epi_stats_contingency_2x2_test(data_f[, fact_cols], "PLZOCU", "SEXO")
-print(result)
-
-# Select columns for testing
-testable_columns <- epi_stats_contingency_2x2_cols(data_f[, fact_cols])
-print(testable_columns)
-
-# Run tests on all testable columns
-results_df <- epi_stats_contingency_2x2_all(data_f[, fact_cols], "PLZOCU")
-print(results_df)
-
-# Save results
-file_n <- '2x2_sig_tests'
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
-                   file_n,
-                   suffix
-                   )
-outfile
-epi_write(file_object = results_df,
-          file_name = outfile
-          )
-
-# ===
-
-
-# ===
-#### Contingency table 2x2 significance tests ----
-### Compute association measures (Chi-square, Fisher’s exact test)
-# Also extra at this point as unclear what the value is
-# will run anyway
-
-# ===
-
-
-# ===
-# TO DO: create a function and move to episcout
-# Create a new workbook:
-wb <- openxlsx::createWorkbook()
-# Add each data frame from the list as a new sheet
-lapply(names(results), function(x) {
-  openxlsx::addWorksheet(wb, x)
-  openxlsx::writeData(wb, sheet = x, results[[x]])
-})
-# Save the workbook
-openxlsx::saveWorkbook(wb, "2x2_tables_vs_Estado.xlsx", overwrite = TRUE)
-# ===
-
-
-# ===
-#### Plot/Visualize with mosaic plots or stacked bar charts. ----
-# # TO DO: continue here ----
-#
-# # TO DO: move to episcout
-# cont_plot <- function(df, x_var = 'Var1', y_var = 'Var2') {
-#   ggplot(df, aes(x = !!sym(x_var), y = Freq, fill = !!sym(y_var))) +
-#     geom_bar(stat = "identity", position = "dodge")
-#   }
-#
-# contingency_df <- cont_df(df = col_facts, x_var = 1, y_var = 3)
-# contingency_df
-# cont_plot(contingency_df, colnames(contingency_df)[1], colnames(contingency_df)[2])
-#
-# for (i in 1:length(results)) {
-#   df <- results[[i]]
-#   fact_plot <- cont_plot(df = df, x_var = colnames(df)[1], y_var = colnames(df)[2])
-#   file_name <- sprintf('cont_bar_plot_Estado_%s.pdf', names(results)[i])
-#   epi_plot_cow_save(file_name = file_name,
-#                     # base_height = 12,
-#                     # base_width = 12,
-#                     plot_grid = fact_plot
-#   )
-#   }
-# ===
-
-# ===
-# # Pair plots of contingency tables, not sure they add much (?)
-# # library(GGally)
-# colnames(col_facts)
-# facts_plot <- GGally::ggpairs(col_facts[, c("Estado", "HAS")],
-#                                 axisLabels = 'show',
-#                                 showStrips = TRUE)
-# facts_plot
-# epi_plot_cow_save(file_name = 'ggpairs_edo_HAS.pdf',
-#                   base_height = 6,
-#                   base_width = 6,
-#                   plot_grid = facts_plot
-#                   )
-#
-# facts_plot_1 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1")],
-#                                 axisLabels = 'show',
-#                                 showStrips = TRUE)
-# facts_plot_1
-# epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno.pdf',
-#                   base_height = 6,
-#                   base_width = 6,
-#                   plot_grid = facts_plot_1
-#                   )
-# facts_plot_2 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS")],
-#                                 axisLabels = 'show',
-#                                 showStrips = TRUE)
-# facts_plot_2
-# epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno_HAS.pdf',
-#                   base_height = 6,
-#                   base_width = 6,
-#                   plot_grid = facts_plot_2
-#                   )
-#
-#
-# facts_plot_3 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS",
-#                                               "DM2", "Obesidad", "EPOC", "IRC",
-#                                               "BULUT_1")],
-#                                 axisLabels = 'show',
-#                                 showStrips = TRUE)
-# facts_plot_3
-# epi_plot_cow_save(file_name = 'ggpairs_facts.pdf',
-#                   base_height = 40,
-#                   base_width = 40,
-#                   plot_grid = facts_plot_3
-#                   )
-
-# # Create ggpairs plot, remove duplicated plots from diagonal:
-# # Custom function for lower triangle: scatter plot
-# show_lower <- function(data, mapping, ...) {
-#   ggplot(data = data, mapping = mapping) #+ geom_point(...)
-#   }
-#
-# # Custom function for upper triangle: blank
-# blank_upper <- function(data, mapping, ...) {
-#   ggplot() + theme_void()
-#   }
-#
-
-# facts_plot <- GGally::ggpairs(col_facts[, c("Estado", "HAS")],
-#                               lower = list(discrete = wrap("lower", show_lower)),
-#                               upper = list(discrete = wrap("upper", blank_upper)),
-#                               axisLabels = 'show',
-#                               showStrips = TRUE
-#                               )
-
-# ===
-
-# ===
-## Numerical vs Categorical ----
-#### Visualize with grouped boxplots or violin plots ----
-
-# TO DO:
-# Consider:
-# Visualization:
-# Boxplots, violin plots, or beeswarm plots by groups.
-# Add jitter to scatter plots to display overlapping points.
-
-#### Boxplots / violin Plots
-# colnames(col_nums)
-#
-# epi_plot_box(df = df_factor,
-#              var_y = 'Neu_count_1',
-#              var_x = 'Estado'
-#              )
-#
-# epi_plot_box(df = df_factor,
-#              var_y = 'IFN_g',
-#              var_x = 'Estado'
-#              )
-#
-# epi_plot_box(df = df_factor,
-#              var_y = 'Lin_count_1',
-#              var_x = 'Estado'
-#              )
-#
-# epi_plot_box(df = df_factor,
-#              var_y = 'IgA_Lavado',
-#              var_x = 'Estado'
-#              )
-#
-# # Plot all numeric variables vs 'Estado'
-# colnames(col_nums)
-# i <- "Lin_count_1"
-# # eval(i)
-# # sym(i)
-# epi_plot_box(df = df_factor, var_y = i)
-# epi_plot_box(df = df_factor, var_y = i, var_x = 'Estado')
-#
-# box_list <- epi_plot_list(vars_to_plot = colnames(col_nums))
-# for (i in names(box_list)) {
-#   # print(i)
-#   box_list[[i]] <- epi_plot_box(df = df_factor,
-#                                 var_y = i,
-#                                 var_x = 'Estado'
-#                                 )
-#   }
-# length(box_list)
-# names(box_list)
-#
-# # Save plots
-# # Plot 4 per page or so:
-# per_file <- 4
-# jumps <- seq(1, length(box_list), per_file)
-# length(jumps)
-#
-# # i <- 2
-# for (i in jumps) {
-#   file_name <- sprintf('plots_box_%s.pdf', i)
-#   start_i <- i
-#   end_i <- i + 3
-#   my_plot_grid <- epi_plots_to_grid(box_list[start_i:end_i])
-#   epi_plot_cow_save(file_name = file_name, plot_grid = my_plot_grid)
-# }
-
-# ===
-# ////////////
-
-
-# ////////////
-#### Perform group comparisons and significance tests ----
-
-# TO DO:
-# Consider:
-# Group Comparisons:
-# Calculate group means, medians, or distributions.
-# Test for significant differences:
-# T-tests or Wilcoxon tests (for two groups).
-# ANOVA or Kruskal-Wallis tests (for more than two groups).
-
-# TO DO: significance tests for num vars vs 'Estado'
-# TO DO: create a function and move to episcout
-
-# # Wilcoxon Rank-Sum Test
-# factor_var <- df_factor[['Estado']]
-# num_var <- df_factor$Neu_count_1
-#
-# if (length(unique(factor_var)) == 2) {
-#   group1 <- num_var[factor_var == levels(factor_var)[1]]
-#   group2 <- num_var[factor_var == levels(factor_var)[2]]
-#   test <- wilcox.test(group1, group2,
-#                       exact = TRUE,
-#                       correct = TRUE,
-#                       conf.int = TRUE,
-#                       conf.level = 0.95
-#                       )
-#   print(test)
-# }
-# test$statistic
-#
 # # TO DO: continue here
-# wilcoxon_res <- data.frame(Group1 = character(),
-#                            Group2 = character(),
-#                            Variable = character(),
-#                            W = numeric(),
-#                            P.Value = numeric(),
-#                            CI95_low = numeric(),
-#                            CI95_high = numeric(),
-#                            stringsAsFactors = FALSE
-#                            )
+# # epi stats table needs updating in episcout, now called epi_stats_contingency_nxn
+# # also sort out funcs epi source R
 #
-# unique_groups <- unique(df_factor[['Estado']])
-# combinations <- combn(unique_groups, 2)
-# factor_var <- df_factor[['Estado']]
-# df <- df_factor
-# dim(combinations)
+# # ////////////
+# # ===
+# ### Generate contingency tables 2x2 ----
+# # Generate a contingency table for two variables
+# fact_cols
 #
-# # c <- 'Neu_count_1' #'Peso'
-# # # Example manual test for verification
-# # test_example <- wilcox.test(df$Edad[df$Estado == "Defuncion"], df$Edad[df$Estado == "Mejoria"])
-# # print(test_example)
+# contingency_2x2_df <- epi_stats_contingency_2x2_df(data_f[, fact_cols], x_var = "PLZOCU", y_var = "SEXO")
+# print(contingency_2x2_df)
 #
-# for (c in colnames(col_nums)) {
-#   for (i in 1:ncol(combinations)) {
-#     group1_data <- df[factor_var == combinations[1, i], c]
-#     group2_data <- df[factor_var == combinations[2, i], c]
-#     # print(head(group1_data))  # Check the data
-#     # print(head(group2_data))  # Check the data
-#     test <- wilcox.test(group1, group2,
-#                         exact = TRUE,
-#                         correct = TRUE,
-#                         conf.int = TRUE,
-#                         conf.level = 0.95
-#                         )
-#     wilcoxon_res <- rbind(wilcoxon_res,
-#                           data.frame(Group1 = combinations[1, i],
-#                                      Group2 = combinations[2, i],
-#                                      Variable = c,
-#                                      W = test$statistic,
-#                                      P.Value = test$p.value,
-#                                      CI95_low = test$conf.int[1],
-#                                      CI95_high = test$conf.int[2]
-#                                      )
-#                           )
-#   }
-# }
-# epi_head_and_tail(wilcoxon_res, cols = 7)
-# ////////////
-
-
-# ////////////
-# Date Variables with Other Types ----
-
-# TO DO:
-# Consider:
-# Trends:
-# Aggregate numerical data over time (e.g., monthly averages, yearly totals).
-# Plot time-series trends with line charts.
-# Event Analysis:
-# Compare categorical event frequencies over time.
-# Use Gantt charts or event plots for timelines.
-# Lagged Effects:
-# Analyze lag relationships (e.g., weekly sales impact on monthly outcomes).
-# ////////////
-
-
-# ////////////
-# TO DO:
-# Consider:
-# Outlier Detection ----
-# Numerical Variables:
-# Detect outliers using:
-# Z-scores or modified Z-scores.
-# IQR rule (values outside [Q1 - 1.5IQR, Q3 + 1.5IQR]).
-# Visualize with boxplots or scatter plots.
-# Multivariate Outliers:
-# Use Mahalanobis distance or DBSCAN clustering.
-# ////////////
-
-
-# ////////////
-# TO DO:
-
-# To a table:
-# (summary(na.omit(df_factor$IgA_Lavado)),
-#       summary(na.omit(df_factor$IgA_Suero)),
-#       summary(na.omit(df_factor$IgG_Lavado)),
-#       summary(na.omit(df_factor$IgG_Suero)),
-#       summary(na.omit(df_factor$IgM_Lavado)),
-#       summary(na.omit(df_factor$IgM_Suero))
-#       )
-
-
-# Two/+ factors
-# clustered bar, stacked bar, heatmap
-
-# Pause after this as descriptive
-# ////////////
-
-
-# ////////////
-# Next:
-# Impute based on key variables
-# Comparisons for survival
-# Comparisons for local vs systemic response
-# Inferential analysis
-# ////////////
-
-
-# ////////////
-# The end ----
-# Outputs saved to disk, no need to save as rdata.
-sessionInfo()
-
-# Closing message loggers:
-if (!interactive()) { # TRUE if not interactive, will then log output
-    info(logger, "Script completed successfully")
-
-    # Close screen output log (both screen and warnings/error messages):
-    # Stop sinks
-    sink(type = "message")
-    close(sink_msg)  # Close the connection
-    sink()
-    }
-
-# q()
-# ////////////
+# # Generate contingency tables for all variables
+# contingency_2x2_list <- epi_stats_contingency_2x2_tables(data_f[, fact_cols], x_var = "PLZOCU")
+# print(contingency_2x2_list[[1]])
+#
+# # Rename columns in contingency tables
+# # TO DO: not sure what this is actually doing
+# # renamed_list <- rename_contingency_2x2_cols(contingency_2x2_list, data_f[, fact_cols], x_var = "Plaza_ocupada")
+# # print(renamed_list[[1]])
+#
+# # Perform a single 2x2 test
+# result <- epi_stats_contingency_2x2_test(data_f[, fact_cols], "PLZOCU", "SEXO")
+# print(result)
+#
+# # Select columns for testing
+# testable_columns <- epi_stats_contingency_2x2_cols(data_f[, fact_cols])
+# print(testable_columns)
+#
+# # Run tests on all testable columns
+# results_df <- epi_stats_contingency_2x2_all(data_f[, fact_cols], "PLZOCU")
+# print(results_df)
+#
+# # Save results
+# file_n <- '2x2_sig_tests'
+# suffix <- 'txt'
+# outfile <- sprintf(fmt = '%s/%s.%s',
+#                    results_subdir,
+#                    file_n,
+#                    suffix
+#                    )
+# outfile
+# epi_write(file_object = results_df,
+#           file_name = outfile
+#           )
+#
+# # ===
+#
+#
+# # ===
+# #### Contingency table 2x2 significance tests ----
+# ### Compute association measures (Chi-square, Fisher’s exact test)
+# # Also extra at this point as unclear what the value is
+# # will run anyway
+#
+# # ===
+#
+#
+# # ===
+# # TO DO: create a function and move to episcout
+# # Create a new workbook:
+# wb <- openxlsx::createWorkbook()
+# # Add each data frame from the list as a new sheet
+# lapply(names(results), function(x) {
+#   openxlsx::addWorksheet(wb, x)
+#   openxlsx::writeData(wb, sheet = x, results[[x]])
+# })
+# # Save the workbook
+# openxlsx::saveWorkbook(wb, "2x2_tables_vs_Estado.xlsx", overwrite = TRUE)
+# # ===
+#
+#
+# # ===
+# #### Plot/Visualize with mosaic plots or stacked bar charts. ----
+# # # TO DO: continue here ----
+# #
+# # # TO DO: move to episcout
+# # cont_plot <- function(df, x_var = 'Var1', y_var = 'Var2') {
+# #   ggplot(df, aes(x = !!sym(x_var), y = Freq, fill = !!sym(y_var))) +
+# #     geom_bar(stat = "identity", position = "dodge")
+# #   }
+# #
+# # contingency_df <- cont_df(df = col_facts, x_var = 1, y_var = 3)
+# # contingency_df
+# # cont_plot(contingency_df, colnames(contingency_df)[1], colnames(contingency_df)[2])
+# #
+# # for (i in 1:length(results)) {
+# #   df <- results[[i]]
+# #   fact_plot <- cont_plot(df = df, x_var = colnames(df)[1], y_var = colnames(df)[2])
+# #   file_name <- sprintf('cont_bar_plot_Estado_%s.pdf', names(results)[i])
+# #   epi_plot_cow_save(file_name = file_name,
+# #                     # base_height = 12,
+# #                     # base_width = 12,
+# #                     plot_grid = fact_plot
+# #   )
+# #   }
+# # ===
+#
+# # ===
+# # # Pair plots of contingency tables, not sure they add much (?)
+# # # library(GGally)
+# # colnames(col_facts)
+# # facts_plot <- GGally::ggpairs(col_facts[, c("Estado", "HAS")],
+# #                                 axisLabels = 'show',
+# #                                 showStrips = TRUE)
+# # facts_plot
+# # epi_plot_cow_save(file_name = 'ggpairs_edo_HAS.pdf',
+# #                   base_height = 6,
+# #                   base_width = 6,
+# #                   plot_grid = facts_plot
+# #                   )
+# #
+# # facts_plot_1 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1")],
+# #                                 axisLabels = 'show',
+# #                                 showStrips = TRUE)
+# # facts_plot_1
+# # epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno.pdf',
+# #                   base_height = 6,
+# #                   base_width = 6,
+# #                   plot_grid = facts_plot_1
+# #                   )
+# # facts_plot_2 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS")],
+# #                                 axisLabels = 'show',
+# #                                 showStrips = TRUE)
+# # facts_plot_2
+# # epi_plot_cow_save(file_name = 'ggpairs_edo_sexo_inmunofeno_HAS.pdf',
+# #                   base_height = 6,
+# #                   base_width = 6,
+# #                   plot_grid = facts_plot_2
+# #                   )
+# #
+# #
+# # facts_plot_3 <- GGally::ggpairs(col_facts[, c("Estado", "Sexo", "Inmunofenotipo_1", "HAS",
+# #                                               "DM2", "Obesidad", "EPOC", "IRC",
+# #                                               "BULUT_1")],
+# #                                 axisLabels = 'show',
+# #                                 showStrips = TRUE)
+# # facts_plot_3
+# # epi_plot_cow_save(file_name = 'ggpairs_facts.pdf',
+# #                   base_height = 40,
+# #                   base_width = 40,
+# #                   plot_grid = facts_plot_3
+# #                   )
+#
+# # # Create ggpairs plot, remove duplicated plots from diagonal:
+# # # Custom function for lower triangle: scatter plot
+# # show_lower <- function(data, mapping, ...) {
+# #   ggplot(data = data, mapping = mapping) #+ geom_point(...)
+# #   }
+# #
+# # # Custom function for upper triangle: blank
+# # blank_upper <- function(data, mapping, ...) {
+# #   ggplot() + theme_void()
+# #   }
+# #
+#
+# # facts_plot <- GGally::ggpairs(col_facts[, c("Estado", "HAS")],
+# #                               lower = list(discrete = wrap("lower", show_lower)),
+# #                               upper = list(discrete = wrap("upper", blank_upper)),
+# #                               axisLabels = 'show',
+# #                               showStrips = TRUE
+# #                               )
+#
+# # ===
+#
+# # ===
+# ## Numerical vs Categorical ----
+# #### Visualize with grouped boxplots or violin plots ----
+#
+# # TO DO:
+# # Consider:
+# # Visualization:
+# # Boxplots, violin plots, or beeswarm plots by groups.
+# # Add jitter to scatter plots to display overlapping points.
+#
+# #### Boxplots / violin Plots
+# # colnames(col_nums)
+# #
+# # epi_plot_box(df = df_factor,
+# #              var_y = 'Neu_count_1',
+# #              var_x = 'Estado'
+# #              )
+# #
+# # epi_plot_box(df = df_factor,
+# #              var_y = 'IFN_g',
+# #              var_x = 'Estado'
+# #              )
+# #
+# # epi_plot_box(df = df_factor,
+# #              var_y = 'Lin_count_1',
+# #              var_x = 'Estado'
+# #              )
+# #
+# # epi_plot_box(df = df_factor,
+# #              var_y = 'IgA_Lavado',
+# #              var_x = 'Estado'
+# #              )
+# #
+# # # Plot all numeric variables vs 'Estado'
+# # colnames(col_nums)
+# # i <- "Lin_count_1"
+# # # eval(i)
+# # # sym(i)
+# # epi_plot_box(df = df_factor, var_y = i)
+# # epi_plot_box(df = df_factor, var_y = i, var_x = 'Estado')
+# #
+# # box_list <- epi_plot_list(vars_to_plot = colnames(col_nums))
+# # for (i in names(box_list)) {
+# #   # print(i)
+# #   box_list[[i]] <- epi_plot_box(df = df_factor,
+# #                                 var_y = i,
+# #                                 var_x = 'Estado'
+# #                                 )
+# #   }
+# # length(box_list)
+# # names(box_list)
+# #
+# # # Save plots
+# # # Plot 4 per page or so:
+# # per_file <- 4
+# # jumps <- seq(1, length(box_list), per_file)
+# # length(jumps)
+# #
+# # # i <- 2
+# # for (i in jumps) {
+# #   file_name <- sprintf('plots_box_%s.pdf', i)
+# #   start_i <- i
+# #   end_i <- i + 3
+# #   my_plot_grid <- epi_plots_to_grid(box_list[start_i:end_i])
+# #   epi_plot_cow_save(file_name = file_name, plot_grid = my_plot_grid)
+# # }
+#
+# # ===
+# # ////////////
+#
+#
+# # ////////////
+# #### Perform group comparisons and significance tests ----
+#
+# # TO DO:
+# # Consider:
+# # Group Comparisons:
+# # Calculate group means, medians, or distributions.
+# # Test for significant differences:
+# # T-tests or Wilcoxon tests (for two groups).
+# # ANOVA or Kruskal-Wallis tests (for more than two groups).
+#
+# # TO DO: significance tests for num vars vs 'Estado'
+# # TO DO: create a function and move to episcout
+#
+# # # Wilcoxon Rank-Sum Test
+# # factor_var <- df_factor[['Estado']]
+# # num_var <- df_factor$Neu_count_1
+# #
+# # if (length(unique(factor_var)) == 2) {
+# #   group1 <- num_var[factor_var == levels(factor_var)[1]]
+# #   group2 <- num_var[factor_var == levels(factor_var)[2]]
+# #   test <- wilcox.test(group1, group2,
+# #                       exact = TRUE,
+# #                       correct = TRUE,
+# #                       conf.int = TRUE,
+# #                       conf.level = 0.95
+# #                       )
+# #   print(test)
+# # }
+# # test$statistic
+# #
+# # # TO DO: continue here
+# # wilcoxon_res <- data.frame(Group1 = character(),
+# #                            Group2 = character(),
+# #                            Variable = character(),
+# #                            W = numeric(),
+# #                            P.Value = numeric(),
+# #                            CI95_low = numeric(),
+# #                            CI95_high = numeric(),
+# #                            stringsAsFactors = FALSE
+# #                            )
+# #
+# # unique_groups <- unique(df_factor[['Estado']])
+# # combinations <- combn(unique_groups, 2)
+# # factor_var <- df_factor[['Estado']]
+# # df <- df_factor
+# # dim(combinations)
+# #
+# # # c <- 'Neu_count_1' #'Peso'
+# # # # Example manual test for verification
+# # # test_example <- wilcox.test(df$Edad[df$Estado == "Defuncion"], df$Edad[df$Estado == "Mejoria"])
+# # # print(test_example)
+# #
+# # for (c in colnames(col_nums)) {
+# #   for (i in 1:ncol(combinations)) {
+# #     group1_data <- df[factor_var == combinations[1, i], c]
+# #     group2_data <- df[factor_var == combinations[2, i], c]
+# #     # print(head(group1_data))  # Check the data
+# #     # print(head(group2_data))  # Check the data
+# #     test <- wilcox.test(group1, group2,
+# #                         exact = TRUE,
+# #                         correct = TRUE,
+# #                         conf.int = TRUE,
+# #                         conf.level = 0.95
+# #                         )
+# #     wilcoxon_res <- rbind(wilcoxon_res,
+# #                           data.frame(Group1 = combinations[1, i],
+# #                                      Group2 = combinations[2, i],
+# #                                      Variable = c,
+# #                                      W = test$statistic,
+# #                                      P.Value = test$p.value,
+# #                                      CI95_low = test$conf.int[1],
+# #                                      CI95_high = test$conf.int[2]
+# #                                      )
+# #                           )
+# #   }
+# # }
+# # epi_head_and_tail(wilcoxon_res, cols = 7)
+# # ////////////
+#
+#
+# # ////////////
+# # Date Variables with Other Types ----
+#
+# # TO DO:
+# # Consider:
+# # Trends:
+# # Aggregate numerical data over time (e.g., monthly averages, yearly totals).
+# # Plot time-series trends with line charts.
+# # Event Analysis:
+# # Compare categorical event frequencies over time.
+# # Use Gantt charts or event plots for timelines.
+# # Lagged Effects:
+# # Analyze lag relationships (e.g., weekly sales impact on monthly outcomes).
+# # ////////////
+#
+#
+# # ////////////
+# # TO DO:
+# # Consider:
+# # Outlier Detection ----
+# # Numerical Variables:
+# # Detect outliers using:
+# # Z-scores or modified Z-scores.
+# # IQR rule (values outside [Q1 - 1.5IQR, Q3 + 1.5IQR]).
+# # Visualize with boxplots or scatter plots.
+# # Multivariate Outliers:
+# # Use Mahalanobis distance or DBSCAN clustering.
+# # ////////////
+#
+#
+# # ////////////
+# # TO DO:
+#
+# # To a table:
+# # (summary(na.omit(df_factor$IgA_Lavado)),
+# #       summary(na.omit(df_factor$IgA_Suero)),
+# #       summary(na.omit(df_factor$IgG_Lavado)),
+# #       summary(na.omit(df_factor$IgG_Suero)),
+# #       summary(na.omit(df_factor$IgM_Lavado)),
+# #       summary(na.omit(df_factor$IgM_Suero))
+# #       )
+#
+#
+# # Two/+ factors
+# # clustered bar, stacked bar, heatmap
+#
+# # Pause after this as descriptive
+# # ////////////
+#
+#
+# # ////////////
+# # Next:
+# # Impute based on key variables
+# # Comparisons for survival
+# # Comparisons for local vs systemic response
+# # Inferential analysis
+# # ////////////
+#
+#
+# # ////////////
+# # The end ----
+# # Outputs saved to disk, no need to save as rdata.
+# sessionInfo()
+#
+# # Closing message loggers:
+# if (!interactive()) { # TRUE if not interactive, will then log output
+#     info(logger, "Script completed successfully")
+#
+#     # Close screen output log (both screen and warnings/error messages):
+#     # Stop sinks
+#     sink(type = "message")
+#     close(sink_msg)  # Close the connection
+#     sink()
+#     }
+#
+# # q()
+# # ////////////

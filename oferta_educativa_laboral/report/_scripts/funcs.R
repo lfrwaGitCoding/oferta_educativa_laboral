@@ -24,7 +24,9 @@ epi_table_to_latex <- function(file_path,
                                full_width = FALSE, # epi_table_kable_format var
                                position = 'center', # epi_table_kable_format var
                                align = "c", # Allows column alignment customization
-                               repeat_header_text = "\\textit{(continuada)}"
+                               repeat_header_text = "\\textit{(continuada)}",
+                               latex_options = c("striped", "scale_down"),
+                               latex_options_longtable = c("repeat_header", "striped")
 ) {
 
     # Check if file exists before reading
@@ -61,7 +63,9 @@ epi_table_to_latex <- function(file_path,
                                font_size = font_size,
                                full_width = full_width,
                                position = position,
-                               repeat_header_text = repeat_header_text
+                               repeat_header_text = repeat_header_text,
+                               latex_options = latex_options,
+                               latex_options_longtable = latex_options_longtable
         )
 
     # Output LaTeX for Quarto PDF conversion:
@@ -75,12 +79,14 @@ epi_table_kable_format <- function(kable_input,
                                    font_size = NULL,
                                    full_width = FALSE,
                                    position = 'center',
-                                   repeat_header_text = repeat_header_text
+                                   repeat_header_text = "\\textit{(continuada)}",
+                                   latex_options_longtable = c("repeat_header", "striped"), #, "hold_position"),
+                                   latex_options = c("striped", "scale_down") #, "hold_position"),  # Ensures proper placement & auto-resize
 ) {
     if (longtable) {
         kable_input <- kable_input %>%
             kable_styling(
-                latex_options = c("repeat_header", "striped"), #, "hold_position"),
+                latex_options = latex_options_longtable, #c("repeat_header", "striped"), #, "hold_position"),
                 full_width = full_width,
                 position = position,
                 repeat_header_text = repeat_header_text,
@@ -91,7 +97,7 @@ epi_table_kable_format <- function(kable_input,
     } else {
         kable_input <- kable_input %>%
             kable_styling(
-                latex_options = c("striped", "scale_down"), #, "hold_position"),  # Ensures proper placement & auto-resize
+                latex_options = latex_options, #c("striped", "scale_down"), #, "hold_position"),  # Ensures proper placement & auto-resize
                 full_width = full_width,
                 position = position,
                 repeat_header_text = repeat_header_text,
@@ -106,19 +112,6 @@ epi_table_kable_format <- function(kable_input,
 
 
 # Reads a long table and outputs a summary table with the top n_rows rows for a PDF output
-epi_table_to_latex_sum2 <- function(file_path, min_total = 10, n_rows = 25, caption = "") {
-    table_df <- episcout::epi_read(file_path)
-
-    table_df_sum <- table_df %>%
-        filter(total >= min_total) %>%
-        arrange(desc(porc_vacante)) %>%
-        head(n_rows)
-
-    epi_table_to_latex(table_df_sum, caption)
-}
-
-
-
 epi_table_to_latex_sum <- function(file_path,
                                    min_total = 10,
                                    n_rows = 25,
@@ -130,7 +123,7 @@ epi_table_to_latex_sum <- function(file_path,
                                    font_size = NULL,
                                    full_width = FALSE,
                                    position = 'center',
-                                   repeat_header_text = repeat_header_text
+                                   repeat_header_text = "\\textit{(continuada)}"
                                         ) {
 
     table_df <- epi_read(file_path)

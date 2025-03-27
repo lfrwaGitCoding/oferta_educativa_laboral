@@ -93,6 +93,8 @@ Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), ed
 
   Desequilibrios de género pueden generar problemas importantes en la atención médica, acceso diferenciado, retención y cultura laboral. Políticas inclusivas, horarios laborales flexibles, programas de mentoría, y demás incentivos dirigidos a los géneros subrepresentados podrían aminorar problemas y mejorar acceso equitativo educativo y laboral. Análisis más detallados sobre tendencias de género en contratación, promoción y retención, y factores de influencia en selección de especialidad podrán dar un mejor entendimiento.
 
+<!-- TO DO: add age difference at ~40 years men v women -->
+
 - **Distribución Geográfica**:
   En un análisis preliminar, observamos diferencias importantes en el número de personas atendidas por cada plaza médica por OOAD. Es posible que la asignación vaya de acuerdo con la carga epidemiológica local y otros factores  (infraestructura, acceso, densidad poblacional, entre otros). Sin embargo, es posible que existan discrepancias en la asignación de recursos.
 
@@ -121,9 +123,13 @@ Distribución por OOAD:
 
 Una comparación por edades promedio de cada grupo mostró diferencias mínimas (ver reporte interactivo), sugiriendo que un análisis más detallado podría arrojar observaciones útiles sobre la movilidad de médicos a lo largo del país y de acuerdo a su trayectoria profesional.
 
+<!-- TO DO: add select Q's, meds por 1000 DH -->
+
 ## Preguntas de Seguimiento
 
 Este análisis genera interrogantes que pueden profundizar recomendaciones y el desarrollo de políticas basadas en evidencia. Las principales líneas y preguntas específicas que identificamos incluyen:
+
+<!-- TO DO: add intervention analysis, e.g. pre vs post draft meds -->
 
 **Factores Asociados a Vacantes**
 

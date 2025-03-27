@@ -94,8 +94,8 @@ print(dir(path = normalizePath(data_dir), all.files = TRUE))
 infiles_dir <- 'data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-infile <- 'Qna_17_Bienestar_2024.csv'
-# infile <- 'Qna_17_Plantilla_2024.csv'
+# infile <- 'Qna_17_Bienestar_2024.csv'
+infile <- 'Qna_17_Plantilla_2024.csv'
 infile_path <- paste0(data_dir, infiles_dir, infile)
 
 # Full path and file loaded:
@@ -245,6 +245,36 @@ data_f[, c('FALTASACUMULADAS', 'ANT_DIAS')]
 head(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
 # ===
 
+
+# ===
+# TO DO
+# Clean up ESCOLARIDAD
+head(data_f$ESCOLARIDAD, 20)
+summary(data_f$ESCOLARIDAD)
+to_NA <- c("-",
+           "1-",
+           "7-",
+           "9-",
+           "15|-",
+           "3-",
+           "8-"
+           )
+to_correct <- c("BACHILLERATO-",
+                "LICENCIATURA EN ENFERMERIA-",
+                "LICENCIATURA-",
+                "MAESTRIA COMPLETA-"
+                )
+length(which(data_f$ESCOLARIDAD %in% to_NA))
+# vec_test <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_NA, NA, data_f$ESCOLARIDAD)
+data_f$ESCOLARIDAD <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_NA, NA, data_f$ESCOLARIDAD)
+
+# Also exclude as ambiguous:
+# vec_test <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_correct, NA, data_f$ESCOLARIDAD)
+data_f$ESCOLARIDAD <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_correct, NA, data_f$ESCOLARIDAD)
+
+head(data_f$ESCOLARIDAD)
+summary(as.factor(data_f$ESCOLARIDAD))
+# ===
 
 # ===
 # TO DO:

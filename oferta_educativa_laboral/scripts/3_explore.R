@@ -48,6 +48,8 @@ getwd()
 # scale base_size accordingly. e.g. for fonts to appear ~12 pt in the final PDF, set:
 
 font_size <- 12 / 0.6 # =20
+font_size_x <- (12 / 0.6) - 3 # =20
+
 my_theme <- theme_minimal(base_size = font_size) +
   theme(
     plot.title = element_text(size = font_size, face = "bold"),

@@ -94,8 +94,8 @@ print(dir(path = normalizePath(data_dir), all.files = TRUE))
 infiles_dir <- 'data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-# infile <- 'Qna_17_Bienestar_2024.csv'
-infile <- 'Qna_17_Plantilla_2024.csv'
+infile <- 'Qna_17_Bienestar_2024.csv'
+# infile <- 'Qna_17_Plantilla_2024.csv'
 infile_path <- paste0(data_dir, infiles_dir, infile)
 
 # Full path and file loaded:
@@ -247,8 +247,7 @@ head(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
 
 
 # ===
-# TO DO
-# Clean up ESCOLARIDAD
+# Clean up ESCOLARIDAD, NA values mainly:
 head(data_f$ESCOLARIDAD, 20)
 summary(data_f$ESCOLARIDAD)
 to_NA <- c("-",
@@ -274,6 +273,7 @@ data_f$ESCOLARIDAD <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_correct, N
 
 head(data_f$ESCOLARIDAD)
 summary(as.factor(data_f$ESCOLARIDAD))
+dim(data_f)
 # ===
 
 # ===

@@ -1,5 +1,4 @@
 <!-- TO DO: increase change y-axis only text  -->
-<!-- TO DO: clean escolaridad -->
 
 # Análisis Exploratorio de Datos: Talento Humano en el IMSS
 ## Resumen Ejecutivo

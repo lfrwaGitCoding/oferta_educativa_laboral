@@ -102,7 +102,7 @@ print(dir(path = normalizePath(project_root), all.files = TRUE))
 # Source functions/scripts/etc
 # TO DO:
 # Source (until I update episcout)
-source(file.path(paste0(code_dir, '/funcs_epi_source.R')))
+source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # ////////////
 
 

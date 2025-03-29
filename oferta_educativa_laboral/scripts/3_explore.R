@@ -46,6 +46,7 @@ getwd()
 # Global options for plotting, generally need larger fot size:
 # If rendering at 60% of linewidth ({ width=60% }) in qmd for PDF output,
 # scale base_size accordingly. e.g. for fonts to appear ~12 pt in the final PDF, set:
+# TO DO: change "Count" For Frecuencias in boxplots and ?, change axes label size only
 
 font_size <- 12 / 0.6 # =20
 font_size_x <- (12 / 0.6) - 3 # =20

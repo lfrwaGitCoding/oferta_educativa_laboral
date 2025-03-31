@@ -1,5 +1,8 @@
-<!-- TO DO: increase change y-axis only text  -->
-
+---
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
 # Análisis Exploratorio de Datos: Talento Humano en el IMSS
 ## Resumen Ejecutivo
 
@@ -69,7 +72,7 @@ Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), ed
   Las fechas de ingreso y movimiento de personal muestran períodos clave de alta contratación, mientras la mayoría de las plazas tienen una fecha de finalización a largo plazo (2050-01), reflejando políticas estables de contratación. Eventos puntuales (nominación, confirmación, límite de ocupación) revelan ciclos específicos de actividad administrativa que pueden aprovecharse para ajustar políticas laborales estratégicamente.
 
 - **Reclutamiento y Retención Focalizados en Especialidades y Regiones**: 
-  Un análisis más detallado de especialidades críticas con altas tasas de vacantes o deserción al igual que por OOAD y localidad podría informar la implementación de incentivos financieros específicos, asistencia para vivienda, oportunidades de desarrollo profesional y becas de formación, entre otros, para atraer personal. Otras medidas en conjunto con otras direcciones, tales como servicios de telemedicina podrían complementar y extender el acceso a servicios médicos especializados en áreas de difícil cobertura.
+  Un primer análisis de diferencias de grupos, en este caso de edad por género, señala que hay más mujeres jóvenes que hombres, desde aproximadamente los 26 años con un pico hacia los 30-35 y una inversión de los 40 en adelante (ver reporte interacivo, plantilla ordinaria médicos). Esta observación indica un área de oportunidad y una necesidad de un análisis más detallado para reforzar o desarrollar políticas de retención dirigidas a grupos específicos. De manera similar, un análisis profundo por especialidad, OOAD, entre otras variables, podría informar la implementación de incentivos financieros específicos, asistencia para vivienda, oportunidades de desarrollo profesional y becas de formación, entre otros, para atraer o retener personal. Otras medidas en conjunto con otras direcciones, tales como servicios de telemedicina podrían complementar y extender el acceso a servicios médicos especializados en áreas de difícil cobertura.
 
 - **Planificación Proactiva de Jubilaciones y Sucesión Laboral**:
   Existe una necesidad de predecir de mejor manera jubilaciones y bajas por cualquier razón para garantizar servicios continuos, en particular en localidades y/o áreas con números bajos de médicos. A primera instancia, las distribuciones de edad y antigüedad indican cierta estabilidad con una cuarta parte del personal médico con más de 48 años, y de manera independiente, una cuarta parte con 17 o más años de antigüedad. Aun así, dadas las contrataciones masivas en 2010 y 2020, existen periodos críticos en donde un alto número del personal médico estaría en posición de jubilarse. Existe la posibilidad de desarrollar modelos predictivos con datos longitudinales y de trayectoria del empleado/empleada del SIAP para anticipar jubilaciones y bajas y ajustar planes de sucesión. Otras estrategias podrían incluir programas como jubilación escalonada, formación acelerada y mentoría para asegurar transiciones efectivas en áreas críticas.
@@ -95,7 +98,7 @@ Resumimos datos para variables como educación (ESCOLARIDAD), género (SEXO), ed
 
   Desequilibrios de género pueden generar problemas importantes en la atención médica, acceso diferenciado, retención y cultura laboral. Políticas inclusivas, horarios laborales flexibles, programas de mentoría, y demás incentivos dirigidos a los géneros subrepresentados podrían aminorar problemas y mejorar acceso equitativo educativo y laboral. Análisis más detallados sobre tendencias de género en contratación, promoción y retención, y factores de influencia en selección de especialidad podrán dar un mejor entendimiento.
 
-<!-- TO DO: add age difference at ~40 years men v women -->
+\newpage
 
 - **Distribución Geográfica**:
   En un análisis preliminar, observamos diferencias importantes en el número de personas atendidas por cada plaza médica por OOAD. Es posible que la asignación vaya de acuerdo con la carga epidemiológica local y otros factores  (infraestructura, acceso, densidad poblacional, entre otros). Sin embargo, es posible que existan discrepancias en la asignación de recursos.
@@ -125,13 +128,28 @@ Distribución por OOAD:
 
 Una comparación por edades promedio de cada grupo mostró diferencias mínimas (ver reporte interactivo), sugiriendo que un análisis más detallado podría arrojar observaciones útiles sobre la movilidad de médicos a lo largo del país y de acuerdo a su trayectoria profesional.
 
-<!-- TO DO: add select Q's, meds por 1000 DH -->
+- **Número de Plazas Médicas por Derechohabientes**:
+  Un análisis preliminar utilizando datos de derechohabiencia por estado (INEGI, 2020) sugiere que el número de plazas de médico varía considerablemente. Por ejemplo, Ciudad de México tiene la mejor relación de número de derechohabientes por plaza ocupada (300 personas/plaza) mientras que Estado de México tiene la peor (757 personas/plaza) a pesar de ser ambas regiones con la mayor cantidad de derechohabientes (Estado de México 5,983,389; Ciudad de México 3,381,545).
+  Un cálculo inicial del potencial de beneficio si se ocuparan todas las plazas vacantes (por porcentaje de beneficiarios) señala que Chihuahua, Michoacán, Tabasco, Sonora y Tamaulipas tendrían el mayor impacto. Por otro lado, Querétaro, Aguascalientes, Tlaxcala, Nuevo León y Yucatán tendrían el menor impacto *relativo* (ver reporte interactivo). Es importante señalar que nuestro análisis debe actualizarse (a una quincena post Draft 2025 y al proceso de reclutamiento de hospitales nuevos) y a datos de derechohabientes del IMSS 2025. 
+
+\vspace{1em}
+
+![Gráfico de líneas de Plazas Ocupadas vs Vacantes por Número de Derechohabientes por Estado](plot_line_med_estado_DH.pdf){fig-pos="h" fig-align="center" #fig-line_meds_DH_ocup_total}
+
+![Gráfico de barras de Número de Plazas Ocupadas por Médicos/as por 1000 Derechohabientes](plot_bar_meds_DH_estado.pdf){fig-pos="h" fig-align="center" #fig-bar_meds_DH_estado}
+
+\clearpage
 
 ## Preguntas de Seguimiento
 
 Este análisis genera interrogantes que pueden profundizar recomendaciones y el desarrollo de políticas basadas en evidencia. Las principales líneas y preguntas específicas que identificamos incluyen:
 
-<!-- TO DO: add intervention analysis, e.g. pre vs post draft meds -->
+**Medición del Impacto del Draft de Médicos**
+
+- ¿Cómo han evolucionado las características y la distribución del personal en el sistema de salud pública a lo largo del tiempo, y qué patrones se observan en la contratación, rotación y permanencia?
+- ¿Qué impacto tienen los eventos de reclutamiento nacional y otras políticas de recursos humanos sobre la dinámica del personal, incluyendo tasas de incorporación, retención y distribución regional?
+
+El objetivo de este análisis es comprender las tendencias a largo plazo en el personal médico. Al analizar la contratación, rotación y composición, podemos obtener información útil sobre cómo responden las personas a diferentes incentivos de contratación y su posible efecto a corto, mediano y largo plazo. Por ejemplo, tomando el Draft 2024, podemos identificar posibles razones y características de bajas en el primer año laboral, comparar contra la cohorte de 2025, contrastar cambios en condiciones de oferta, entre otros.
 
 **Factores Asociados a Vacantes**
 
@@ -214,9 +232,10 @@ La integración de datos demográficos, financieros, geográficos y laborales pu
 
 Para continuar profundizando en el entendimiento y optimización de la fuerza laboral del IMSS, se proponen las siguientes líneas estratégicas de análisis:
 
-**Análisis Longitudinal y de Tendencias**
+**Análisis Longitudinal y del Imapcto de Políticas**
 
 - Examinar los cambios en las variables demográficas, financieras, ocupacionales y regionales usando datos quincenales de los últimos años, para identificar tendencias clave y anticipar futuros desafíos.
+- Análizar el impacto de la implementación de políticas (p.ej. pre vs post Draft 2024, 2025)
 
 **Modelado Estadístico**
 

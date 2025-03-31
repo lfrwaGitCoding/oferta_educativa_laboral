@@ -106,12 +106,12 @@ epi_table_to_latex("sum_factors.txt",
 
 ### De acuerdo a variables sociodemográficas
 
-\vspace{3em}
+<!-- \vspace{1em} -->
 
-::: {layout="[[-10,40,40,-10], [-25,50,-25]]"}
-![Histograma de Edad](plots_hist_num_EDAD.pdf){#fig-hist_edad width=50%}
+::: {layout="[[-5,45,45,-5], [-25,50,-25]]"}
+![Histograma de Edad](plots_hist_num_EDAD.pdf){#fig-hist_edad}
 
-![Diagrama de cajas de Edad](plots_box_num_EDAD.pdf){#fig-box_edad width=50%}
+![Diagrama de cajas de Edad](plots_box_num_EDAD.pdf){#fig-box_edad}
 
 ![Gráfico de barras por Género](plots_bar_num_SEXO.pdf){#fig-bar_sexo width=50%}
 :::
@@ -121,6 +121,8 @@ epi_table_to_latex("sum_factors.txt",
 
 ![Diagrama de caja de Antigüedad en días](plots_box_num_ANT_DIAS.pdf){#fig-box_ANT_DIAS}
 :::
+
+\FloatBarrier
 
 ![Gráfico de barras por Escolaridad](plots_bar_num_ESCOLARIDAD.pdf){#fig-bar_escolaridad}
 
@@ -133,6 +135,7 @@ epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
 :::
 
 \clearpage
+\FloatBarrier
 
 ### Por tipo de plaza y clasificación
 
@@ -149,7 +152,7 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
 
 
 <!-- TO DO: Separate script, will not regenerate with batch processing -->
-![Gráfico de barras de Especialidades más Frecuentes por OOAD](ordinario_plot_bar_med_esp_OOAD_top.pdf)
+![Gráfico de barras de Especialidades más Frecuentes por OOAD](plot_bar_med_esp_OOAD_top.pdf)
 
 ::: {.cell tbl-cap="Áreas de Responsabilidad con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_NOMBREAR"}
 ```{r, table_PLZOCU_NOMBREAR_corta, echo = FALSE, results = "asis"}
@@ -220,7 +223,7 @@ epi_table_to_latex("table_PLZOCU_GrupoTipoPlaza.txt",
 \clearpage
 \FloatBarrier
 
-<!-- TO DO: re-do as onlyif occupied, so no vacants -->
+<!-- TO DO: re-do as only if occupied, so no vacants -->
 <!-- ```{r, table_PLZOCU_COMSIN, echo = FALSE, results = "asis"} -->
 <!-- epi_table_to_latex("table_PLZOCU_COMSIN.txt", -->
 <!--                    "Ocupación de plazas por Comisión sindical" -->
@@ -420,7 +423,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_MCP.txt",
 <!-- Forces tables to stay in section: -->
 \FloatBarrier
 
-<!-- TO DO: re-do as onlyif occupied, so no vacants -->
+<!-- TO DO: re-do as only if occupied, so no vacants -->
 ```{r, table_PLZOCU_JUBILA, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_JUBILA.txt",
                    "Proyección de Jubilación"
@@ -466,31 +469,40 @@ epi_table_to_latex("table_PLZOCU_CPTO180.txt",
                    )
 ```
 
-::: {layout="[[-15,30,-10,30,-15], [-5,30,30,30,-5]]"}
+<!-- ::: {layout="[[-15,30,-10,30,-15], [-5,30,30,30,-5]]"} -->
+<!-- ::: {layout="[[50,50], [-5,30,30,30,-5]]"} -->
+::: {layout="[50,50]"}
 ![Histograma de concepto IMP_010](plots_hist_num_IMP_010.pdf){#fig-hist_IMP_010}
 
-![Histograma de concepto IMP_024](plots_hist_num_IMP_024.pdf){#fig-hist_IMP_024}
-
-![Histograma de concepto IMP_035](plots_hist_num_IMP_035.pdf){#fig-hist_IMP_035}
-
-![Histograma de concepto IMP_037](plots_hist_num_IMP_037.pdf){#fig-hist_IMP_037}
-
-![Histograma de concepto IMP_SDO](plots_hist_num_IMP_SDO.pdf){#fig-hist_IMP_SDO}
+![Diagrama de caja de concepto IMP_010](plots_box_num_IMP_010.pdf){#fig-box_IMP_010}
 :::
 
-::: {layout="[[-15,30,-10,30,-15], [-5,30,30,30,-5]]"}
-![Diagrama de caja de concepto IMP_010](plots_box_num_IMP_010.pdf){#fig-box_IMP_010}
-
-![Diagrama de caja de concepto IMP_024](plots_box_num_IMP_024.pdf){#fig-box_IMP_024}
+::: {layout="[50,50]"}
+![Histograma de concepto IMP_035](plots_hist_num_IMP_035.pdf){#fig-hist_IMP_035}
 
 ![Diagrama de caja de concepto IMP_035](plots_box_num_IMP_035.pdf){#fig-box_IMP_035}
+:::
+
+<!-- ::: {layout="[[-15,30,-10,30,-15], [-5,30,30,30,-5]]"} -->
+::: {layout="[50,50]"}
+![Histograma de concepto IMP_024](plots_hist_num_IMP_024.pdf){#fig-hist_IMP_024}
+
+![Diagrama de caja de concepto IMP_024](plots_box_num_IMP_024.pdf){#fig-box_IMP_024}
+:::
+
+::: {layout="[50,50]"}
+![Histograma de concepto IMP_037](plots_hist_num_IMP_037.pdf){#fig-hist_IMP_037}
 
 ![Diagrama de caja de concepto IMP_037](plots_box_num_IMP_037.pdf){#fig-box_IMP_037}
+:::
+
+::: {layout="[50,50]"}
+![Histograma de concepto IMP_SDO](plots_hist_num_IMP_SDO.pdf){#fig-hist_IMP_SDO}
 
 ![Diagrama de caja de concepto IMP_SDO](plots_box_num_IMP_SDO.pdf){#fig-box_IMP_SDO}
 :::
 
-::: {layout="[[50,50]]"}
+::: {layout="[50,50]"}
 ![Histograma de Faltas Acumuladas](plots_hist_num_FALTASACUMULADAS.pdf){#fig-hist_FALTASACUMULADAS}
 
 ![Diagrama de caja de Faltas Acumuladas](plots_box_num_FALTASACUMULADAS.pdf){#fig-box_FALTASACUMULADAS}

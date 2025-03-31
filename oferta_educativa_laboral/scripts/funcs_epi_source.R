@@ -656,7 +656,9 @@ epi_plot_cow_save <- function(file_name = NULL,
 
 
 epi_plot_theme_2 <- function(base_size = 13,
-                             base_family = 'Times'
+                             base_family = 'Times',
+                             font_size_x = NULL,
+                             font_size_y = NULL
 ) {
   # Use this instead or library or require inside functions:
   if (!requireNamespace('scales', quietly = TRUE)) {
@@ -691,6 +693,8 @@ epi_plot_theme_2 <- function(base_size = 13,
                      axis.text = ggplot2::element_text(),
                      axis.line = ggplot2::element_line(colour = "black"),
                      axis.ticks = ggplot2::element_line(),
+                     axis.text.x = ggplot2::element_text(size = font_size_x),
+                     axis.text.y = ggplot2::element_text(size = font_size_y),
                      # panel.grid.major = element_line(colour = "#f0f0f0"),
                      # this is like grey90 roughly
                      panel.grid.major = ggplot2::element_blank(),
@@ -711,3 +715,40 @@ epi_plot_theme_2 <- function(base_size = 13,
       )
   )
 }
+
+epi_stats_corr <- function(df = NULL,
+                           method = 'spearman'
+) {
+  if (!requireNamespace('Hmisc', quietly = TRUE)) {
+    stop('Package Hmisc needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  if (!requireNamespace('dplyr', quietly = TRUE)) {
+    stop('Package dplyr needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  if (!requireNamespace('tidyr', quietly = TRUE)) {
+    stop('Package tidyr needed for this function to work. Please install it.',
+         call. = FALSE)
+  }
+  cormat <- Hmisc::rcorr(as.matrix(df), type = method)
+
+  # Correlation values:
+  cormat_melted_r <- as.data.frame(cormat$r) %>%
+    tibble::rownames_to_column("Var1") %>%
+    pivot_longer(-Var1, names_to = "Var2", values_to = "correlation")
+
+  # P-values separately:
+  cormat_melted_pval <- as.data.frame(cormat$P) %>%
+    tibble::rownames_to_column("Var1") %>%
+    pivot_longer(-Var1, names_to = "Var2", values_to = "pvalue")
+
+  # Sanity: identical(rownames(cormat_melted_r),
+  # rownames(cormat_melted_pval))
+  cormat_all <- list(cormat = cormat,
+                     cormat_melted_r = cormat_melted_r,
+                     cormat_melted_pval = cormat_melted_pval
+  )
+  return(cormat_all)
+}
+

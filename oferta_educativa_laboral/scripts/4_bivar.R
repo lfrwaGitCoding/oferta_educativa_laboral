@@ -29,6 +29,8 @@ library(ggthemes)
 library(cowplot)
 library(tidyverse)
 library(log4r)
+library(dplyr)
+library(tidyr)
 # library(skimr)
 # ////////////
 

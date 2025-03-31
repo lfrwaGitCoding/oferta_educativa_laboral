@@ -39,7 +39,7 @@ getwd()
 # Load rdata file ----
 
 # ===
-rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
+rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/old/'
 
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.all_columns.rdata.gzip'
@@ -89,7 +89,6 @@ source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 
 # ////////////
 # Output dir, based on today's date ----
-script_n <- 'med_fam_uni_salud'
 infile_prefix <- strsplit(infile, "\\.")[[1]][1]
 results_subdir <- sprintf('%s_%s',
                           format(Sys.Date(), '%d_%m_%Y'),
@@ -449,7 +448,6 @@ epi_write(file_object = df_f_tab_wide_ord,
 # ////////////
 # Horizontal bar plot of numero de medicos especialistas por especialidad y OOAD ----
 
-
 # ===
 epi_head_and_tail(df_f_tab_wide_ord)
 str(df_f_tab_wide_ord$DELEGACION)
@@ -471,12 +469,39 @@ str(df_f_tab_wide_ord$Total)
 # ===
 
 # ===
+# Get font sizes to scale properly for qmd pdf output:
+font_size <- 15 / 0.6  # Final appearance size after scaling (≈20), where scaling is at eg 60% for latex PDF output
+font_size_x <- font_size + 2 # axis ticks (x-axis)
+font_size_y <- font_size + 2 # y-axis ticks
+
+my_theme <- theme_minimal(base_size = font_size) +
+  theme(
+    plot.title    = element_text(size = font_size, face = "bold"),
+    axis.title.x  = element_text(size = font_size),
+    axis.title.y  = element_text(size = font_size),
+    axis.text.x   = element_text(size = font_size_x),  # x-axis tick labels
+    axis.text.y   = element_text(size = font_size_y)  # y-axis tick labels
+    # panel.grid    = element_blank()
+    # panel.background = element_rect(fill = "white", colour = NA),
+    # plot.background  = element_rect(fill = "white", colour = NA),
+    # axis.line     = element_blank(),
+    # axis.ticks    = element_blank(),
+    # legend.key    = element_blank()
+  )
+
+theme_set(my_theme)
+
+
+
 bar_plot <- epi_plot_bar(df_f_tab_wide_ord,
              var_x = "DELEGACION",
              var_y = "Total"
              ) +
   coord_flip() +
   labs(title = "Número de médicos/as por especialidad y OOAD") +
+  epi_plot_theme_2(base_size = font_size,
+                   font_size_x = font_size_x,
+                   font_size_y = font_size_y) +
   theme(legend.position = "none")
 bar_plot
 
@@ -486,7 +511,7 @@ suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile, plot = bar_plot,
-       height = 20, width = 20, units = "in"
+       height = 20, width = 20, units = "in", scale = 1, dpi = 300
        )
 # ===
 
@@ -525,6 +550,9 @@ stacked_bar <- ggplot(df_long_filt,
   geom_bar(stat = "identity") +
   coord_flip() +
   labs(title = "Número de médicos/as por especialidad y OOAD - especialidades más frecuentes") +
+  epi_plot_theme_2(base_size = font_size,
+                   font_size_x = font_size_x,
+                   font_size_y = font_size_y) +
   theme(legend.position = "bottom")
 stacked_bar
 
@@ -535,7 +563,7 @@ suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile, plot = stacked_bar,
-       height = 20, width = 20, units = "in"
+       height = 20, width = 20, units = "in", scale = 1, dpi = 300
        )
 # ===
 # ////////////

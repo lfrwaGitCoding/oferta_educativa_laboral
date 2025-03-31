@@ -45,26 +45,29 @@ getwd()
 # ////////////
 # Global options for plotting, generally need larger fot size:
 # If rendering at 60% of linewidth ({ width=60% }) in qmd for PDF output,
-# scale base_size accordingly. e.g. for fonts to appear ~12 pt in the final PDF, set:
-# TO DO: change "Count" For Frecuencias in boxplots and ?, change axes label size only
+# scale base_size accordingly. e.g. for fonts to appear ~12pt in the final PDF, set:
 
-font_size <- 12 / 0.6 # =20
-font_size_x <- (12 / 0.6) - 3 # =20
+font_size <- 12 / 0.6  # Final appearance size after scaling (≈20), where scaling is at eg 60% for latex PDF output
+font_size_x <- font_size - 0 # axis ticks (x-axis)
+font_size_y <- font_size - 0 # y-axis ticks
 
 my_theme <- theme_minimal(base_size = font_size) +
   theme(
-    plot.title = element_text(size = font_size, face = "bold"),
-    axis.text = element_text(size = font_size),
-    axis.title = element_text(size = font_size),
-    panel.grid = element_blank(),       # Remove gridlines
-    panel.background = element_rect(fill = "white", colour = NA),  # Clean white panel
-    plot.background = element_rect(fill = "white", colour = NA),   # White around the plot
-    axis.line = element_blank(),        # No axis lines
-    axis.ticks = element_blank(),       # No axis ticks
-    legend.key = element_blank()        # Clean legend background
+    plot.title    = element_text(size = font_size, face = "bold"),
+    axis.title.x  = element_text(size = font_size),
+    axis.title.y  = element_text(size = font_size),
+    axis.text.x   = element_text(size = font_size_x),  # x-axis tick labels
+    axis.text.y   = element_text(size = font_size_y)  # y-axis tick labels
+    # panel.grid    = element_blank()
+    # panel.background = element_rect(fill = "white", colour = NA),
+    # plot.background  = element_rect(fill = "white", colour = NA),
+    # axis.line     = element_blank(),
+    # axis.ticks    = element_blank(),
+    # legend.key    = element_blank()
   )
 
 theme_set(my_theme)
+
 
 # cowplot::ggsave2 has dpi = 300 as default
 # epi_plot_cow_save has base_height = 11.69, base_width = 8.27, default units is "in"
@@ -503,13 +506,18 @@ for (i in colnames(data_f)) {
 num_vars
 
 # Numeric, boxplots:
-epi_plot_box(df = data_f, var_y = "EDAD")
+epi_plot_box(df = data_f, var_y = "EDAD") +
+  epi_plot_theme_2(base_size = 10,
+                   font_size_x = 30,
+                   font_size_y = 30)
 
 # i <- "EDAD"
 var_list <- epi_plot_list(vars_to_plot = num_vars)
 for (i in names(var_list)) {
   var_list[[i]] <- epi_plot_box(df = data_f, var_y = i) +
-    epi_plot_theme_2(base_size = font_size)
+    epi_plot_theme_2(base_size = font_size,
+                     font_size_x = font_size_x,
+                     font_size_y = font_size_y)
   }
 
 # Save plots
@@ -545,7 +553,11 @@ for (start_i in jumps) {
 
 # ===
 # Histograms:
-epi_plot_hist(df = data_f, var_x = "EDAD")
+epi_plot_hist(df = data_f, var_x = "EDAD") +
+  epi_plot_theme_2(base_size = font_size,
+                   font_size_x = font_size_x,
+                   font_size_y = font_size_y) +
+  labs(y = "Frecuencia")
 
 var_list <- NULL
 i <- NULL
@@ -556,7 +568,10 @@ for (i in names(var_list)) {
   # TO DO for episcout: switch to dplyr::sym() for tidy evaluation and/or clean up column names initially. Can be useful to keep original column names though
   # i <- paste0("`", i, "`") # because of spaces and special characters in column names
   var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
-    epi_plot_theme_2(base_size = font_size)
+    epi_plot_theme_2(base_size = font_size,
+                     font_size_x = font_size_x,
+                     font_size_y = font_size_y) +
+    labs(y = "Frecuencia")
   }
 var_list
 
@@ -628,7 +643,8 @@ str(data_f[, fact_cols])
 plot_bar <- epi_plot_bar(df = data_f,
                          var_x = 'SEXO',
                          custom_palette = custom_palette
-                         )
+                         ) +
+  labs(y = "Frecuencia")
 plot_bar
 
 var_list <- epi_plot_list(vars_to_plot = fact_cols)
@@ -638,7 +654,8 @@ for (i in names(var_list)) {
                                   var_x = i,
                                   custom_palette = custom_palette
                                   ) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      labs(y = "Frecuencia")
 }
 # var_list
 
@@ -689,13 +706,17 @@ summary(data_f[, date_cols])
 # ===
 # Histograms of date frequencies, to check for gaps and clusters:
 ggplot(data = data_f, aes(x = FECHAPROBJUB)) +
-    geom_histogram()
+    geom_histogram() +
+  labs(y = "Frecuencia")
 table(data_f$FECHAPROBJUB)
 
 i <- 'FECHAPROBJUB'
 epi_plot_hist(df = data_f, var_x = i) +
     geom_density(col = 2) +
-  epi_plot_theme_2(base_size = font_size)
+  epi_plot_theme_2(base_size = font_size,
+                   font_size_x = font_size_x,
+                   font_size_y = font_size_y) +
+  labs(y = "Frecuencia")
 
 var_list <- epi_plot_list(vars_to_plot = date_cols)
 for (i in names(var_list)) {
@@ -703,7 +724,10 @@ for (i in names(var_list)) {
     # i <- paste0("`", i, "`") # because of spaces and special characters in column names
     var_list[[i]] <- epi_plot_hist(df = data_f, var_x = i) +
         geom_density(col = 2) +
-      epi_plot_theme_2(base_size = font_size)
+      epi_plot_theme_2(base_size = font_size,
+                       font_size_x = font_size_x,
+                       font_size_y = font_size_y) +
+      labs(y = "Frecuencia")
 }
 var_list
 
@@ -747,7 +771,9 @@ var_list <- epi_plot_list(vars_to_plot = date_cols)
 for (i in names(var_list)) {
     # print(i)
     var_list[[i]] <- epi_plot_box(df = data_f, var_y = i) +
-      epi_plot_theme_2(base_size = font_size)
+      epi_plot_theme_2(base_size = font_size,
+                       font_size_x = font_size_x,
+                       font_size_y = font_size_y)
     }
 # var_list
 
@@ -816,7 +842,8 @@ ggplot(plot_data, aes(x = !!sym(i), y = value)) +
     geom_line() +
     geom_point() +
     annotate("text", x = mean(range(plot_data[[i]])), y = -Inf,
-             label = label_annot, vjust = -1, size = 2, color = "gray20")
+             label = label_annot, vjust = -1, size = 2, color = "gray20") +
+  labs(y = "Frecuencia")
 # ===
 
 # ===
@@ -830,7 +857,8 @@ for (i in names(var_list)) {
     # Plot:
     var_list[[i]] <- ggplot(plot_data, aes(x = !!sym(i), y = value)) +
         geom_line() +
-        geom_point()
+        geom_point() +
+      labs(y = "Frecuencia")
 }
 # var_list
 

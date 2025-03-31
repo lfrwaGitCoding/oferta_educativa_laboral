@@ -40,8 +40,8 @@ dir()
 
 # ===
 # rdata_dir <- '/results/19_02_2025_UP_meds_por_DH/'
-rdata_dir <- '/results/19_02_2025_mac24/'
-code_dir <- '/Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral'
+rdata_dir <- '/results/specific_Qs/31_03_2025_medicos_por_mil_derechohabientes/'
+code_dir <- '/Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/'
 results_dir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/'
 
 # TO DO: Manually set:
@@ -77,10 +77,9 @@ results_subdir <- sprintf('%s_%s',
                           infile_prefix
 )
 results_subdir
-# results_subdir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/19_02_2025_mac24/'
-# results_subdir <- epi_create_dir(base_path = results_dir,
-#                                  subdir = results_subdir
-# )
+results_subdir <- epi_create_dir(base_path = results_dir,
+                                 subdir = results_subdir
+)
 # ////////////
 
 
@@ -88,7 +87,26 @@ results_subdir
 # ////////////
 # Horizontal bar plot of Numero de medicos por estado ----
 # Set a global theme with larger axis text
-theme_set(theme_minimal(base_size = 11))  # Adjust base size for all text
+font_size <- 12 / 0.6  # Final appearance size after scaling (≈20), where scaling is at eg 60% for latex PDF output
+font_size_x <- font_size - 0 # axis ticks (x-axis)
+font_size_y <- font_size - 0 # y-axis ticks
+
+my_theme <- theme_minimal(base_size = font_size) +
+  theme(
+    plot.title    = element_text(size = font_size - 3, face = "bold"),
+    axis.title.x  = element_text(size = font_size),
+    axis.title.y  = element_text(size = font_size),
+    axis.text.x   = element_text(size = font_size_x),  # x-axis tick labels
+    axis.text.y   = element_text(size = font_size_y)  # y-axis tick labels
+    # panel.grid    = element_blank()
+    # panel.background = element_rect(fill = "white", colour = NA),
+    # plot.background  = element_rect(fill = "white", colour = NA),
+    # axis.line     = element_blank(),
+    # axis.ticks    = element_blank(),
+    # legend.key    = element_blank()
+  )
+theme_set(my_theme)
+
 
 # ===
 epi_head_and_tail(data_f, cols = ncol(data_f))
@@ -108,14 +126,14 @@ bar_plot <- epi_plot_bar(data_f,
                                          ) +
     coord_flip() +
     labs(title = "Número de plazas ocupadas por médicos/as por 1000 derechohabientes") +
-    theme(legend.position = "none",
-                  axis.text.x = element_text(size = 11),  # Increase x-axis text size
-                  axis.text.y = element_text(size = 11),  # Increase y-axis text size
-                  axis.title.x = element_text(size = 12), # Increase x-axis title size
-                  axis.title.y = element_text(size = 12)  # Increase y-axis title size
+    theme(legend.position = "none"
+                  # axis.text.x = element_text(size = 11),  # Increase x-axis text size
+                  # axis.text.y = element_text(size = 11),  # Increase y-axis text size
+                  # axis.title.x = element_text(size = 12), # Increase x-axis title size
+                  # axis.title.y = element_text(size = 12)  # Increase y-axis title size
               ) +
   labs(x = NULL, y = NULL)  # Remove axis labels
-  bar_plot
+bar_plot
 
 # Save:
 file_n <- 'plot_bar_meds_DH_estado'
@@ -149,11 +167,11 @@ bar_plot <- epi_plot_bar(data_f,
 ) +
     coord_flip() +
     labs(title = "Porcentaje de plazas vacantes de médicos por estado") +
-    theme(legend.position = "none",
-          axis.text.x = element_text(size = 11),  # Increase x-axis text size
-          axis.text.y = element_text(size = 11),  # Increase y-axis text size
-          axis.title.x = element_text(size = 12), # Increase x-axis title size
-          axis.title.y = element_text(size = 12)  # Increase y-axis title size
+    theme(legend.position = "none"
+          # axis.text.x = element_text(size = 11),  # Increase x-axis text size
+          # axis.text.y = element_text(size = 11),  # Increase y-axis text size
+          # axis.title.x = element_text(size = 12), # Increase x-axis title size
+          # axis.title.y = element_text(size = 12)  # Increase y-axis title size
     ) +
   labs(x = NULL, y = NULL)  # Remove axis labels
 bar_plot
@@ -167,36 +185,6 @@ ggsave(outfile, plot = bar_plot,
        height = 8.5, width = 11, units = "in",
        dpi = 300,  # Adjust DPI to maintain font size
        scale = 1  # Increase scale factor
-)
-
-
-# ===
-
-
-
-
-
-
-
-
-# ===
-# Stacked bar plot:
-stacked_bar <- ggplot(df_long_filt,
-                      aes(x = DELEGACION, y = Cantidad, fill = Especialidad)) +
-    geom_bar(stat = "identity") +
-    coord_flip() +
-    labs(title = "Número de médicos/as por especialidad y OOAD - especialidades más frecuentes") +
-    theme(legend.position = "bottom")
-stacked_bar
-
-# Save:
-# file_n <- 'plot_bar_med_esp_OOAD_top_ordinario'
-file_n <- 'plot_bar_med_esp_OOAD_top'
-suffix <- 'pdf'
-outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
-outfile
-ggsave(outfile, plot = stacked_bar,
-       height = 20, width = 20, units = "in"
 )
 # ===
 # ////////////

@@ -36,6 +36,8 @@ source("_scripts/funcs.R")
 
 \clearpage
 
+<!-- TO DO: -->
+<!-- File needs to be in pwd -->
 <!-- In _quarto.yml set params to true for: -->
 ::: {.content-visible when-meta="meta.extended_report"}
 {{< include _extended_ord_meds_Qna_17_2024.qmd >}}
@@ -139,8 +141,9 @@ epi_table_to_latex("table_PLZOCU_ESCOLARIDAD.txt",
 
 ### Por tipo de plaza y clasificación
 
+<!-- TO DO: -->
 <!-- Exclude if filtered by profession: -->
-<!-- ![Gráfico de barras de Clasificación por Categoría](plots_bar_num_DESCRIP_CLASCATEG.pdf) -->
+![Gráfico de barras de Clasificación por Categoría](plots_bar_num_DESCRIP_CLASCATEG.pdf)
 
 ::: {.cell tbl-cap="Ocupación de plazas de acuerdo a Clasificación por Categoría" tbl-pos="h" id="tbl-PLZOCU_DESCRIP_CLASCATEG"}
 ```{r, table_PLZOCU_DESCRIP_CLASCATEG, echo = FALSE, results = "asis"}
@@ -150,6 +153,7 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
 ```
 :::
 
+<!-- TO DO: -->
 <!-- In _quarto.yml set params to true for: -->
 ::: {.content-visible when-meta="meta.extended_report"}
 ![Gráfico de barras de Especialidades más Frecuentes por OOAD](plot_bar_med_esp_OOAD_top.pdf)
@@ -188,7 +192,7 @@ epi_table_to_latex_sum(file_path = "table_PLZOCU_DESCRIPCION_SERVICIO.txt",
 \clearpage
 \FloatBarrier
 
-![Gráfico de barras al Tipo de Contrato](plots_bar_num_DescripcionTC.pdf)
+![Gráfico de barras de acuerdo al Tipo de Contrato](plots_bar_num_DescripcionTC.pdf)
 
 ```{r, table_PLZOCU_DescripcionTC, echo = FALSE, results = "asis"}
 epi_table_to_latex("table_PLZOCU_DescripcionTC.txt",
@@ -515,3 +519,4 @@ epi_table_to_latex("table_PLZOCU_CPTO180.txt",
 ::: {.content-visible when-meta="meta.extended_appendices"}
 {{< include _extended_appendices.qmd >}}
 :::
+

@@ -17,3 +17,8 @@ cp /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educati
 cp -f ../31_03_2025_medicos_por_mil_derechohabientes/plot_bar_* .
 cp -f ../31_03_2025_2_clean_dups_col_types_Qna_17_Plantilla_2024/plot_bar_med_esp_OOAD_top.pdf .
 cp -f ../specific_Qs/meds_por_DH/31_03_2025_meds_OOAD_DH/plot_line_med_estado_DH.pdf .
+
+
+
+
+cp _report_outputs/SIAP_desc_stats.pdf /Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/documents/reports/freeze_01042025/estaticos/

@@ -34,7 +34,7 @@ format:
     keep-tex: true  # Helpful for debugging
 
 # Dynamic variables (qmd md style, could also be r params where e.g. params$a_param):
-tipo_plantilla: "OOAD Chiapas: Ordinario - Médicos"
+tipo_plantilla: "Bienestar - Médicos"
 quincena: "17 del 2024"
 responsable: "Unidad de Educación e Investigación en Salud"
 contacto_1: "antonio.berlanga@imss.gob.mx; rosana.pelayo@imss.gob.mx"

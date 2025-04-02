@@ -53,14 +53,14 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
 # infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
-# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
+infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_enfermeras.rdata.gzip'
 
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
 # Double filter:
-infile <- "2b_clean_subset_Qna_17_Plantilla_2024_meds_Chiapas.rdata.gzip"
+# infile <- "2b_clean_subset_Qna_17_Plantilla_2024_meds_Chiapas.rdata.gzip"
 
 # Full path and file name:
 infile_path <- paste0(rdata_dir, infile)

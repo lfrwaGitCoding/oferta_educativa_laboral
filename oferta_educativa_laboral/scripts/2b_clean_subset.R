@@ -46,11 +46,11 @@ getwd()
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-# infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
+infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
 # infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
 # For double subset, eg first meds, then by OOAD:
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
 # ===
 
 # ===
@@ -75,16 +75,16 @@ epi_head_and_tail(data_f, cols = ncol(data_f))
 summary(data_f$DESCRIP_CLASCATEG)
 summary(data_f$DELEGACION)
 
-# col_to_subset <- 'DESCRIP_CLASCATEG'
-# value_to_subset <- '1.MÉDICOS'
+col_to_subset <- 'DESCRIP_CLASCATEG'
+value_to_subset <- '1.MÉDICOS'
 # value_to_subset <- '2.ENFERMERAS'
 
-col_to_subset <- 'DELEGACION'
-value_to_subset <- 'Chiapas'
+# col_to_subset <- 'DELEGACION'
+# value_to_subset <- 'Chiapas'
 
 
 # TO DO: Manually set:
-subset_n <- 'meds_Chiapas'
+subset_n <- 'meds'
 # subset_n <- 'enfermeras'
 # ===
 

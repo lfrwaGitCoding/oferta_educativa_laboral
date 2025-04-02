@@ -88,9 +88,12 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Bienestar_2024_enfermeras.rdata.gzip'
 
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
+
+# Double filter:
+infile <- "2b_clean_subset_Qna_17_Plantilla_2024_meds_Chiapas.rdata.gzip"
 
 # Full path and file name:
 infile_path <- paste0(rdata_dir, infile)
@@ -387,6 +390,9 @@ for (i in names(dates_list)) {
 # ////////////
 # ===
 # Numeric columns ----
+test_shapiro <- epi_stats_numeric(data_f$IMP_010)
+test_shapiro
+
 stats_num <- epi_stats_summary(df = data_f, class_type = 'int_num')
 stats_num
 
@@ -821,7 +827,7 @@ tail(ord_i)
 length(ord_i)
 
 # Get a subset to plot:
-rand_size <- 1000
+rand_size <- 0.05 * nrow(data_f)
 rand_indices <- sort(sample(length(ord_i), size = rand_size, replace = FALSE))
 # rand_indices <- rand_indices[order(rand_indices)]
 head(rand_indices)

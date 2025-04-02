@@ -38,7 +38,7 @@ source("_scripts/funcs.R")
 
 <!-- In _quarto.yml set params to true for: -->
 ::: {.content-visible when-meta="meta.extended_report"}
-{{< include _extended_ord_meds.qmd >}}
+{{< include _extended_ord_meds_Qna_17_2024.qmd >}}
 :::
 
 \clearpage
@@ -150,9 +150,10 @@ epi_table_to_latex("table_PLZOCU_DESCRIP_CLASCATEG.txt",
 ```
 :::
 
-
-<!-- TO DO: Separate script, will not regenerate with batch processing -->
+<!-- In _quarto.yml set params to true for: -->
+::: {.content-visible when-meta="meta.extended_report"}
 ![Gráfico de barras de Especialidades más Frecuentes por OOAD](plot_bar_med_esp_OOAD_top.pdf)
+:::
 
 ::: {.cell tbl-cap="Áreas de Responsabilidad con más de diez plazas y mayor vacancia" tbl-pos="h" id="tbl-top_PLZOCU_NOMBREAR"}
 ```{r, table_PLZOCU_NOMBREAR_corta, echo = FALSE, results = "asis"}

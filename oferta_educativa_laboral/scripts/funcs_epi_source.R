@@ -752,3 +752,120 @@ epi_stats_corr <- function(df = NULL,
   return(cormat_all)
 }
 
+epi_stats_numeric <- function(num_vec = NULL,
+                              na.rm = TRUE,
+                              coef = 1.5,
+                              ...
+) {
+  if (!requireNamespace('e1071', quietly = TRUE)) {
+    stop("Package e1071 needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+
+  # Remove NAs first
+  x <- num_vec[!is.na(num_vec)]
+
+  # Default to NA for Shapiro
+  normality <- NA_real_
+
+  # Only try Shapiro if there are enough values AND they're not all identical
+  if (length(x) > 3 && length(x) < 5000 && length(unique(x)) > 1) {
+    normality <- tryCatch({
+      shapiro.test(x)$p.value
+    }, error = function(e) {
+      NA_real_
+    })
+  }
+
+  desc_stats <- data.frame(
+    'min' = min(num_vec, na.rm = na.rm),
+    'quantile_25' = quantile(num_vec, probs = 0.25, names = FALSE, na.rm = na.rm),
+    'mean' = mean(num_vec, na.rm = na.rm),
+    'median' = median(num_vec, na.rm = na.rm),
+    'quantile_75' = quantile(num_vec, probs = 0.75, names = FALSE, na.rm = na.rm),
+    'max' = max(num_vec, na.rm = na.rm),
+    'SD' = sd(num_vec, na.rm = na.rm),
+    'variance' = var(num_vec, na.rm = na.rm),
+    'sem' = sd(num_vec, na.rm = na.rm) / sqrt(length(na.omit(num_vec))),
+    'skewness' = e1071::skewness(num_vec, na.rm = na.rm, ...),
+    'kurtosis' = e1071::kurtosis(num_vec, na.rm = na.rm, ...),
+    'Shapiro_Wilk_p_value' = normality,
+    'outlier_count' = epi_stats_count_outliers(num_vec, coef = coef),
+    'NA_count' = sum(is.na(num_vec)),
+    'NA_percentage' = (sum(is.na(num_vec)) / length(num_vec)) * 100
+  )
+
+  return(desc_stats)
+}
+
+
+epi_stats_summary <- function(df = NULL,
+                              codes = NULL,
+                              class_type = 'chr_fct', # 'int_num'
+                              action = 'exclude' # 'codes_only'
+) {
+  if (!requireNamespace('dplyr', quietly = TRUE)) {
+    stop("Package dplyr needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (!requireNamespace('purrr', quietly = TRUE)) {
+    stop("Package purrr needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  if (!requireNamespace('tibble', quietly = TRUE)) {
+    stop("Package tibble needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
+  df <- tibble::as_tibble(df)
+  # Determine which group of columns to use:
+  if (class_type == 'chr_fct') {
+    cond <- expression(epi_clean_cond_chr_fct(.))
+  } else if (class_type == 'int_num') {
+    cond <- expression(epi_clean_cond_numeric(.))
+  } else {
+    stop('class_type parameter not specified correctly?')
+  }
+  # Determine what to do with the codes provided (count only codes or
+  # exclude codes from counting):
+  if (action == 'codes_only') {
+    map_func <- expression(purrr::keep(., .p = (. %in% codes)))
+  } else if (action == 'exclude') {
+    map_func <- expression(purrr::discard(., .p = (. %in% codes)))
+  } else {
+    stop('action parameter not specified correctly?')
+  }
+  # Determine if to count or sum depending on class cond and action asked for
+  # codes are expected to be summarised as factors (so count()) as they are
+  # assumed to represent database codes for NA explanations
+  # chr and factor columns would be counted regardless of codes only or codes excluded
+  # so summary() should only be needed for num/int columns where codes are excluded
+  if (class_type == "int_num" & action == "exclude") {
+    sum_func <- function(.x) epi_stats_numeric(.x)
+  } else {
+    # count is designed for data frames, not vectors, so pass as:
+    sum_func <- function(.x) dplyr::count(data.frame(x = .x), x)
+  }
+
+  df <- df %>%
+    dplyr::select_if(~eval(cond)) %>%
+    purrr::map(~eval(map_func)) %>%
+    purrr::map(sum_func) # Returns a list
+
+  # Convert to dataframe with the same names for the var of interest:
+  df <- as.data.frame(purrr::map_df(df,
+                                    tibble::rownames_to_column,
+                                    'var',
+                                    .id = 'id')
+  )
+  # Returns a list if sum_func is summary()
+  df <- tibble::as_tibble(as.data.frame(df))
+  # Drop 'var' col as not needed:
+  df$var <- NULL
+  # Make the rownames a column and order columns:
+  # df$id <- rownames(df)
+  # df <- df %>%
+  #   select(id,
+  #          everything()
+  #   )
+  return(df)
+}

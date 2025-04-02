@@ -47,21 +47,10 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
-infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
-# ===
+# infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
 
-# ===
-# TO DO: set manually
-# Needs column and value
-# From e.g.:
-# summary(data_f[, 'DESCRIP_CLASCATEG'])
-col_to_subset <- 'DESCRIP_CLASCATEG'
-value_to_subset <- '1.MÉDICOS'
-# value_to_subset <- '2.ENFERMERAS'
-
-# TO DO: Manually set:
-subset_n <- 'meds'
-# subset_n <- 'enfermeras'
+# For double subset, eg first meds, then by OOAD:
+infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
 # ===
 
 # ===
@@ -74,6 +63,31 @@ print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
 load(infile_path)
 ls()
 # ===
+
+
+# ===
+# TO DO: set manually
+# Needs column and value
+# From e.g.:
+colnames(data_f)
+epi_head_and_tail(data_f, cols = ncol(data_f))
+
+summary(data_f$DESCRIP_CLASCATEG)
+summary(data_f$DELEGACION)
+
+# col_to_subset <- 'DESCRIP_CLASCATEG'
+# value_to_subset <- '1.MÉDICOS'
+# value_to_subset <- '2.ENFERMERAS'
+
+col_to_subset <- 'DELEGACION'
+value_to_subset <- 'Chiapas'
+
+
+# TO DO: Manually set:
+subset_n <- 'meds_Chiapas'
+# subset_n <- 'enfermeras'
+# ===
+
 
 # ===
 # Get rid of RStudio warnings for loaded objects:

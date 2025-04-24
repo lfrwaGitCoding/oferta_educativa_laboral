@@ -258,7 +258,7 @@ Este enfoque integral permitirá generar evidencia sólida y aplicable para fort
 
 ## Oferta General de Plazas Médicas
 
-- El Instituto cuenta con un total de 90,378 plazas médicas. De estas, 82,930 están ocupadas y 7,448 (8.24%) vacantes. De las plazas ocupadas, 41,723 corresponden a mujeres (50.31%) y 41,207 a hombres (49.69%), reflejando una ligera predominancia femenina (ver @tbl-PLZOCU_DESCRIP_CLASCATEG).
+- El Instituto cuenta con un total de 90,378 plazas médicas. De estas, 82,930 están ocupadas y 7,448 (8.24%) vacantes. De las plazas ocupadas, 41,723 corresponden a mujeres (50.31%) y 41,207 a hombres (49.69%), reflejando una ligera predominancia de género femenino (ver @tbl-PLZOCU_DESCRIP_CLASCATEG).
 - 7,446 plazas vigentes, con un 91.75% de ocupación del total
 - 89,500 plazas cuentan con presupuesto, de las cuales 82,928 se encuentran ocupadas. De 878 sin presupuesto, 2 se encuentran ocupadas y 876 vacantes.
 - Existen 1,609 plazas marcadas como sobrantes, con cero vacantes
@@ -269,8 +269,8 @@ Este enfoque integral permitirá generar evidencia sólida y aplicable para fort
 
 ## Distribución del Personal Médico por Especialidad y Género
 
-- Medicina Familiar tiene el mayor personal total (23,345 total de plazas con 3.55% vacantes), con predominancia femenina (55.76%), seguida de Urgencias (12,215 totales, 49.05% mujeres y 6.57% vacantes) y Anestesiología (6,752 plazas, 61.23% mujeres, 4.49% vacantes)
-- Urología, Hemodinamia, Neurocirugía y Traumatología y Ortopedia tienen cerca de 90% de hombres
+- Medicina Familiar tiene el mayor personal total (23,345 total de plazas con 3.55% vacantes), con predominancia de género femenino (55.76%), seguida de Urgencias (12,215 totales, 49.05% mujeres y 6.57% vacantes) y Anestesiología (6,752 plazas, 61.23% mujeres, 4.49% vacantes)
+- Urología, Hemodinamia, Neurocirugía, y Traumatología y Ortopedia tienen cerca de 90% de hombres
 - Endocrinología Pediátrica, Atención Y Orientación Al D.H., Medicina Paliativa, Hematología Pediátrica, Dermatología, Audiología y Nefrología Pediátrica tienen >70% de mujeres 
 - Especialidades con al menos 10 plazas y >25% de vacantes: Neurocirugía Pediátrica, Traslado De Enfermos, Dermatología, Pediatra En Servicios De Urgencias, Cirugía Plástica Y Reconstructiva, Gastroenterología (ver @tbl-top_PLZOCU_NOMBREAR, tabla extendida en Apéndices y reporte interactivo)
 

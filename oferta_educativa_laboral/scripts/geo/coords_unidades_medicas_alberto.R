@@ -1,7 +1,7 @@
 # ////////////
 # Script information ----
 
-# Coordinadas de unidades medicas cruzadas con datos del SIAP
+# Coordinadas de unidades medicas de Alberto R. cruzadas con datos del SIAP
 # Universidad de la Salud - Medicina rural
 # Diciembre 2024
 # Input is rdata output from script:
@@ -37,7 +37,7 @@ getwd()
 # Load rdata file ----
 
 # ===
-rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
+rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/old/'
 
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.all_columns.rdata.gzip'
@@ -160,7 +160,7 @@ str(data_f$IP)
 head(unique(data_f$IP))
 summary(data_f$IP)
 
-# Get dataframe where IP has unique values but keep all columns (selects first occurrence:
+# Get dataframe where IP has unique values but keep all columns (selects first occurrence):
 unique_IP_df <- data_f %>%
   distinct(IP, .keep_all = TRUE)
 
@@ -177,15 +177,15 @@ cols_keep <- c('IP',
                "ADSCRIPCION",
                "CVEUNI",
                'DEPENDENCIA',
-               # 'DESCRIPCION_SERVICIO',
+               'DESCRIPCION_SERVICIO',
                'CVELOC',
                'DESCRIP_LOCALIDAD',
                'REGIMEN',
-               # 'CLAVEAR',
-               # 'NOMBREAR',
+               'CLAVEAR',
+               'NOMBREAR',
                'CVEZONABT',
-               'ZONABT'
-               # 'CVEAR'
+               'ZONABT',
+               'CVEAR'
                )
 
 unique_IP_df <- unique_IP_df[, cols_keep, with = FALSE]
@@ -199,10 +199,10 @@ sapply(unique_IP_df, summary)
 # ===
 # Save:
 # file_n <- 'coordenadas_unidades_medicas_bienestar_SIAP'
-file_n <- 'coordenadas_unidades_medicas_plantilla_SIAP'
+file_n <- 'info_geo_admin_ordinario_Q17_2024'
 suffix <- 'txt'
 outfile <- sprintf(fmt = '%s/%s.%s',
-                   paste0(results_dir, '/coords_unidades_medicas/'),
+                   paste0(results_subdir),
                    file_n,
                    suffix
                    )
@@ -215,22 +215,26 @@ epi_write(file_object = unique_IP_df,
 
 
 # ////////////
-# Get Alberto Rascon file with coordinates ----
+# Get external coords (unidades medicas, A Rascon, Mateo CUUMS)
 
 # ===
+# Alberto Rascon file with coordinates ----
 # Has both plantilla and bienestar though
 coords_match <- paste0(data_dir, '/external', '/coordenadas_ordinario_y_bienestar_alberto.csv')
-coords_match
-alberto_coords_df <- epi_read(coords_match)
-epi_head_and_tail(alberto_coords_df)
-colnames(alberto_coords_df)
-str(alberto_coords_df)
 
-length(unique(alberto_coords_df$presup))
-dim(alberto_coords_df)
-unique(alberto_coords_df$tipologia)
-unique(alberto_coords_df$presup6)
-unique(alberto_coords_df$seleccion)
+# # Mateo CUUMS in separate script:
+# coords_match <- "/Users/antoniob/Documents/work/science/devel/github/med-comp-imss/geo_stats/data/CUUMS_Dic_2024_mod_for_R.tsv"
+coords_df <- epi_read(coords_match)
+epi_head_and_tail(coords_df)
+colnames(coords_df)
+str(coords_df)
+
+# Cols Alberto:
+length(unique(coords_df$presup))
+dim(coords_df)
+unique(coords_df$tipologia)
+unique(coords_df$presup6)
+unique(coords_df$seleccion)
 # ===
 
 # ===
@@ -248,22 +252,22 @@ fact_cols <- c('clavepersonal',
                'seleccion'
                )
 for (i in fact_cols) {
-  alberto_coords_df[[i]] <- as.factor(alberto_coords_df[[i]])
+  coords_df[[i]] <- as.factor(coords_df[[i]])
   }
-str(alberto_coords_df)
-sapply(alberto_coords_df, summary)
-head(as.data.frame(alberto_coords_df[, c('latitud', 'longitud')]), n = 10)
+str(coords_df)
+sapply(coords_df, summary)
+head(as.data.frame(coords_df[, c('latitud', 'longitud')]), n = 10)
 # ===
 
 
 # # ===
 # # Subset to only plantilla:
-# summary(alberto_coords_df$regimen)
+# summary(coords_df$regimen)
 #
-# alberto_coords_df_plantilla <- alberto_coords_df %>%
+# coords_df_plantilla <- coords_df %>%
 #   filter(regimen == 'Ordinario')
-# epi_head_and_tail(alberto_coords_df_plantilla)
-# sapply(alberto_coords_df_plantilla, summary)
+# epi_head_and_tail(coords_df_plantilla)
+# sapply(coords_df_plantilla, summary)
 #
 # # Save:
 # file_n <- 'alberto_coordenadas_unidades_medicas_plantilla'
@@ -274,7 +278,7 @@ head(as.data.frame(alberto_coords_df[, c('latitud', 'longitud')]), n = 10)
 #                    suffix
 #                    )
 # outfile
-# epi_write(file_object = alberto_coords_df_plantilla,
+# epi_write(file_object = coords_df_plantilla,
 #           file_name = outfile
 #           )
 # # ===
@@ -282,12 +286,12 @@ head(as.data.frame(alberto_coords_df[, c('latitud', 'longitud')]), n = 10)
 #
 # # ===
 # # Subset to only bienestar:
-# summary(alberto_coords_df$regimen)
+# summary(coords_df$regimen)
 #
-# alberto_coords_df_bienestar <- alberto_coords_df %>%
+# coords_df_bienestar <- coords_df %>%
 #   filter(regimen == 'Bienestar')
-# epi_head_and_tail(alberto_coords_df_bienestar)
-# sapply(alberto_coords_df_bienestar, summary)
+# epi_head_and_tail(coords_df_bienestar)
+# sapply(coords_df_bienestar, summary)
 #
 # # Save:
 # file_n <- 'alberto_coordenadas_unidades_medicas_bienestar'
@@ -298,7 +302,7 @@ head(as.data.frame(alberto_coords_df[, c('latitud', 'longitud')]), n = 10)
 #                    suffix
 #                    )
 # outfile
-# epi_write(file_object = alberto_coords_df_bienestar,
+# epi_write(file_object = coords_df_bienestar,
 #           file_name = outfile
 #           )
 # # ===
@@ -311,24 +315,24 @@ head(as.data.frame(alberto_coords_df[, c('latitud', 'longitud')]), n = 10)
 # ===
 # Match column names for merging:
 colnames(unique_IP_df)[which(colnames(unique_IP_df) == 'IP')] <- 'IP_presup'
-colnames(alberto_coords_df)[which(colnames(alberto_coords_df) == 'presup')] <- 'IP_presup'
+colnames(coords_df)[which(colnames(coords_df) == 'presup')] <- 'IP_presup'
 
 dim(unique_IP_df)
-dim(alberto_coords_df)
+dim(coords_df)
 # ===
 
 # ===
 # Number of actual matches by presupuesto / IP:
-length(intersect(unique_IP_df$IP_presup, alberto_coords_df$IP_presup))
+length(intersect(unique_IP_df$IP_presup, coords_df$IP_presup))
 
 # Number of mismatches by presupuesto / IP:
-length(setdiff(unique_IP_df$IP_presup, alberto_coords_df$IP_presup))
+length(setdiff(unique_IP_df$IP_presup, coords_df$IP_presup))
 # ===
 
 
 # ===
-all_IP_df <- alberto_coords_df %>%
-  full_join(unique_IP_df, alberto_coords_df, by = 'IP_presup')
+all_IP_df <- coords_df %>%
+  full_join(unique_IP_df, coords_df, by = 'IP_presup')
 dim(all_IP_df)
 epi_head_and_tail(all_IP_df)
 # View(all_IP_df)

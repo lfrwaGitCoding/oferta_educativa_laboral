@@ -100,9 +100,11 @@ epi_plot_bar <- function(df = NULL, var_x = NULL, var_y = "", fill = NULL,
 
 epi_stats_table <- function(df, dep_var, ind_vars) {
   # Create the formula for xtabs dynamically
-  formula_str <- sprintf("~ %s + %s", dep_var, ind_vars)
-  formula_obj <- as.formula(formula_str)
-  formula_obj
+  # formula_str <- sprintf("~ %s + %s", dep_var, ind_vars)
+  # formula_obj <- as.formula(formula_str)
+  # formula_obj
+
+  formula_obj <- reformulate(c(dep_var, ind_vars))
 
   # Create the ftable
   f_tab <- ftable(xtabs(formula_obj, data = df))

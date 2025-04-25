@@ -13,12 +13,6 @@
 
 
 # ////////////
-# Global options ----
-# options(error = stop)
-# ////////////
-
-
-# ////////////
 # Import libraries ----
 library(data.table)
 library(episcout)
@@ -149,8 +143,7 @@ length(unique(data_f$IP))
 summary(data_f$NOMBREAR)
 summary(data_f$DELEGACION)
 summary(data_f$CLASIF_UNIDAD)
-summary(data_f$IP)
-
+summary(data_f$PLZOCU)
 
 # ===
 # Filter data based on these categories from CLASIF_UNIDAD:
@@ -165,6 +158,8 @@ dim(data_f)
 epi_head_and_tail(data_f_un_meds)
 # View(head(data_f_un_meds))
 summary(data_f_un_meds$CLASIF_UNIDAD)
+summary(data_f_un_meds$PLZOCU)
+
 
 # Drop levels with zero count
 levels(data_f_un_meds$CLASIF_UNIDAD)
@@ -173,11 +168,10 @@ levels(data_f_un_meds$CLASIF_UNIDAD)
 summary(data_f_un_meds$CLASIF_UNIDAD)
 dim(data_f_un_meds)
 
+
 # Get values where ADSCRIPCION also has values in unidades_meds:
 epi_head_and_tail(data_f_un_meds[, c("IP", "ADSCRIPCION", "CVEADSC", "CLASIF_UNIDAD")], cols = 3)
 # View(head(data_f_un_meds[, c("ADSCRIPCION", "CVEADSC", "CLASIF_UNIDAD")], n = 1000))
-
-
 
 summary(data_f_un_meds$CLASIF_UNIDAD)
 summary(data_f_un_meds$ADSCRIPCION)
@@ -218,6 +212,7 @@ summary(data_f_un_meds$CLASIF_UNIDAD)
 # ////////////
 # Numero de medicos familiares por unidad ----
 
+# TO DO: continue here
 # ===
 df <- data_f_un_meds
 

@@ -6,6 +6,29 @@ summary(data_f$DELEGACION)
 summary(data_f$DESCRIP_LOCALIDAD)
 summary(data_f$DEPENDENCIA)
 
+
+cols_keep <- c('IP',
+               'NUMDEL',
+               'DELEGACION',
+               'CLASIF_UNIDAD',
+               'CVEADSC',
+               "ADSCRIPCION",
+               "CVEUNI",
+               'DEPENDENCIA',
+               'DESCRIPCION_SERVICIO',
+               'CVELOC',
+               'DESCRIP_LOCALIDAD',
+               'REGIMEN',
+               # 'CLAVEAR',
+               # 'NOMBREAR',
+               'CVEZONABT',
+               'ZONABT'
+               # 'CVEAR'
+               )
+
+sapply(data_f[, cols_keep], function(x) length(unique(x)))
+sapply(data_f, function(x) length(unique(x)))
+
 dep_var <- "PLZOCU"
 ind_vars <- c("DELEGACION", "NOMBREAR")
 

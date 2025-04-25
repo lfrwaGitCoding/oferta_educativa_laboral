@@ -89,11 +89,11 @@ infile_prefix <- strsplit(infile, "\\.")[[1]][1]
 results_subdir <- sprintf('%s_%s',
                           format(Sys.Date(), '%d_%m_%Y'),
                           infile_prefix
-)
+                          )
 results_subdir
 results_subdir <- epi_create_dir(base_path = results_dir,
                                  subdir = results_subdir
-)
+                                 )
 # ////////////
 
 
@@ -182,7 +182,7 @@ cols_keep <- c('IP',
                'CVEZONABT',
                'ZONABT'
                # 'CVEAR'
-)
+               )
 
 unique_IP_df <- unique_IP_df[, cols_keep, with = FALSE]
 unique_IP_df
@@ -190,6 +190,10 @@ unique_IP_df
 dim(unique_IP_df)
 str(unique_IP_df)
 sapply(unique_IP_df, summary)
+
+col_merge <- "DEPENDENCIA"
+length(unique(unique_IP_df[[col_merge]]))
+length(which(is.na(unique_IP_df[[col_merge]])))
 # ===
 
 # ===
@@ -201,11 +205,11 @@ outfile <- sprintf(fmt = '%s/%s.%s',
                    paste0(results_subdir),
                    file_n,
                    suffix
-)
+                   )
 outfile
 epi_write(file_object = unique_IP_df,
           file_name = outfile
-)
+          )
 # ===
 # ////////////
 
@@ -337,6 +341,12 @@ as.data.frame(head(df2[, c(1:10)], n = 10))
 # ===
 
 # ===
+# TO DO: continue here
+# re-filter based on IP and DEPENDENCIA
+# don't get unique values for DEPENDENCIA if filtering with IP
+# ===
+
+# ===
 # Match column names for merging:
 col_merge <- "Clave_Presupuestal_IP"
 col_df1 <- "IP"
@@ -376,14 +386,13 @@ outfile <- sprintf(fmt = '%s/%s.%s',
                    paste0(results_subdir),
                    file_n,
                    suffix
-)
+                   )
 outfile
 epi_write(file_object = all_IP_df,
           file_name = outfile
-)
+          )
 # ===
 # ////////////
-
 
 
 # ////////////

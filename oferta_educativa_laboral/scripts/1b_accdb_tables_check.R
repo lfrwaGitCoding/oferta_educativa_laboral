@@ -49,22 +49,23 @@ print(dir(path = normalizePath(data_dir), all.files = TRUE))
 
 infiles_dir <- 'data_UP/access_SIAP_18092024/processed/'
 
-infile <- 'Qna_17_Bienestar_2024.csv'
+# infile <- 'Qna_07_Bienestar_2025.csv'
+infile <- 'Qna_17_Plantilla_2024.csv'
 infile <- paste0(data_dir, infiles_dir, infile)
 infile
 
-infile2 <- 'Qna_17_Plantilla_2024.csv'
+infile2 <- 'Qna_07_Plantilla_2025.csv'
 infile2 <- paste0(data_dir, infiles_dir, infile2)
 infile2
 
 # Output locations:
-results_outdir <- create_results_dir(project_root = project_root)
+results_outdir <- epi_create_dir(results_dir)
 # TO DO later: setup project tools as an R package, separate from episcout?
 typeof(results_outdir)
 print(results_outdir)
 
 # For saving/naming outputs:
-# infile_prefix <- 'setup'
+infile_prefix <- 'setup'
 ############
 
 
@@ -74,6 +75,7 @@ infile <- episcout::epi_read(infile)
 infile2 <- episcout::epi_read(infile2)
 
 epi_head_and_tail(infile)
+epi_head_and_tail(infile, last_cols = TRUE)
 epi_head_and_tail(infile2)
 
 colnames(infile)

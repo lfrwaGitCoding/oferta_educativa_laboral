@@ -41,6 +41,8 @@ library(data.table)
 library(episcout)
 library(tidyverse)
 library(skimr)
+library(knitr)
+library(htmltools)
 library(log4r)
 # ////////////
 
@@ -94,8 +96,8 @@ print(dir(path = normalizePath(data_dir), all.files = TRUE))
 infiles_dir <- 'data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
-infile <- 'Qna_17_Bienestar_2024.csv'
-# infile <- 'Qna_17_Plantilla_2024.csv'
+# infile <- 'Qna_17_Bienestar_2024.csv'
+infile <- 'Qna_07_Plantilla_2025.csv'
 infile_path <- paste0(data_dir, infiles_dir, infile)
 
 # Full path and file loaded:
@@ -247,6 +249,34 @@ head(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
 
 
 # ===
+# Clean up MATRICULA, NA values mainly:
+# Numbers must match for these:
+# [1] "MATRICULA"             "Nombre"
+#  [3] "RFC"                   "CURP"
+
+data_f$MATRICULA
+length(which(data_f$MATRICULA == '0'))
+
+head(data_f$MATRICULA, 20)
+summary(data_f$MATRICULA)
+summary(as.character(data_f$MATRICULA))
+
+# Check for values with fewer than 9 digits:
+col_check <- data_f$MATRICULA
+count_char <- nchar(col_check)
+summary(count_char)
+summary(as.factor(count_char))
+length(which(count_char < 8))
+
+
+to_NA <- c("0")
+data_f$MATRICULA <- ifelse(as.character(data_f$MATRICULA) %in% to_NA, NA, data_f$MATRICULA)
+summary(data_f$MATRICULA)
+# Should match other IDs:
+summary(data_f$NSS)
+# ===
+
+# ===
 # Clean up ESCOLARIDAD, NA values mainly:
 head(data_f$ESCOLARIDAD, 20)
 summary(data_f$ESCOLARIDAD)
@@ -288,22 +318,6 @@ dim(data_f)
 # which(colnames(data_f) == 'AntiguedadVacAños')
 # colnames(data_f)[88]
 # ===
-
-# ===
-# Numbers must match for these:
-# [1] "MATRICULA"             "Nombre"
-#  [3] "RFC"                   "CURP"
-
-data_f$MATRICULA
-length(which(data_f$MATRICULA == '0'))
-
-# Check for values with fewer than 9 digits:
-col_check <- data_f$MATRICULA
-count_char <- nchar(col_check)
-summary(count_char)
-summary(as.factor(count_char))
-length(which(count_char < 8))
-# ===
 # ////////////
 
 
@@ -341,6 +355,16 @@ epi_head_and_tail(data_f[mismatches_index, c('Nombre', 'NOMBRE_TITULAR')],
                   cols = 2)
 # Remove for now, check
 # ===
+
+# ===
+# Remove new columns, or those different to test file QNA 17 2024, eg Cedula in QNA 07 2025:
+summary(data_f$Cédula)
+str(data_f$Cédula)
+length(unique(data_f$Cédula))
+length(which(is.na(data_f$Cédula)))
+# 425502 are missing
+# Remove
+# ===
 # ////////////
 
 
@@ -348,18 +372,21 @@ epi_head_and_tail(data_f[mismatches_index, c('Nombre', 'NOMBRE_TITULAR')],
 # Remove columns that aren't needed ----
 
 # ===
+# TO DO: remove this section when passing to pipeline, same for some of the above, although needed for removal of extra columns:
+# Link to previous file, add "Cedula" which is new in QNA 07 2025, and now missing PLAZANA
 # Many columns, manually looking at data and deciding what types are each
 # Convert based on manual inspection, re-read file for column types to convert to.
 # 19 Nov 2024, added descriptions, columns to keep, etc. This was manual, directly to the same file:
+
+colnames(data_f)
 
 print(results_dir)
 col_types_file <- sprintf("%s/%s/%s",
                           results_dir,
                           "manual_col_types/",
-                          "df_col_types2.txt"
+                          "df_col_types2_utf8.csv" # txt was a pain with encodings
                           )
 print(col_types_file)
-
 
 col_types_file <- episcout::epi_read(col_types_file)
 epi_head_and_tail(col_types_file)
@@ -383,35 +410,37 @@ colnames(df_col_types)
 
 # Manual conversion for some:
 # TO DO: switch to regex to avoid using a position:
-col_types_file[[1]][37]
-col_types_file[[1]][88]
-col_types_file[[1]][88] <- 'AntiguedadVacAños'
+# col_types_file[[1]][37]
+# col_types_file[[1]][88]
+# col_types_file[[1]][88] <- 'AntiguedadVacAños'
 # ===
+
 
 # ===
 # Column type conversions, except for dates, will run separately:
 # i <- 1
-for (i in 1:nrow(col_types_file)) {
-  col_name <- col_types_file$variables[i]
-  orig_col_type <- col_types_file$base_type[i]
-  target_type <- col_types_file$convert_to[i]
 
-  # Skip if target_type is NA:
-  if (is.na(target_type)) {
-    next
-  }
+missing_cols <- col_types_file$variables[!col_types_file$variables %in% names(df_col_types)]
+missing_cols
 
-  # Convert based on target_type:
-  if (target_type == "factor") {
-    df_col_types[[col_name]] <- as.factor(df_col_types[[col_name]])
-  } else if (target_type == "character") {
-    df_col_types[[col_name]] <- as.character(df_col_types[[col_name]])
-  } else if (target_type == "integer") {
-    df_col_types[[col_name]] <- as.integer(df_col_types[[col_name]])
-  } else if (target_type == "numeric") {
-    df_col_types[[col_name]] <- as.numeric(df_col_types[[col_name]])
-  }
-}
+df_col_types <- setNames(
+    lapply(seq_len(nrow(col_types_file)), function(i) {
+        col <- col_types_file$variables[i]
+        typ <- col_types_file$convert_to[i]
+        if (is.na(typ) || !(col %in% names(df_col_types))) return(NULL)
+        switch(typ,
+               "factor" = as.factor(df_col_types[[col]]),
+               "character" = as.character(df_col_types[[col]]),
+               "integer" = as.integer(df_col_types[[col]]),
+               "numeric" = as.numeric(df_col_types[[col]]),
+               df_col_types[[col]])
+    }),
+    col_types_file$variables
+) %>% compact() %>% as.data.frame() %>% select(all_of(col_types_file$variables[col_types_file$variables %in% names(df_col_types)]))
+
+# View missing columns:
+cat("Missing columns:\n", missing_cols)
+
 
 # Check:
 str(data_f)
@@ -436,14 +465,44 @@ column_types_dfs
 
 # Save an initial summary with all columns:
 summary(df_col_types)
-df <- skimr::skim(df_col_types)
+skim_summary <- skimr::skim(df_col_types)
+skim_summary
 
 epi_write_df(df = df,
              results_subdir = results_subdir,
              file_n = 'skimr_all_cols',
              suffix = 'txt'
-             )
-# Generally looks good
+)
+
+
+# # TO DO: try func for html output:
+# # Render as HTML
+# save_skim_html <- function(df, file) {
+#     library(skimr)
+#     library(dplyr)
+#     library(knitr)
+#     library(kableExtra)
+#     library(htmltools)
+#
+#     skimmed_split <- skim(df) %>%
+#         group_by(skim_type) %>%
+#         group_split()
+#
+#     html_tables <- lapply(skimmed_split, function(df_part) {
+#         df_part %>%
+#             select(-skim_type) %>%
+#             kable("html") %>%
+#             kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
+#     })
+#
+#     html_doc <- tagList(html_tables)
+#     save_html(html_doc, file)
+# }
+#
+# # Usage:
+# # html_summary <- knitr::knit_print(skim_summary)
+# save_path <- file.path(results_subdir, "skimr_all_cols.html")
+# save_skim_html(df_col_types, save_path)
 # ===
 
 # ===

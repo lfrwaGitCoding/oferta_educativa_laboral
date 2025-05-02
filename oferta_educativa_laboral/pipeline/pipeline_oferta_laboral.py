@@ -6,10 +6,38 @@ pipeline_oferta_laboral
 :Release: 0.1
 :Date: 30 Dec 2024
 
-
-
 Ejecuta los scripts para el analisis descriptivo de cada quincena del SIAP.
 
+
+# Data:
+# ~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/data/data_UP/access_SIAP_18092024/processed/pipe_tests
+
+# Results:
+# ~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results
+
+# Code:
+# ~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/pipeline
+
+
+# Run:
+  # Load once?
+    # 1_dir_locations.R
+  # Fail early:
+    # 1b_accdb_tables_check.R 
+  # Actual work:
+    # 2_clean_dups_col_types.R #
+    # If subsetting: 2b_clean_subset.R
+    # 3_explore.R
+    # 4_bivar.R
+
+# Load:
+# funcs_epi_source.R
+# plots_theme_imss_palette.R
+
+# Not needed:
+# 2c_subset_PLZOCU.R
+# blurbs.R
+# 3b_skim_summary.qmd
 
 Uso:
 

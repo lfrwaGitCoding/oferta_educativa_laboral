@@ -6,7 +6,7 @@
 # Febrero 2025
 # Numero de medicos familiares por unidad
 # Input is rdata output from script:
-# 2_dups_col_types.R
+
 
 # Output: tabla de frecuencias de med fam por unidad y plaza ocupada/vacante
 # ////////////
@@ -45,17 +45,18 @@ code_dir <- '/Users/antoniob/Documents/work/science/devel/github/antoniojbt/ofer
 results_dir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/'
 
 # TO DO: Manually set:
-infile <- 'medicos_por_mil_derechohabientes.csv'
+infile <- 'medicos_por_mil_derechohabientes_utf8.csv'
 
 # Full path and file name:
 infile_path <- paste0(getwd(), rdata_dir, infile)
 print(infile_path)
 
 
-data_f <- epi_read(infile_path)
+data_f <- epi_read(infile_path, encoding = "UTF-8")
 epi_head_and_tail(data_f)
 epi_clean_count_classes(df = data_f)
 str(data_f)
+
 # ===
 # ////////////
 
@@ -75,11 +76,11 @@ infile_prefix <- strsplit(infile, "\\.")[[1]][1]
 results_subdir <- sprintf('%s_%s',
                           format(Sys.Date(), '%d_%m_%Y'),
                           infile_prefix
-)
+                          )
 results_subdir
 results_subdir <- epi_create_dir(base_path = results_dir,
                                  subdir = results_subdir
-)
+                                 )
 # ////////////
 
 
@@ -110,20 +111,40 @@ theme_set(my_theme)
 
 # ===
 epi_head_and_tail(data_f, cols = ncol(data_f))
-str(data_f$medicos_por_mil_derechohabientes)
-str(data_f$DELEGACION)
+str(data_f$medicos_por_mil_derechohabientes_072025)
+str(data_f$Delegación)
+str(data_f$Estado)
+summary(as.factor(data_f$Estado))
+# View(data_f)
 
 # Order ascending based on "medicos_por_mil_derechohabientes":
-data_f$DELEGACION <- factor(data_f$DELEGACION,
-                            levels = data_f$DELEGACION[order(data_f$medicos_por_mil_derechohabientes,
-                                                             decreasing = TRUE)]
-                            )
-str(data_f$DELEGACION)
+# data_f$Estado <- factor(data_f$Estado,
+#                             levels = data_f$Estado[order(data_f$medicos_por_mil_derechohabientes_072025,
+#                                                              decreasing = TRUE)]
+#                             )
 
-bar_plot <- epi_plot_bar(data_f,
-                         var_x = "DELEGACION",
-                         var_y = "medicos_por_mil_derechohabientes"
+data_f <- data_f %>%
+  mutate(Estado = fct_reorder(Estado,
+                              medicos_por_mil_derechohabientes_072025,
+                              .fun = max,
+                              .desc = TRUE
+  ) %>%
+    fct_drop() # drop any unused (e.g. NA)
+  )
+str(data_f$Estado)
+summary(data_f$Estado)
+
+data_plot <- data_f %>%
+  filter(!is.na(Estado)) %>%
+  droplevels()
+summary(data_plot$Estado)
+
+df <- data_plot
+bar_plot <- epi_plot_bar(df,
+                         var_x = "Estado",
+                         var_y = "medicos_por_mil_derechohabientes_072025"
                                          ) +
+    scale_x_discrete(drop = TRUE) +
     coord_flip() +
     labs(title = "Número de plazas ocupadas por médicos/as por 1000 derechohabientes") +
     theme(legend.position = "none"
@@ -136,7 +157,7 @@ bar_plot <- epi_plot_bar(data_f,
 bar_plot
 
 # Save:
-file_n <- 'plot_bar_meds_DH_estado'
+file_n <- 'plot_bar_meds_DH_estado_2025'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile

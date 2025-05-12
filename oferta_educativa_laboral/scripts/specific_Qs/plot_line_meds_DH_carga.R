@@ -33,6 +33,7 @@ getwd()
 project_dir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/"
 results_dir <- "results/specific_Qs/meds_por_DH/"
 infile <- "meds_OOAD_DH.txt"
+# infile <- "medicos_por_mil_derechohabientes_utf8.csv"
 infile_path <- file.path(paste0(project_dir, results_dir, infile))
 infile_path
 # ////////////
@@ -56,7 +57,7 @@ results_subdir <- epi_create_dir(base_path = results_dir,
 # Load data ----
 
 # ===
-data_f <- epi_read(infile)
+data_f <- epi_read(infile_path)
 str(data_f)
 data_f$OOAD <- as.factor(data_f$OOAD)
 str(data_f)

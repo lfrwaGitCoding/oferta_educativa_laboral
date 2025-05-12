@@ -90,7 +90,7 @@ theme_set(my_theme)
 # Load rdata file ----
 
 # ===
-rdata_dir <- '/data/data_UP/access_SIAP_18092024/processed/'
+rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
@@ -105,35 +105,14 @@ rdata_dir <- '/data/data_UP/access_SIAP_18092024/processed/'
 
 infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
 
-
 # Full path and file name:
 infile_path <- paste0(rdata_dir, infile)
 print(infile_path)
 
 print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
-
 load(infile_path)
 ls()
 # ===
-
-# ===
-# num derechohabientes  ----
-DIR_DH_rdata_dir <- '/results/specific_Qs/31_03_2025_medicos_por_mil_derechohabientes/'
-
-# TO DO: Manually set:
-infile <- 'medicos_por_mil_derechohabientes_utf8.csv'
-
-# Full path and file name:
-infile_path <- paste0(getwd(), DIR_DH_rdata_dir, infile)
-print(infile_path)
-
-
-DIR_num_DH <- epi_read(infile_path, encoding = "UTF-8")
-epi_head_and_tail(DIR_num_DH)
-epi_clean_count_classes(df = DIR_num_DH)
-str(DIR_num_DH)
-# ===
-
 
 # ===
 # Get rid of RStudio warnings for loaded objects:
@@ -251,7 +230,29 @@ epi_clean_count_classes(df = data_f)
 
 
 # ////////////
-# e.g. Meds Aguascalientes ----
+# ===
+# num derechohabientes  DIR 2025 data ----
+DIR_DH_rdata_dir <- '/results/specific_Qs/meds_por_DH/31_03_2025_medicos_por_mil_derechohabientes/'
+
+# TO DO: Manually set:
+# has extedned columns with eg carga, carga con vacantes, qna 17 2024, qna 07 2025, etc
+infile <- 'medicos_por_mil_derechohabientes_utf8.csv'
+
+# Full path and file name:
+infile_path <- paste0(getwd(), DIR_DH_rdata_dir, infile)
+print(infile_path)
+
+
+DIR_num_DH <- epi_read(infile_path, encoding = "UTF-8")
+epi_head_and_tail(DIR_num_DH)
+epi_clean_count_classes(df = DIR_num_DH)
+str(DIR_num_DH)
+# ===
+
+
+# ===
+# meds per DH per OOAD ----
+# e.g. Meds Aguascalientes
 
 # ===
 # Get meds esp por OOAD, e.g.:
@@ -275,7 +276,7 @@ epi_head_and_tail(meds_OOAD, last_cols = T)
 # ===
 
 # ===
-# Totals, wide to long, etc. for plotting ----
+# Totals, wide to long, etc. for plotting
 
 # Extract and sort row‐totals (drop "Total" row):
 row_totals <- meds_OOAD %>%
@@ -302,7 +303,7 @@ meds_plot <- meds_OOAD %>%
         NOMBREAR   = factor(NOMBREAR,   levels = levels_nombrear)
     )
 
-# Plot:
+# Plot heatmap of meds esp per OOAD ----
 plot_1 <- ggplot(meds_plot, aes(x = NOMBREAR, y = DELEGACION, fill = n)) +
     geom_tile(color = "grey90", size = 0.1) +
     scale_fill_gradient(
@@ -323,7 +324,7 @@ plot_1 <- ggplot(meds_plot, aes(x = NOMBREAR, y = DELEGACION, fill = n)) +
         )
 plot_1
 
-# Save last plot:
+# Save:
 file_n <- 'plot_heatmap_NOMBREAR_DELEGACION_1'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
@@ -334,6 +335,7 @@ ggsave(outfile, plot = plot_1,
        scale = 1  # Increase scale factor
        )
 
+# Same as above but label non-zero values inside heatmap:
 plot_1 <- ggplot(meds_plot, aes(x = NOMBREAR, y = DELEGACION)) +
  # tiles white for zero
  geom_tile(aes(fill = n), color = "grey90", size = 0.1) +
@@ -420,15 +422,22 @@ saveWidget(gg_int, outfile, selfcontained = TRUE)
 
 # ===
 # Sort columns excluding DELEGACION based on row 'Total':
-epi_head_and_tail(meds_OOAD)
-epi_head_and_tail(meds_OOAD, last_cols = T)
 
-ord_vect <- order(as.numeric(meds_OOAD[meds_OOAD$DELEGACION == "Total", -1]),
+df <- meds_OOAD
+epi_head_and_tail(df)
+epi_head_and_tail(df, last_cols = T)
+
+ord_vect <- order(as.numeric(df[df$DELEGACION == "Total", -1]),
                   decreasing = TRUE
                  )
-meds_OOAD2 <- meds_OOAD[, c(1, ord_vect + 1)] # plus 1 to include "DELEGACION" col
-epi_head_and_tail(meds_OOAD2)
-epi_head_and_tail(meds_OOAD2, last_cols = T)
+df <- df[, c(1, ord_vect + 1)] # plus 1 to include "DELEGACION" col
+epi_head_and_tail(df)
+epi_head_and_tail(df, last_cols = T)
+
+# Clean up:
+meds_OOAD <- df
+ls()
+rm(df)
 # ===
 
 # ===
@@ -444,55 +453,66 @@ num_DH_OOAD <- num_DH_OOAD[!is.na(num_DH_OOAD$Delegación), ]
 # ===
 
 # ===
-# Merge DIR DH values with meds esp per OOAD"
-meds_OOAD2$DELEGACION
+# Merge DIR DH values with meds esp per OOAD
+meds_OOAD$DELEGACION
 num_DH_OOAD$Delegación
 
 # 35 - DF Norte       36 - DF Norte       37 - DF Sur         38 - DF Sur
 # are merged in DIR data as "Ciudad de México Norte"    "Ciudad de México Sur"
 # Add rows with sums for 35 - DF Norte       36 - DF Norte as "Ciudad de México Norte":
+df <- meds_OOAD
 sum_ids <- c("35 - DF Norte", "36 - DF Norte")
-cdmx <- meds_OOAD2 %>%
+cdmx <- df %>%
     filter(DELEGACION %in% sum_ids) %>%
     summarise(across(-DELEGACION, sum, na.rm = TRUE)) %>%
     mutate(DELEGACION = "Ciudad de México Norte") %>%
     select(DELEGACION, everything())
-meds_OOAD3 <- bind_rows(meds_OOAD2, cdmx)
-meds_OOAD3 <- meds_OOAD2 %>%
-    filter(!DELEGACION %in% sum_ids) %>%
+df <- bind_rows(df, cdmx)
+df <- df %>%
+    filter(!DELEGACION %in% sum_ids)
     # bind_rows(cdmx) # to do, not needed but no error?
-epi_head_and_tail(meds_OOAD3)
+epi_head_and_tail(df)
 
 # Same for "Ciudad de México Sur":
 sum_ids <- c("37 - DF Sur", "38 - DF Sur")
-cdmx <- meds_OOAD3 %>%
+cdmx <- df %>%
     filter(DELEGACION %in% sum_ids) %>%
     summarise(across(-DELEGACION, sum, na.rm = TRUE)) %>%
     mutate(DELEGACION = "Ciudad de México Sur") %>%
     select(DELEGACION, everything())
-meds_OOAD4 <- bind_rows(meds_OOAD3, cdmx)
-meds_OOAD4 <- meds_OOAD3 %>%
-    filter(!DELEGACION %in% sum_ids) %>%
+df <- bind_rows(df, cdmx)
+df <- df %>%
+    filter(!DELEGACION %in% sum_ids)
     # bind_rows(cdmx) # to do, not needed but no error?
-epi_head_and_tail(meds_OOAD4)
+epi_head_and_tail(df)
+# ===
 
-# Clean up, too many dfs:
-ls()
-rm(meds_OOAD2, meds_OOAD3, cdmx)
-
+# ===
 # México Oriente      México Poniente should be "Estado de México Oriente" "Estado de México Poniente"
-meds_OOAD4$DELEGACION[meds_OOAD4$DELEGACION == "México Oriente"] <- "Estado de México Oriente"
-meds_OOAD4$DELEGACION[meds_OOAD4$DELEGACION == "México Poniente"] <- "Estado de México Poniente"
+df$DELEGACION[df$DELEGACION == "México Oriente"] <- "Estado de México Oriente"
+df$DELEGACION[df$DELEGACION == "México Poniente"] <- "Estado de México Poniente"
+# ===
 
-meds_OOAD4$DELEGACION
-length(which(meds_OOAD4$DELEGACION %in% num_DH_OOAD$Delegación))
+# ===
+df$DELEGACION
+length(which(df$DELEGACION %in% num_DH_OOAD$Delegación))
 # Mismatches:
-meds_OOAD4[which(!meds_OOAD4$DELEGACION %in% num_DH_OOAD$Delegación), "DELEGACION"]
+df[which(!df$DELEGACION %in% num_DH_OOAD$Delegación), "DELEGACION"]
 # "Total" and "Nivel Central" are also extra in SIAP data, here df is meds_OOAD4
 # DIR data is df num_DH_OOAD
 
-# Add pop per OOAD to meds_OOAD4 for each OOAD:
-meds_OOAD_merged <- merge(meds_OOAD4, num_DH_OOAD, by.x = "DELEGACION", by.y = "Delegación", all.x = TRUE)
+# Clean up, too many dfs:
+ls()
+meds_OOAD <- df
+rm(df, cdmx)
+epi_head_and_tail(meds_OOAD)
+# ===
+
+# ===
+# Add pop per OOAD to meds_OOAD for each OOAD:
+df <- meds_OOAD
+
+meds_OOAD_merged <- merge(df, num_DH_OOAD, by.x = "DELEGACION", by.y = "Delegación", all.x = TRUE)
 epi_head_and_tail(meds_OOAD_merged)
 epi_head_and_tail(meds_OOAD_merged, last_cols = T)
 summary(meds_OOAD_merged$Derechohabientes_DIR_03_2025)
@@ -516,9 +536,10 @@ meds_OOAD_merged <- meds_OOAD_merged[!meds_OOAD_merged$DELEGACION %in% c("Nivel 
 
 # Drop cols not needed:
 colnames(meds_OOAD_merged)
-meds_OOAD_merged$NOMBREAR_DH <- NULL
+# meds_OOAD_merged$NOMBREAR_DH <- NULL
 epi_head_and_tail(meds_OOAD_merged)
 epi_head_and_tail(meds_OOAD_merged, last_cols = T)
+rm(df)
 # ===
 
 
@@ -541,6 +562,7 @@ check_dfs <- merge(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechoha
                    all.x = TRUE
                    )
 # View(check_dfs)
+rm(check_dfs)
 # ===
 
 # ===
@@ -628,21 +650,22 @@ ggsave(outfile, plot = plot_1,
 meds_OOAD_merged_per10k_long
 
 # Remove Total from DELEGACION:
-meds_OOAD_merged_per10k_long <- meds_OOAD_merged_per10k_long %>%
+df <- meds_OOAD_merged_per10k_long
+df <- meds_OOAD_merged_per10k_long %>%
     filter(DELEGACION != "Total")
-meds_OOAD_merged_per10k_long
+df
 
 # Get top 10 per DELEGACION:
 top_n <- 10
-meds_OOAD_merged_per10k_long_top <- meds_OOAD_merged_per10k_long %>%
+df <- df %>%
     group_by(DELEGACION) %>%
     slice_max(`Tasa por 10 mil derechohabientes`, n = top_n) %>%
     ungroup()
-meds_OOAD_merged_per10k_long_top
+df
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-meds_OOAD_merged_per10k_long_top$`Área de Responsabilidad` <- gsub("_por10k", "", meds_OOAD_merged_per10k_long_top$`Área de Responsabilidad`)
-meds_OOAD_merged_per10k_long_top
+df$`Área de Responsabilidad` <- gsub("_por10k", "", df$`Área de Responsabilidad`)
+df
 
 # For each DELEGACION, plot separately a bar plot of `Área de Responsabilidad` by `Tasa por 10 mil derechohabientes`:
 # safe file‐name from DELEGACION:
@@ -651,10 +674,10 @@ safe_name <- function(x) {
     }
 
 # unique values:
-dels <- unique(meds_OOAD_merged_per10k_long_top$DELEGACION)
+dels <- unique(df$DELEGACION)
 
 for(del in dels) {
-    df_sub <- meds_OOAD_merged_per10k_long_top %>%
+    df_sub <- df %>%
         filter(DELEGACION == del)
 
     p <- ggplot(df_sub, aes(
@@ -681,6 +704,8 @@ for(del in dels) {
            scale = 1  # Increase scale factor
     )
 }
+
+rm(df) # so meds_OOAD_merged_per10k_long still has Total row
 # ===
 
 

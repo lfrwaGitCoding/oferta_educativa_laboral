@@ -1,6 +1,7 @@
-# TO DO: continue here
-
 # ////////////
+
+# Now have shape files for OOADs though
+
 # ===
 # Same bar plots but by Estado not OOAD ---
 # Need to merge, Edo Mex, CDMX, Veracruz into one for each
@@ -103,6 +104,18 @@ meds_OOAD_merged_states_per10k$medicos_por_mil_derechohabientes_072025_por10k <-
 
 # ===
 # Plot per 10k ----
+epi_head_and_tail(meds_OOAD_merged)
+epi_head_and_tail(meds_OOAD_merged, last_cols = T)
+
+epi_head_and_tail(meds_OOAD_merged_per10k, last_cols = T)
+epi_head_and_tail(meds_OOAD_merged_per10k_long, cols = 3)
+epi_head_and_tail(meds_OOAD_merged_per10k_long_top, cols = 3)
+
+
+summary(as.factor(meds_OOAD_merged_per10k_long_top$DELEGACION))
+
+
+# This was for states, not OOADs:
 meds_OOAD_merged_states_per10k_long <- meds_OOAD_merged_states_per10k %>%
     select(Estado, ends_with("_por10k")) %>%
     pivot_longer(
@@ -116,7 +129,10 @@ summary(as.factor(meds_OOAD_merged_states_per10k_long$Estado))
 
 # ===
 # Totals:
-totals_long <- meds_OOAD_merged_states_per10k_long %>%
+df <- meds_OOAD_merged_per10k_long
+unique(df$DELEGACION)
+
+totals_long <- df %>%
     filter(Estado == "Total") %>%
     arrange(desc(`Tasa por 10 mil derechohabientes`))
 # View(totals_long)
@@ -217,118 +233,4 @@ for(del in dels) {
 # ////////////
 
 
-# ////////////
-# Maps ----
 
-# ===
-# state boundaries
-mx_states <- ne_states(country = "Mexico", returnclass = "sf") %>%
-    select(name_es) %>%
-    rename(Estado = name_es)
-
-# Manually pick `Área de Responsabilidad` and search across full file:
-top_specs <- c("Total_por10k",
-              "MEDICINA FAMILIAR_por10k",
-              "MEDICINA DE URGENCIAS_por10k",
-              "ANESTESIOLOGIA_por10k",
-              "PEDIATRIA_por10k",
-              "MEDICINA INTERNA_por10k",
-              "GINECOLOGIA Y OBSTETRICIA_por10k",
-              "CIRUGIA GENERAL_por10k",
-              "IMAGENOLOGIA, DIAGNOSTICO Y TERAPEUTICA_por10k",
-              "N.CENT.REG.DELEG.SUBDELEG.DIR.ADMTV.U.OP_por10k",
-              "TRAUMATOLOGIA Y ORTOPEDIA_por10k"
-              )
-
-# Get top_specs:
-length(which(meds_OOAD_merged_states_per10k_long$`Área de Responsabilidad` %in% top_specs))
-
-df_to_map <- meds_OOAD_merged_states_per10k_long %>%
-    filter(`Área de Responsabilidad` %in% top_specs)
-df_to_map
-
-# Match name sets for joins:
-summary(as.factor(mx_states$Estado))
-as.factor(mx_states$Estado)
-
-unique(sort(mx_states$Estado))
-unique(sort(df_to_map$Estado))
-
-which(!unique(mx_states$Estado) %in% unique(df_to_map$Estado))
-
-# name‐sets:
-ne_names  <- sort(unique(mx_states$Estado))
-data_names <- sort(unique(df_to_map$Estado))
-
-# in Natural Earth:
-setdiff(ne_names, data_names)
-# in SIAP/DIR:
-setdiff(data_names, ne_names)
-
-meds_clean <- df_to_map %>%
-    mutate(
-        Estado = recode(
-            Estado,
-            "Ciudad de México" = "México",
-            "Coahuila"         = "Coahuila de Zaragoza",
-            "Veracruz"        = "Estado de Veracruz"
-        )
-    )
-
-setdiff(unique(mx_states$Estado), unique(meds_clean$Estado))
-setdiff(unique(meds_clean$Estado), unique(mx_states$Estado))
-# ===
-
-
-
-# ===
-# Plot maps:
-df <- meds_clean
-
-df_map <- df %>%
-    rename(Tasa = `Tasa por 10 mil derechohabientes`)
-
-# global max for a common legend
-max_tasa <- max(df_map$Tasa, na.rm = TRUE)
-
-# safe‐file helper
-safe_fname <- function(x) stri_trans_general(x, "Latin-ASCII") %>%
-    gsub("[^[:alnum:]_]", "_", .)
-
-# loop over specialties
-specialties <- unique(df_map$`Área de Responsabilidad`)
-
-for(spec in specialties) {
-    sub <- df_map %>% filter(`Área de Responsabilidad` == spec)
-
-    m   <- mx_states %>%
-        left_join(sub, by = "Estado")
-
-    p <- ggplot(m) +
-        geom_sf(aes(fill = Tasa), colour = "grey80", size = 0.2) +
-        scale_fill_viridis_c(
-            name    = "Tasa\n(×10 000)",
-            limits  = c(0, max_tasa),
-            na.value = "white"
-        ) +
-        labs(title = spec) +
-        theme(
-            axis.text    = element_blank(),
-            axis.ticks   = element_blank(),
-            panel.grid   = element_blank()
-        )
-
-    # Save:
-    file_n <- paste0("plot_map_tasa_10k_meds_esp_top_10_", safe_name(spec))
-    suffix <- 'pdf'
-    outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
-    ggsave(outfile, plot = p,
-           height = 12, width = 12, units = "in",
-           dpi = 300,  # Adjust DPI to maintain font size
-           scale = 1  # Increase scale factor
-    )
-}
-
-
-# ===
-# ////////////

@@ -35,8 +35,6 @@ str(mex_sf)
 unique(mex_sf$name_es)
 unique(meds_OOAD_merged_per10k_long$DELEGACION)
 
-df <- meds_OOAD_merged_per10k_long
-
 # Manually pick `Área de Responsabilidad` and search across full file:
 top_specs <- c("Total_por10k",
                "MEDICINA FAMILIAR_por10k",
@@ -52,11 +50,17 @@ top_specs <- c("Total_por10k",
                )
 
 # Get top_specs:
-length(which(df$`Área de Responsabilidad` %in% top_specs))
+length(which(meds_OOAD_merged_per10k_long$`Área de Responsabilidad` %in% top_specs))
 
-df_to_map <- df %>%
-    filter(`Área de Responsabilidad` %in% top_specs)
-df_to_map
+# Plot all:
+df_to_map <- meds_OOAD_merged_per10k_long
+
+# Plot only top / most frequent specialties:
+# df_to_map <- meds_OOAD_merged_per10k_long %>%
+#     filter(`Área de Responsabilidad` %in% top_specs)
+# df_to_map
+
+
 # ===
 
 
@@ -137,7 +141,7 @@ safe_fname <- function(x) stri_trans_general(x, "Latin-ASCII") %>%
 specialties <- unique(df_map$`Área de Responsabilidad`)
 
 
-for(spec in specialties) {
+for (spec in specialties) {
     sub <- df_map %>% filter(`Área de Responsabilidad` == spec)
 
     m   <- mex_sf %>%
@@ -152,6 +156,8 @@ for(spec in specialties) {
 
     p <- ggplot(m) +
         geom_sf(aes(fill = Tasa), colour = "grey80", size = 0.2) +
+        # No rounding:
+        # geom_sf_text(aes(label = Tasa)) +
         geom_sf_text(aes(label = round(Tasa, 2)), size = 2.5) +
         scale_fill_gradient(
             name    = "Tasa\n(×10 000)",
@@ -165,7 +171,8 @@ for(spec in specialties) {
              y     = NULL
              ) +
         theme_void() +
-        theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+        theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold")
+              )
 
     print(p)
 

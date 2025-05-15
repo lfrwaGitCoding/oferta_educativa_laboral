@@ -3,7 +3,7 @@
 # Now have shape files for OOADs though
 
 # ===
-# Same bar plots but by Estado not OOAD ---
+# Same bar plots but by Estado not OOAD ----
 # Need to merge, Edo Mex, CDMX, Veracruz into one for each
 summary(as.factor(meds_OOAD_merged_per10k_long_top$DELEGACION))
 meds_OOAD_merged_per10k_long_top
@@ -46,17 +46,24 @@ meds_OOAD_merged_states <- bind_rows(meds_OOAD_merged_states, sub_df)
 epi_head_and_tail(meds_OOAD_merged_states)
 # View(meds_OOAD_merged_states)
 
+# ===
+# Rename to Estado:
+colnames(meds_OOAD_merged_states)[colnames(meds_OOAD_merged_states) == "DELEGACION"] <- "Estado"
+colnames(meds_OOAD_merged_states)
+# ===
+
+
 meds_OOAD_merged_states <- meds_OOAD_merged_states %>%
-    filter(!DELEGACION %in% sum_ids)
+    filter(!Estado %in% sum_ids)
 epi_head_and_tail(meds_OOAD_merged_states)
 
 # Same for Ciudad de México:
 sum_ids <- c("Ciudad de México Norte", "Ciudad de México Sur")
 sub_df <- meds_OOAD_merged_states %>%
-    filter(DELEGACION %in% sum_ids) %>%
-    summarise(across(-DELEGACION, sum, na.rm = TRUE)) %>%
-    mutate(DELEGACION = "Ciudad de México") %>%
-    select(DELEGACION, everything())
+    filter(Estado %in% sum_ids) %>%
+    summarise(across(-Estado, sum, na.rm = TRUE)) %>%
+    mutate(Estado = "Ciudad de México") %>%
+    select(Estado, everything())
 sub_df
 
 meds_OOAD_merged_states <- bind_rows(meds_OOAD_merged_states, sub_df)
@@ -64,19 +71,12 @@ epi_head_and_tail(meds_OOAD_merged_states)
 # View(meds_OOAD_merged_states)
 
 meds_OOAD_merged_states <- meds_OOAD_merged_states %>%
-    filter(!DELEGACION %in% sum_ids)
+    filter(!Estado %in% sum_ids)
 epi_head_and_tail(meds_OOAD_merged_states)
 # ===
 
-
 # ===
-# Rename to Estado:
-colnames(meds_OOAD_merged_states)[colnames(meds_OOAD_merged_states) == "DELEGACION"] <- "Estado"
-colnames(meds_OOAD_merged_states)
-# ===
-
-# ===
-# Re calculate per 10k:
+# Re calculate per 10k ----
 epi_head_and_tail(meds_OOAD_merged_states)
 
 # Create new df with meds per eg 10,000 pop, this is per OOAD:
@@ -129,8 +129,8 @@ summary(as.factor(meds_OOAD_merged_states_per10k_long$Estado))
 
 # ===
 # Totals:
-df <- meds_OOAD_merged_per10k_long
-unique(df$DELEGACION)
+df <- meds_OOAD_merged_states_per10k_long
+unique(df$Estado)
 
 totals_long <- df %>%
     filter(Estado == "Total") %>%

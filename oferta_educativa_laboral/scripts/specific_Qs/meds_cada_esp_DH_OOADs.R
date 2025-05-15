@@ -550,6 +550,8 @@ meds_OOAD_merged[meds_OOAD_merged$DELEGACION == "Aguascalientes", "Derechohabien
 
 # "Total" is plazas totales, not ocupadas!
 meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- round(meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000), 2)
+# No rounding, for maps with very few specialists, will appear as zero otherwise:
+# meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000)
 
 DIR_num_DH
 # View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])
@@ -568,7 +570,7 @@ rm(check_dfs)
 # ===
 # Create new df with meds per eg 10,000 pop, this is per OOAD:
 meds_OOAD_merged_per10k <- meds_OOAD_merged %>%
-    # for every column except DELEGACION & population, compute rate per 10 000
+    # for every column except DELEGACION and population, compute rate per 10 000
     mutate(across(
         -c(DELEGACION, Derechohabientes_DIR_03_2025),
         ~ round(.x / Derechohabientes_DIR_03_2025 * 10000, 2),
@@ -705,6 +707,8 @@ for(del in dels) {
     )
 }
 
+# But keep object, will use in next script:
+meds_OOAD_merged_per10k_long_top <- df
 rm(df) # so meds_OOAD_merged_per10k_long still has Total row
 # ===
 

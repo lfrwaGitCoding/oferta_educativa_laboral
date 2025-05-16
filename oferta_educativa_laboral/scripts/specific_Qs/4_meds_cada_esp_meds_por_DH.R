@@ -47,48 +47,49 @@ meds_OOAD_merged_DH_per_med[, c("DELEGACION", "Total",
 colnames(meds_OOAD_merged_DH_per_med)
 head(meds_OOAD_merged_DH_per_med[, c(1:4, 105:110, 202:205)])
 tail(meds_OOAD_merged_DH_per_med[, c(1:4, 105:110, 202:205)])
-
-
 # ===
 
 
-# TO DO: continue here
-
 # ===
-# Plot per 10k ----
-meds_OOAD_merged_per10k_long <- meds_OOAD_merged_per10k %>%
-    select(DELEGACION, ends_with("_por10k")) %>%
+# Plot DH por med ----
+meds_OOAD_merged_DH_per_med_long <- meds_OOAD_merged_DH_per_med %>%
+    select(DELEGACION, ends_with("_DH_por_med")) %>%
     pivot_longer(
         -DELEGACION,
         names_to  = "Área de Responsabilidad",
-        values_to = "Tasa por 10 mil derechohabientes"
+        values_to = "Derechohabientes por plaza de médico"
     )
-meds_OOAD_merged_per10k_long
-summary(as.factor(meds_OOAD_merged_per10k_long$DELEGACION))
-
+meds_OOAD_merged_DH_per_med_long
+colnames(meds_OOAD_merged_DH_per_med_long)
+summary(as.factor(meds_OOAD_merged_DH_per_med_long$DELEGACION))
+summary(meds_OOAD_merged_DH_per_med_long$`Derechohabientes por plaza de médico`)
 
 # ===
 # Totals:
-totals_long <- meds_OOAD_merged_per10k_long %>%
+totals_long <- meds_OOAD_merged_DH_per_med_long %>%
     filter(DELEGACION == "Total") %>%
-    arrange(desc(`Tasa por 10 mil derechohabientes`))
+    arrange(desc(`Derechohabientes por plaza de médico`))
 # View(totals_long)
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-totals_long$`Área de Responsabilidad` <- gsub("_por10k", "", totals_long$`Área de Responsabilidad`)
+totals_long$`Área de Responsabilidad` <- gsub("_DH_por_med", "", totals_long$`Área de Responsabilidad`)
 totals_long
 
+
+# TO DO: continue here
+#
 df <- totals_long[-1, ] # drop "Total" row
-plot_1 <- ggplot(df, aes(x = reorder(
-    `Área de Responsabilidad`,
-    `Tasa por 10 mil derechohabientes`
-),
-y = `Tasa por 10 mil derechohabientes`,
-fill = `Tasa por 10 mil derechohabientes`)
-) +
+plot_1 <- ggplot(df, aes(x = `Área de Responsabilidad`,
+    #                          reorder(
+    # `Área de Responsabilidad`,
+    # `Derechohabientes por plaza de médico`
+    # ),
+    y = `Derechohabientes por plaza de médico`,
+    fill = `Derechohabientes por plaza de médico`)
+    ) +
     geom_col() +
     coord_flip() +
-    scale_fill_viridis_c() +
+    # scale_fill_viridis_c() + # continuous scale
     theme_minimal() +
     labs(
         x = NULL,
@@ -183,6 +184,8 @@ rm(df) # so meds_OOAD_merged_per10k_long still has Total row
 # ===
 
 # ////////////
+
+
 
 
 

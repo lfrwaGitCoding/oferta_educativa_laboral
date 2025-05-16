@@ -33,9 +33,15 @@ str(mex_sf)
 # ===
 # names should be OOADs:
 unique(mex_sf$name_es)
-unique(meds_OOAD_merged_per10k_long$DELEGACION)
+
+df <- meds_OOAD_merged_DH_per_med_long
+# meds_OOAD_merged_per10k_long
+
+unique(df$DELEGACION)
+epi_head_and_tail(df, cols = 3)
 
 # Manually pick `Área de Responsabilidad` and search across full file:
+# TO DO: manual, also _DH_por_med
 top_specs <- c("Total_por10k",
                "MEDICINA FAMILIAR_por10k",
                "MEDICINA DE URGENCIAS_por10k",
@@ -50,13 +56,13 @@ top_specs <- c("Total_por10k",
                )
 
 # Get top_specs:
-length(which(meds_OOAD_merged_per10k_long$`Área de Responsabilidad` %in% top_specs))
+length(which(df$`Área de Responsabilidad` %in% top_specs))
 
 # Plot all:
-df_to_map <- meds_OOAD_merged_per10k_long
+df_to_map <- df
 
 # Plot only top / most frequent specialties:
-# df_to_map <- meds_OOAD_merged_per10k_long %>%
+# df_to_map <- df %>%
 #     filter(`Área de Responsabilidad` %in% top_specs)
 # df_to_map
 
@@ -108,14 +114,19 @@ setdiff(data_names, ne_names)
 
 # ===
 # Plot maps:
+# TO DO: clean up df switching
 df <- df_to_map
+df
 
 df_map <- df %>%
-    rename(Tasa = `Tasa por 10 mil derechohabientes`)
+    # rename(Tasa = `Tasa por 10 mil derechohabientes`)
+    rename(Tasa = `Derechohabientes por plaza de médico`)
 epi_head_and_tail(df_map , cols = 3)
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-df_map$`Área de Responsabilidad` <- gsub("_por10k", "", df_map$`Área de Responsabilidad`)
+# TO DO: manual
+# df_map$`Área de Responsabilidad` <- gsub("_por10k", "", df_map$`Área de Responsabilidad`)
+df_map$`Área de Responsabilidad` <- gsub("_DH_por_med", "", df_map$`Área de Responsabilidad`)
 epi_head_and_tail(df_map , cols = 3)
 
 # Exclude Total rows, these are per OOAD for all meds:
@@ -160,7 +171,7 @@ for (spec in specialties) {
         # geom_sf_text(aes(label = Tasa)) +
         geom_sf_text(aes(label = round(Tasa, 2)), size = 2.5) +
         scale_fill_gradient(
-            name    = "Tasa\n(×10 000)",
+            # name    = "Tasa\n(×10 000)",
             low      = "red",
             high     = "green",
             # limits   = c(0, max_tasa),
@@ -187,7 +198,7 @@ for (spec in specialties) {
     # )
 }
 
-
+# TO DO: continue here, remove numbers within polygons, invert colours for DH per med
 # With table side by side:
 for (spec in specialties) {
     sub <- df_map %>%

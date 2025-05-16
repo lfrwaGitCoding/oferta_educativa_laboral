@@ -42,6 +42,7 @@ library(htmlwidgets)
 library(sf)
 library(rnaturalearth)
 library(stringi)
+library(openxlsx)
 # ////////////
 
 

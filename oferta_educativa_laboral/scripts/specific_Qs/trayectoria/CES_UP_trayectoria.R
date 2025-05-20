@@ -54,13 +54,13 @@ all_locs <- all_locs
 
 
 # TO DO: needs updating:
-all_colnames <- all_colnames
-char_cols <- char_cols
-date_cols <- date_cols
-fact_cols <- fact_cols
-int_cols <- int_cols
-id_cols <- id_cols
-num_cols <- num_cols
+# all_colnames <- all_colnames
+# char_cols <- char_cols
+# date_cols <- date_cols
+# fact_cols <- fact_cols
+# int_cols <- int_cols
+# id_cols <- id_cols
+# num_cols <- num_cols
 
 print(project_root)
 setwd(project_root)
@@ -306,9 +306,19 @@ nuevos_adscritos <- meds_resids %>%
             (is.na(DESCRIP_CLASCATEG) != is.na(i.DESCRIP_CLASCATEG))     # or one is NA, the other isn’t
     )
 epi_head_and_tail(nuevos_adscritos, cols = 29)
-
 summary(meds_resids$DESCRIP_CLASCATEG)
 summary(meds_resids$i.DESCRIP_CLASCATEG)
+
+
+# This is DELEGACION 2024 when residentes:
+colnames(nuevos_adscritos)[which(colnames(nuevos_adscritos) == "DELEGACION")] <- "DELEGACION_2024_residencia"
+summary(nuevos_adscritos$DELEGACION_2024_residencia)
+
+# DELEGACION 2025 adscritos:
+colnames(nuevos_adscritos)[which(colnames(nuevos_adscritos) == "i.DELEGACION")] <- "DELEGACION_2025_adcsrito"
+summary(nuevos_adscritos$DELEGACION_2025_adcsrito)
+
+#
 
 # TO DO: continue here
 # only ~3400, should be ~7500? Draft 2025 hired ~1000 externos?

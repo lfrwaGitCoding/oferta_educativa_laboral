@@ -12,6 +12,7 @@ library(stringi)
 #     select(name_es) %>%
 #     rename(Estado = name_es)
 
+ls()
 
 sh_dir <- "~/Documents/work/science/devel/github/med-comp-imss/geo_stats/shapefiles/por_OOAD/"
 # read the shapefile
@@ -34,8 +35,9 @@ str(mex_sf)
 # names should be OOADs:
 unique(mex_sf$name_es)
 
-df <- meds_OOAD_merged_DH_per_med_long
-# meds_OOAD_merged_per10k_long
+
+# df <- meds_OOAD_merged_DH_per_med_long
+df <- meds_OOAD_merged_per10k_long
 
 unique(df$DELEGACION)
 epi_head_and_tail(df, cols = 3)
@@ -119,14 +121,14 @@ df <- df_to_map
 df
 
 df_map <- df %>%
-    # rename(Tasa = `Tasa por 10 mil derechohabientes`)
-    rename(Tasa = `Derechohabientes por plaza de médico`)
+    rename(Tasa = `Tasa por 10 mil derechohabientes`)
+    # rename(Tasa = `Derechohabientes por plaza de médico`)
 epi_head_and_tail(df_map , cols = 3)
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
 # TO DO: manual
-# df_map$`Área de Responsabilidad` <- gsub("_por10k", "", df_map$`Área de Responsabilidad`)
-df_map$`Área de Responsabilidad` <- gsub("_DH_por_med", "", df_map$`Área de Responsabilidad`)
+df_map$`Área de Responsabilidad` <- gsub("_por10k", "", df_map$`Área de Responsabilidad`)
+# df_map$`Área de Responsabilidad` <- gsub("_DH_por_med", "", df_map$`Área de Responsabilidad`)
 epi_head_and_tail(df_map , cols = 3)
 
 # Exclude Total rows, these are per OOAD for all meds:

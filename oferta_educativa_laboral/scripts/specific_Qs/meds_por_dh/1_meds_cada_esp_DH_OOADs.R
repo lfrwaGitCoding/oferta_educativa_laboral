@@ -104,7 +104,10 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
 
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
+infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
+# "~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/data//data_UP/access_SIAP_18092024/processed//2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
+
 
 # Full path and file name:
 infile_path <- paste0(rdata_dir, infile)
@@ -151,7 +154,8 @@ source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 
 # ////////////
 # Output dir, based on today's date ----
-script_n <- 'meds_cada_esp_DH_OOADs'
+# script_n <- 'meds_cada_esp_DH_OOADs'
+script_n <- 'resids_cada_esp_DH_OOADs'
 infile_prefix <- strsplit(infile, "\\.")[[1]][1]
 results_subdir <- sprintf('%s_%s',
                           format(Sys.Date(), '%d_%m_%Y'),

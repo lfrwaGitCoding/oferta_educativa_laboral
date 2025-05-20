@@ -70,6 +70,7 @@ ls()
 # TO DO: set manually
 # Needs column and value
 # From e.g.:
+data_f <- data_f # rstudio warning
 colnames(data_f)
 epi_head_and_tail(data_f, cols = ncol(data_f))
 
@@ -77,7 +78,8 @@ summary(data_f$DESCRIP_CLASCATEG)
 summary(data_f$DELEGACION)
 
 col_to_subset <- 'DESCRIP_CLASCATEG'
-value_to_subset <- '1.MÉDICOS'
+value_to_subset <- '9.RESIDENTES'
+# value_to_subset <- '1.MÉDICOS'
 # value_to_subset <- '2.ENFERMERAS'
 
 # col_to_subset <- 'DELEGACION'
@@ -85,7 +87,7 @@ value_to_subset <- '1.MÉDICOS'
 
 
 # TO DO: Manually set:
-subset_n <- 'meds'
+subset_n <- 'resids'
 # subset_n <- 'enfermeras'
 # ===
 
@@ -95,7 +97,6 @@ subset_n <- 'meds'
 project_root <- project_root
 data_dir <- data_dir
 results_dir <- results_dir
-data_f <- data_f
 
 all_colnames <- all_colnames
 char_cols <- char_cols

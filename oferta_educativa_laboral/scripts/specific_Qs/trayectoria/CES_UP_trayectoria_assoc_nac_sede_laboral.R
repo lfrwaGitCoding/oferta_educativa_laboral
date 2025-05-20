@@ -275,7 +275,93 @@ alluv_plot4 <- df %>%
     )
 alluv_plot4
 
+# Save:
+file_n <- 'plot_alluvial_trayectoria_2024-2025'
+suffix <- 'pdf'
+outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile
+ggsave(outfile,
+       plot = alluv_plot4,
+       height = 20,
+       width = 20,
+       units = "in",
+       scale = 1, dpi = 300
+       )
 # ===
+
+
+
+
+# ===
+# Alluvial filtered
+colnames(df)
+unique(df$NOMBREAR)
+
+df2 <- df[which(df$NOMBREAR == "TRAUMATOLOGIA Y ORTOPEDIA"), ]
+# df2 <- df[which(df$NOMBREAR == "OFTALMOLOGIA"), ]
+epi_head_and_tail(df2)
+
+
+alluv_plot4 <- df2 %>%
+    count(EDO_NACIMIENTO,
+          DELEGACION_2024_residencia,
+          DELEGACION_2025_adcsrito) %>%
+    ggplot(aes(axis1 = EDO_NACIMIENTO,
+               axis2 = DELEGACION_2024_residencia,
+               axis3 = DELEGACION_2025_adcsrito,
+               y     = n)) +
+    geom_alluvium(aes(fill = EDO_NACIMIENTO), width = 1/8, alpha = 0.8) +
+    geom_stratum(width = 1/6, fill = "grey80", color = "white") +
+    geom_text_repel(
+        stat        = "stratum",
+        aes(label   = after_stat(stratum)),
+        # position    = position_stratum(vjust = 0.5),
+        nudge_x     = 0.1,            # don’t move horizontally
+        # direction   = "x",          # only repel up/down
+        seed        = 42,
+        size        = 3,
+        max.overlaps= Inf
+    ) +
+    scale_x_discrete(
+        limits = c("Nacimiento","Residencia","Trabajo"),
+        expand = c(0.1, 0.1)
+    ) +
+    labs(
+        title = "Movimiento de médicos: nacimiento → residencia → adscripción - Traumatología y Ortopedia",
+        y     = "Frecuencia",
+        x     = NULL
+    ) +
+    theme_minimal(base_size = 14) +
+    theme(
+        legend.position   = "none",            # drop the legend
+        # panel.grid        = element_blank(),   # no grid
+        # axis.ticks        = element_blank(),
+        # axis.text.y       = element_blank(),   # hide the y labels if they overlap
+        axis.text.x       = element_text(
+            size   = 12,
+            margin = margin(t = 20)
+        ),
+        plot.title        = element_text(
+            hjust = 0.5,
+            face  = "bold"
+        )
+    )
+alluv_plot4
+
+# Save:
+file_n <- 'plot_alluvial_trayectoria_2024-2025_TyO'
+suffix <- 'pdf'
+outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile
+ggsave(outfile,
+       plot = alluv_plot4,
+       height = 20,
+       width = 20,
+       units = "in",
+       scale = 1, dpi = 300
+)
+# ===
+
 
 
 # ===

@@ -30,6 +30,10 @@ library(log4r)
 # Set working directory to the project root  ----
 # Should be there already if loaded as RStudio project
 setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+# TO DO:
+# Mac24:
+# setwd("/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral")
+# project_root <- "/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral"
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
 # ////////////
@@ -73,6 +77,7 @@ print(all_locs)
 # ===
 # UP and CES data dirs:
 data_dir
+# data_dir <- paste0(project_root, "/data/")
 dir(data_dir)
 up_data_dir <- file.path(data_dir, "data_UP/access_SIAP_18092024/processed/")
 dir.exists(up_data_dir)
@@ -151,6 +156,7 @@ epi_head_and_tail(activos_2025)
 # Source functions/scripts/etc
 # TO DO:
 # Source (until I update episcout)
+# code_dir <- '/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral'
 source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # ////////////
 
@@ -163,6 +169,7 @@ results_subdir <- sprintf('%s_%s',
                           format(Sys.Date(), '%d_%m_%Y'),
                           infile_prefix
                           )
+# results_subdir <- '/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/19_05_2025_2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids'
 results_subdir
 results_subdir <- epi_create_dir(base_path = results_dir,
                                  subdir = results_subdir

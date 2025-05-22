@@ -1,7 +1,21 @@
+# ////////////
+# Script information ----
+
+# SIAP
+# Unidad de Personal
+# Mayo 2025
+#
+#
+# Input is rdata output from script:
+#
+
+# Output are
+# ////////////
 
 
 
 # ////////////
+# Import libraries ----
 library(janitor)
 library(vcd)      # for assocstats()
 library(ggalluvial)

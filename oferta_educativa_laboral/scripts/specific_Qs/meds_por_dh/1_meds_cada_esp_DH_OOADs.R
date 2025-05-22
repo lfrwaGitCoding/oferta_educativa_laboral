@@ -104,8 +104,8 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
 
-# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
+infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
+# infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
 # "~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/data//data_UP/access_SIAP_18092024/processed//2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
 
 
@@ -252,6 +252,7 @@ DIR_num_DH <- epi_read(infile_path, encoding = "UTF-8")
 epi_head_and_tail(DIR_num_DH)
 epi_clean_count_classes(df = DIR_num_DH)
 str(DIR_num_DH)
+# View(DIR_num_DH)
 # ===
 
 
@@ -490,6 +491,7 @@ df <- df %>%
     filter(!DELEGACION %in% sum_ids)
     # bind_rows(cdmx) # to do, not needed but no error?
 epi_head_and_tail(df)
+epi_head_and_tail(df, last_cols = TRUE)
 # ===
 
 # ===
@@ -529,7 +531,7 @@ meds_OOAD_merged <- meds_OOAD_merged %>%
 epi_head_and_tail(meds_OOAD_merged)
 epi_head_and_tail(meds_OOAD_merged, last_cols = T)
 
-
+# TO DO: continue here
 # Get a total for Derechohabientes_DIR_03_2025 and insert in row 'Total':
 get_value <- sum(meds_OOAD_merged$Derechohabientes_DIR_03_2025, na.rm = TRUE)
 meds_OOAD_merged[meds_OOAD_merged$DELEGACION == "Total", "Derechohabientes_DIR_03_2025"] <- get_value
@@ -553,10 +555,14 @@ rm(df)
 # e.g.:
 meds_OOAD_merged[meds_OOAD_merged$DELEGACION == "Aguascalientes", "Derechohabientes_DIR_03_2025"]
 
+# View(meds_OOAD_merged)
+
 # "Total" is plazas totales, not ocupadas!
 meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- round(meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000), 2)
 # No rounding, for maps with very few specialists, will appear as zero otherwise:
 # meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000)
+
+View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])
 
 DIR_num_DH
 # View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])

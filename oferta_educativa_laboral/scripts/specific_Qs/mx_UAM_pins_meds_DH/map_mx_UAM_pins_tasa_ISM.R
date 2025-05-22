@@ -6,7 +6,6 @@ library(tidyverse)
 library(DBI)
 library(RMariaDB)
 
-library(naturalearth)
 library(rnaturalearth)
 library(ggplot2)
 library(sf)
@@ -22,7 +21,7 @@ library(RColorBrewer)
 
 # ////////////
 # TO DO: manual
-results_subdir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/20_05_2025_meds_DH_mx_unidades"
+results_subdir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades"
 # ////////////
 
 
@@ -79,6 +78,11 @@ outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
 epi_write(df2, outfile)
 
+# # Already saved:
+# df2 <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades/db_djaine_personalaps_unidades_imss.txt"
+# file.exists(df2)
+# df2 <- epi_read(df2)
+
 # Remove NAs:
 df2 <- df2 %>% drop_na(longitud, latitud)
 summary(as.factor(df2$latitud))
@@ -100,6 +104,7 @@ colnames(df_ism)
 epi_head_and_tail(df_ism, cols = 6)
 epi_head_and_tail(df_ism, last_cols = T)
 # df_ism <- df_ism[, 1:5]
+# View(df_ism)
 
 df_ism <- df_ism[, c("Estado", #"Delegación",
                      "PLAZAS_OCUPADAS_172024",
@@ -113,7 +118,7 @@ epi_head_and_tail(df_ism, cols = 5)
 # meds per 1000:
 df_ism$medicos_por_mil_derechohabientes_172024 <- round((df_ism$PLAZAS_OCUPADAS_172024 / df_ism$Derechohabientes_DIR_03_2025) * 1000, 2)
 df_ism$medicos_por_mil_derechohabientes_172024
-summary(df_ism$medicos_por_mil_derechohabientes_172024_2)
+summary(df_ism$medicos_por_mil_derechohabientes_172024)
 # View(df_ism)
 # TO DO: for OOADs needs palzas ocupads, original calc
 
@@ -253,9 +258,9 @@ mex_sf_ism <- mex_sf %>%
     left_join(df_ism, by = loc_col_name) %>%
     mutate(
         nivel_cat = cut(
-            medicos_por_mil_derechohabientes_172024,
-            # medicos_por_mil_derechohabientes_072025,
-            breaks = c(-Inf, 1.2, 1.5, 1.7, 1.9, Inf),
+            # medicos_por_mil_derechohabientes_172024,
+            medicos_por_mil_derechohabientes_072025,
+            breaks = c(-Inf, 1.19, 1.5, 1.7, 1.9, Inf),
             labels = c(
                 "<1.2",
                 "1.2 – 1.49",
@@ -272,24 +277,24 @@ p <- ggplot(mex_sf_ism) +
     scale_fill_manual(
         name   = "Médicos por 1,000\nderechohabientes",
         values = c(
-            "<1.2"             = "#C62828",
-            "1.2 – 1.49"     = "#FFD93D",
-            "1.5 – 1.69"  = "#81C784",
-            "1.7 – 1.89"  = "#4CAF50",
-            "≥1.9"     = "#2E7D32"
+            "<1.2" = "#C62828",
+            "1.2 – 1.49" = "#FFD93D",
+            "1.5 – 1.69" = "#81C784",
+            "1.7 – 1.89" = "#4CAF50",
+            "≥1.9" = "#2E7D32"
         ),
         na.value = "grey90"
     ) +
     labs(
-        # title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
-        title = "Índice de Médicos por Derechohabiente (Abril 2025)"
+        title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
+        # title = "Índice de Médicos por Derechohabiente (Abril 2025)"
     ) +
     theme_minimal()
 p
 
 # Save:
-# file_n <- 'plot_mapa_mx_meds_DH_172024'
-file_n <- 'plot_mapa_mx_meds_DH_072025'
+file_n <- 'plot_mapa_mx_meds_DH_172024'
+# file_n <- 'plot_mapa_mx_meds_DH_072025'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
@@ -299,7 +304,7 @@ ggsave(outfile,
        width = 20,
        units = "in",
        scale = 1, dpi = 300
-)
+       )
 # ===
 # ////////////
 
@@ -307,14 +312,14 @@ ggsave(outfile,
 # ////////////
 
 joint_p <- ggplot() +
-    # 1) background choropleth
+    # background choropleth
     geom_sf(
         data = mex_sf_ism,
         aes(fill = nivel_cat),
         color = "white",   # municipality borders
         size  = 0.1
     ) +
-    # 2) overlay your medical‐unit points
+    # overlay medical‐unit points
     geom_sf(
         data = df_sf,
         aes(color = nivel),
@@ -327,30 +332,30 @@ joint_p <- ggplot() +
     #     color = "black",    # pin colour
     #     size  = 1           # smaller circles
     # ) +
-    # 3) use your custom IMSS palette
+    # custom IMSS palette
     scale_fill_manual(
         name   = "Médicos por 1,000\nderechohabientes",
         values = c(
-            "<1.2"             = "#C62828",
-            "1.2 – 1.49"     = "#FFD93D",
-            "1.5 – 1.69"  = "#81C784",
-            "1.7 – 1.89"  = "#4CAF50",
-            "≥1.9"     = "#2E7D32"
+            "<1.2" = "#C62828",
+            "1.2 – 1.49" = "#FFD93D",
+            "1.5 – 1.69" = "#81C784",
+            "1.7 – 1.89" = "#4CAF50",
+            "≥1.9" = "#2E7D32"
         ),
         na.value = "grey90"
     ) +
     coord_sf(datum = NA) +
     theme_minimal() +
     labs(
-        title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
-        # title = "Índice de Médicos por Derechohabiente (Abril 2025)"
+        # title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
+        title = "Índice de Médicos por Derechohabiente (Abril 2025)"
         # caption = "Unidades médicas sobre el índice IMSS"
     )
 joint_p
 
 # Save:
-file_n <- 'plot_mapa_mx_meds_DH_unidades_172024'
-# file_n <- 'plot_mapa_mx_meds_DH_unidades_072025'
+# file_n <- 'plot_mapa_mx_meds_DH_unidades_172024'
+file_n <- 'plot_mapa_mx_meds_DH_unidades_072025'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile

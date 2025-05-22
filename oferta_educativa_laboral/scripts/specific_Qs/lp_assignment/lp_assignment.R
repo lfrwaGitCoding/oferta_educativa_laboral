@@ -26,34 +26,140 @@
 # ////////////
 
 
+
 # ////////////
 # Import libraries ----
+library(data.table)
+library(episcout)
 library(sf)
-library(dplyr)
+library(tidyverse)
 library(geosphere)
 library(lpSolve)
+library(networkD3)
+library(circlize)
+library(scales)
+# ////////////
+
+
+# ////////////
+# Set working directory to the project root  ----
+# Should be there already if loaded as RStudio project
+setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+# TO DO:
+# Mac24:
+# setwd("/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral")
+# project_root <- "/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral"
+# renv should be picked up automatically, see 0_xx in project_tools if it interrupts
+getwd()
 # ////////////
 
 
 # ////////////
 # Load files ----
 
-# TO DO: clean up, need files with med per dh, nombrear, delegacion, etc
-
-# eg:
-summary(as.factor(nuevos_adscritos$DELEGACION_2024_residencia))
-colnames(nuevos_adscritos)
-
-df2 <- nuevos_adscritos[which(nuevos_adscritos$NOMBREAR == "TRAUMATOLOGIA Y ORTOPEDIA"), ]
-epi_head_and_tail(df2)
+# ===
+# Load the .rdata.gzip file:
+# load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
+load("data/data_UP/access_SIAP_18092024/processed/2_clean_dups_col_types_Qna_07_Plantilla_2025.rdata.gzip")
+ls()
 
 
-epi_head_and_tail(meds_2025)
+# Get rid of RStudio warnings for loaded objects:
+project_root <- project_root
+data_dir <- data_dir
+results_dir <- results_dir
+code_dir <- code_dir
 
+all_colnames <- all_colnames
+char_cols <- char_cols
+date_cols <- date_cols
+fact_cols <- fact_cols
+int_cols <- int_cols
+id_cols <- id_cols
+num_cols <- num_cols
+
+data_f <- data_f
+
+print(project_root)
+setwd(project_root)
+getwd()
+print(dir(path = normalizePath(project_root), all.files = TRUE))
+
+epi_head_and_tail(data_f)
+length(which(is.na(data_f$MATRICULA)))
+# ===
+# ////////////
+
+
+# ////////////
+# Source functions/scripts/etc
+# TO DO:
+# Source (until I update episcout)
+# code_dir <- '/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral'
+source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
+# ////////////
+
+
+# ////////////
+# Output dir, based on today's date ----
+script_n <- 'lp_assignment'
+infile_prefix <- strsplit(script_n, "\\.")[[1]][1]
+results_subdir <- sprintf('%s_%s',
+                          format(Sys.Date(), '%d_%m_%Y'),
+                          infile_prefix
+                          )
+results_subdir
+results_subdir <- epi_create_dir(base_path = results_dir,
+                                 subdir = results_subdir
+                                 )
+# ////////////
+
+
+# ////////////
+# Capture output / log ----
+
+# ===
+# Redirect standard output
+if (!interactive()) { # TRUE if not interactive, will then log output
+  script_n <- '2_clean_dups_col_types'
+  sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
+  sink(sink_stdout, split = TRUE)
+
+  # Redirect messages and warnings
+  sink_msg <- file(paste0(results_subdir, '/', script_n, '.sink_msg.log'), open = "wt")
+  sink(sink_msg, type = "message")
+
+  # Example outputs
+  cat("Test: This is standard output.\n")
+  message("Test: This is a message.")
+  warning("Test: This is a warning.")
+}
+# ===
+
+# ===
+# Create a logger
+if (!interactive()) { # TRUE if not interactive, will then log output
+  logger <- create.logger()
+  log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
+  logfile(logger) <- log_n # Log file location
+  level(logger) <- "INFO"  # Set logging level (DEBUG, INFO, WARN, ERROR)
+
+  # Add log messages
+  # info(logger, "Script started")
+  # debug(logger, "This is a debug message")
+  # warn(logger, "This is a warning")
+  # error(logger, "This is an error")
+}
+# ////////////
+
+
+
+# ////////////
 # ===
 # Get meds per DH by OOAD
 # TO DO: manual
 # Was created for sharing, only has 07 2025 data, missing 17 2024:
+# TO DO: this file has plazas totales but medicos_por_mil_derechohabientes_utf8.csv has plazas ocupadas
 df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/15_05_2025_2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds/tasas_meds_qna_07_2025.txt"
 
 # Messier but has estado, OOAD, INEGI, 17 2024, 2025, etc.:
@@ -67,12 +173,6 @@ epi_head_and_tail(df_ism, cols = 5)
 
 summary(df_ism$medicos_por_mil_derechohabientes_072025)
 # View(df_ism)
-# ===
-
-
-# ===
-
-
 # ===
 # ////////////
 
@@ -162,19 +262,17 @@ dist_mat["Sonora", "Baja California"]
 # but needs ratio, such as med per DH to use as population, and specialty (if estiamting by specialty)
 # will estimate based on constraints (parameters), distance (centroids), and population
 
-epi_head_and_tail(meds_2025)
-colnames(meds_2025)
-
-
 # Create dataframe and vars with needed inputs:
 # DELEGACION | Population | meds_tasa | meds_totales
 
-epi_head_and_tail(meds_2025) # rows are individual medics
+epi_head_and_tail(data_f) # rows are individual medics
+colnames(data_f)
+
 epi_head_and_tail(df_ism) # rows are states
 
 # Group residentes by OOAD:
-summary(meds_2025$DESCRIP_CLASCATEG)
-resids_OOAD <- meds_2025 %>%
+summary(data_f$DESCRIP_CLASCATEG)
+resids_OOAD <- data_f %>%
     filter(DESCRIP_CLASCATEG == "9.RESIDENTES") %>%
     count(DELEGACION, name = "total_residentes")
 epi_head_and_tail(resids_OOAD, cols = 2)
@@ -359,6 +457,9 @@ lp_df[, col_check]
 n_states <- nrow(lp_df)
 
 # TO DO: manually set
+# currently arbitrary and just a constant
+# need extracting totals for each state? ie where they were born, were they currently are
+# should be negative or positive? positive gives inverse results, or fails at second pass, very sparse matrix
 birth_bonus <- -10       # distance of km‐equivalent “bonus” for move to birth state
 
 # Build cost matrix with a birth‐state bonus on the diagonal:
@@ -376,13 +477,15 @@ sol1 <- lp.transport(
     row.signs = rep("<=", n_states),
     row.rhs   = lp_df$supply_adscritos,
     col.signs = rep(">=", n_states),
-    col.rhs   = lp_df$demand_adscritos
-    # integers   = TRUE
+    col.rhs   = lp_df$demand_adscritos,
+    integers   = TRUE
     )
 flow1 <- matrix(sol1$solution, n_states, byrow = TRUE)
 str(flow1)
 if (sol1$status != 0) stop("First LP failed: check constraints or feasibility")
 print(sol1$status)  # 0 = success, 2 = infeasible
+
+# View(flow1)
 
 # Compute the remaining supply and demand (ie consultants first, then all available medics, including residents):
 rem_supply <- pmax(0, lp_df$supply_all - rowSums(flow1))
@@ -407,14 +510,15 @@ sol2 <- lp.transport(
     row.signs = rep("<=", n_states),
     row.rhs   = rem_supply,
     col.signs = rep(">=", n_states),
-    col.rhs   = rem_demand
-    # integers   = TRUE
+    col.rhs   = rem_demand,
+    integers   = TRUE
     )
 flow2 <- matrix(sol2$solution, n_states, byrow = TRUE)
 str(flow2)
 
 print(sol2$status)  # 0 = success, 2 = infeasible
 if (sol2$status != 0) stop("Second LP failed: check remaining supply/demand")
+# View(flow2)
 # ===
 
 # ===
@@ -431,8 +535,17 @@ flow_total
 
 head(rownames(flow_total), 10)
 tail(rownames(flow_total), 10)
-# View(t(lp_df[which(lp_df$DELEGACION == "Ciudad de México Norte"), ]))
+t(lp_df[which(lp_df$DELEGACION == "Ciudad de México Norte"), ])
 # View(flow_total)
+
+# Save:
+dir.exists(results_subdir)
+outfile <- 'matrix_flow_total_qna_07_2025.txt'
+outfile <- file.path(results_subdir, outfile)
+outfile
+epi_write(flow_total, outfile,
+          row.names = TRUE)      # keeps your From-state names
+
 # ===
 
 # ===
@@ -469,48 +582,208 @@ lapply(as.list(sum_moves_df[2:5]), sum) # supplies and demands must match
 # join back to individual‐level data (using birth-state information) to select specific doctors for each move
 
 # Summarise / plot, etc ----
+
+# ===
+# Ranked flows:
 flow_long <- as.data.frame(flow_total) %>%
-    rownames_to_column("To") %>%
-    pivot_longer(
-        cols      = -To,
-        names_to  = "From",
-        values_to = "n"
-    ) %>%
-    filter(n > 0)
+rownames_to_column("To") %>%
+pivot_longer(
+  cols      = -To,
+  names_to  = "From",
+  values_to = "n"
+  ) %>%
+filter(n > 0) %>%
+arrange(desc(n))
 # View(flow_long)
+# ===
 
-# total outbound moves per state:
-outbound <- flow_long %>%
-    group_by(From) %>%
-    summarise(out = sum(n)) %>%
-    arrange(desc(out))
-outbound
+# ===
+# State-level net-flow table:
+net_flow <- flow_long %>%
+  group_by(From) %>%
+  summarise(salen = sum(n)) %>%
+  full_join(
+    flow_long %>% group_by(To) %>% summarise(entran = sum(n)),
+    by = c("From" = "To")
+  ) %>%
+  replace_na(list(salen = 0, entran = 0)) %>%
+  mutate(neto = salen - entran) %>%
+  rename(OOAD = From) %>%
+  arrange(desc(neto))
+# View(net_flow)
 
-# assume `centroids` are state centroids sf with a column "DELEGACION"
+# Save:
+dir.exists(results_subdir)
+outfile <- 'net_flow_qna_07_2025.txt'
+outfile <- file.path(results_subdir, outfile)
+outfile
+epi_write(net_flow, outfile)
+# ===
+
+# ===
+# assume `centroids` are state centroids sf with a column "DELEGACION":
+# join centroids to flows
 flow_map <- flow_long %>%
-    left_join(centroids %>% select(From = name_es, geometry),
-              by = "From") %>%
-    left_join(centroids %>% select(To   = name_es, geometry),
-              by = "To", suffix = c(".from",".to")) %>%
-    st_as_sf(crs = 4326)
+  left_join(centroids %>% select(From=name_es, geometry), by="From") %>%
+  rename(geom_from = geometry) %>%
+  left_join(centroids %>% select(To=name_es, geometry), by="To") %>%
+  rename(geom_to = geometry) %>%
+  st_as_sf(crs=4326)
+flow_map
 
-# Plot:
 plot1 <- ggplot() +
-    geom_sf(data = mex_sf, fill="grey95", color="white") +
-    geom_curve(
-        data       = flow_map,
-        aes(x      = st_coordinates(geometry.from)[,1],
-            y      = st_coordinates(geometry.from)[,2],
-            xend   = st_coordinates(geometry.to)[,1],
-            yend   = st_coordinates(geometry.to)[,2],
-            size   = n),
-        color      = "darkred",
-        curvature  = 0.2,
-        alpha      = 0.8
-    ) +
-    scale_size_continuous(range = c(0.2, 2), name = "Doctors moved") +
-    theme_minimal()
+  geom_sf(data = mex_sf, fill = "grey95", color = "white") +
+  geom_curve(data=flow_map,
+             aes(x = st_coordinates(geom_from)[, 1],
+                 y = st_coordinates(geom_from)[, 2],
+                 xend = st_coordinates(geom_to)[, 1],
+                 yend = st_coordinates(geom_to)[, 2],
+                 size = n),
+             arrow = arrow(length = unit(0.2, "cm")),
+             color = "darkred", alpha = 0.7,
+             curvature = 0.2) +
+  scale_size_continuous(range=c(0.2,2), name = "Movimiento de médicos y residentes") +
+  theme_minimal()
+plot1
+# ===
 
+# ===
+# Get thresholds for ISM:
+colnames(lp_df)
+lp_df$DELEGACION
+lp_df$meds_tasa  # (numeric: medics per 1,000 derechohabientes)
+View(lp_df)
+
+
+idx_df <- lp_df %>%
+  select(DELEGACION, meds_tasa) %>%
+  mutate(
+    ism_cat = cut(
+      meds_tasa,
+      breaks = c(-Inf, 1.19, 1.5, 1.7, 1.9, Inf),
+      labels = c("<1.2", "1.2 – 1.49", "1.5 – 1.69", "1.7 – 1.89", "≥1.9"),
+      right  = FALSE
+    )
+  )
+
+# Join with mx OOADs shapefile:
+mex_sf2 <- mex_sf %>%
+  left_join(idx_df, by = c("name_es" = "DELEGACION"))
+
+# Create simple sf of unique origins (dots):
+origin_pts <- flow_map %>%
+  distinct(From, geom_from) %>%
+  st_as_sf() %>%
+  st_set_geometry("geom_from")    # use the origin geometry column
+
+# Plot with fill mapped to ism_cat, flows on top:
+joint_p <- ggplot() +
+  # fill by category
+  geom_sf(
+    data = mex_sf2,
+    aes(fill = ism_cat),
+    color = "white", size = 0.2
+  ) +
+  # origin dots
+  geom_sf(
+    data = origin_pts,
+    color = "black",
+    fill = "white",
+    shape = 21,
+    size = 2,
+    stroke = 0.5,
+    inherit.aes = FALSE
+  ) +
+  # flow arrows
+  geom_curve(
+    data = flow_map,
+    aes(
+      x = st_coordinates(geom_from)[,1],
+      y = st_coordinates(geom_from)[,2],
+      xend = st_coordinates(geom_to)[,1],
+      yend = st_coordinates(geom_to)[,2],
+      size = n
+    ),
+    arrow = arrow(length = unit(0.2, "cm")),
+    color = "darkred",
+    alpha = 0.5,
+    curvature = 0.2
+  ) +
+  # colour scale for the 5 bins
+  scale_fill_manual(
+    name   = "Médicos por 1,000 derechohabientes",
+    values = c(
+      "<1.2" = "#C62828",
+      "1.2 – 1.49" = "#FFD93D",
+      "1.5 – 1.69" = "#81C784",
+      "1.7 – 1.89" = "#4CAF50",
+      "≥1.9" = "#2E7D32"
+    ),
+    na.value = "grey90"
+  ) +
+  scale_size_continuous(
+    range = c(0.2, 2),
+    name = "Movimiento de médicos residentes y adscritos"
+  ) +
+  coord_sf(datum = NA) +
+  theme_minimal(base_size = 14) +
+  # remove axis titles and ticks
+  labs(x = NULL, y = NULL, title = NULL) +
+  theme_minimal(base_size = 14) +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank()
+  )
+
+print(joint_p)
+
+# Save:
+file_n <- 'plot_mapa_mx_meds_DH_lp_flow_072025'
+suffix <- 'pdf'
+outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile
+ggsave(outfile,
+       plot = joint_p,
+       height = 12,
+       width = 12,
+       units = "in",
+       scale = 1,
+       dpi = 300
+       )
+# ===
+
+
+# ===
+# "sankey"
+# prepare nodes & links
+nodes <- tibble(name = unique(c(flow_long$From, flow_long$To)))
+links <- flow_long %>%
+  mutate(source = match(From, nodes$name)-1,
+         target = match(To,   nodes$name)-1) %>%
+  select(source, target, value = n)
+sn <- sankeyNetwork(
+  Links       = links,
+  Nodes       = nodes,
+  Source      = "source",
+  Target      = "target",
+  Value       = "value",
+  NodeID      = "name",
+  sinksRight  = FALSE
+  )
+sn
+# htmlwidgets::saveWidget(sn,
+#                         file.path(args$output_dir, "03_sankey.html"),
+#                         selfcontained = TRUE)
+# ===
+
+# ===
+# "chord"
+# chord diagram requires a square matrix; use flow_total
+circos.clear()
+chordDiagram(flow_total, transparency = 0.5, )
+
+# ===
 # ////////////
 
 

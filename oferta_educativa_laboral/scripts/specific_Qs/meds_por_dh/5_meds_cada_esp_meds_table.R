@@ -77,7 +77,7 @@ df_merged_reord$DELEGACION
 
 # Save:
 dir.exists(results_subdir)
-outfile <- 'tasas_meds_qna_07_2025.txt'
+outfile <- 'tasas_meds_qna_07_2025_PLZ_totales.txt'
 outfile <- file.path(results_subdir, outfile)
 outfile
 epi_write(df_merged_reord, outfile)
@@ -114,7 +114,7 @@ writeData(wb, sheet = "dh_med", x = df_dh_med)
 
 
 # to disk:
-outfile <- 'tasas_meds_qna_07_2025.xlsx'
+outfile <- 'tasas_meds_qna_07_2025_PLZ_totales.xlsx'
 outfile <- file.path(results_subdir, outfile)
 outfile
 saveWorkbook(wb,

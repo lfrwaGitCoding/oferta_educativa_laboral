@@ -260,7 +260,7 @@ alluv_plot4 <- df %>%
         nudge_x     = 0.1,            # don’t move horizontally
         # direction   = "x",          # only repel up/down
         seed        = 42,
-        size        = 3,
+        size        = 8,
         max.overlaps= Inf
     ) +
     scale_x_discrete(

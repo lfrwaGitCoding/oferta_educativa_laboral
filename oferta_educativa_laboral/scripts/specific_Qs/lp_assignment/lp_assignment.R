@@ -160,19 +160,34 @@ if (!interactive()) { # TRUE if not interactive, will then log output
 # TO DO: manual
 # Was created for sharing, only has 07 2025 data, missing 17 2024:
 # TO DO: this file has plazas totales but medicos_por_mil_derechohabientes_utf8.csv has plazas ocupadas
-df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/15_05_2025_2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds/tasas_meds_qna_07_2025.txt"
+# df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/15_05_2025_2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds/tasas_meds_qna_07_2025_PLZ_totales.txt"
 
+# Frec. plazas ocupadas
 # Messier but has estado, OOAD, INEGI, 17 2024, 2025, etc.:
-# df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/31_03_2025_medicos_por_mil_derechohabientes/medicos_por_mil_derechohabientes_utf8.csv"
+df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/31_03_2025_medicos_por_mil_derechohabientes/medicos_por_mil_derechohabientes_utf8.csv"
+file.exists(df_ism)
 df_ism <- epi_read(df_ism)
 colnames(df_ism)
 epi_head_and_tail(df_ism, cols = 6)
 epi_head_and_tail(df_ism, last_cols = T)
-df_ism <- df_ism[, 1:5]
-epi_head_and_tail(df_ism, cols = 5)
-
-summary(df_ism$medicos_por_mil_derechohabientes_072025)
+# df_ism <- df_ism[, 1:5]
 # View(df_ism)
+
+# TO DO: this file has NAs for estados for some columns and NAs for some columns for OOADs, use Estado now but sort out.
+df_ism <- df_ism[, c("Estado", #"Delegación",
+                     "Derechohabientes_DIR_03_2025",
+                     "medicos_por_mil_derechohabientes_072025",
+                     "PLAZAS_VACANTES_072025",
+                     "PLAZAS_OCUPADAS_072025",
+                     "total_072025"
+                     ),
+                 ]
+epi_head_and_tail(df_ism, cols = 6)
+
+# Drop NA rows:
+df_ism <- df_ism[which(complete.cases(df_ism)), ]
+# View(df_ism)
+summary(df_ism)
 # ===
 # ////////////
 
@@ -182,16 +197,18 @@ summary(df_ism$medicos_por_mil_derechohabientes_072025)
 
 # ===
 # state boundaries, but now have OOAD boundaries (middle cut)
-# mex_sf <- ne_states(country = "Mexico", returnclass = "sf") %>%
-#     select(name_es) %>%
+mex_sf <- ne_states(country = "Mexico", returnclass = "sf") %>%
+    select(name_es)
+# %>%
 #     rename(Estado = name_es)
 
 ls()
 
-sh_dir <- "~/Documents/work/science/devel/github/med-comp-imss/geo_stats/shapefiles/por_OOAD/"
-# read the shapefile
-mex_sf <- st_read(paste0(sh_dir, "mexico_OOADs.shp"))
-mex_sf
+# # TO DO: by OOAD
+# sh_dir <- "~/Documents/work/science/devel/github/med-comp-imss/geo_stats/shapefiles/por_OOAD/"
+# # read the shapefile
+# mex_sf <- st_read(paste0(sh_dir, "mexico_OOADs.shp"))
+# mex_sf
 
 # check CRS
 st_crs(mex_sf)
@@ -201,11 +218,15 @@ str(mex_sf)
 summary(as.factor(mex_sf$name_es))
 mex_sf <- mex_sf %>%
     filter(!is.na(name_es))
+  # filter(!is.na(Estado))
+
 summary(as.factor(mex_sf$name_es))
+# summary(as.factor(mex_sf$Estado))
 str(mex_sf)
 
-# names should be OOADs:
+# names should be OOADs (or Estados):
 unique(mex_sf$name_es)
+# unique(mex_sf$Estado)
 # ===
 # ////////////
 
@@ -321,6 +342,9 @@ rm(df)
 # Create LP dataframe from initial data
 # get residentes totals per OOAD/DELEGACION, for full count of available medics
 
+# TO DO: so that colnames match if by estado
+# colnames(df_ism)[which(colnames(df_ism) == "Estado")] <- "DELEGACION"
+
 lp_df <- df_ism %>%
     left_join(resids_OOAD, by = "DELEGACION") %>%
     mutate(
@@ -339,7 +363,9 @@ colnames(lp_df)
 # df_ism$Total_meds,
 
 # all available medics, not jsut adscritos/consultants:
-lp_df$resids_mas_adscritos <- lp_df$Total_meds + lp_df$total_residentes
+# lp_df$resids_mas_adscritos <- lp_df$Total_meds + lp_df$total_residentes
+# TO DO: this is for plazas ocupadas
+lp_df$resids_mas_adscritos <- lp_df$PLAZAS_OCUPADAS_072025 + lp_df$total_residentes
 
 # Remove 'total' row:
 lp_df <- lp_df %>%
@@ -465,6 +491,10 @@ birth_bonus <- -10       # distance of km‐equivalent “bonus” for move to b
 # Build cost matrix with a birth‐state bonus on the diagonal:
 bonus_mat <- matrix(0, n_states, n_states)
 diag(bonus_mat) <- birth_bonus
+
+dim(dist_mat)
+dim(lp_df)
+
 cost_mat <- dist_mat[lp_df$DELEGACION, lp_df$DELEGACION] - bonus_mat
 cost_mat
 # ===

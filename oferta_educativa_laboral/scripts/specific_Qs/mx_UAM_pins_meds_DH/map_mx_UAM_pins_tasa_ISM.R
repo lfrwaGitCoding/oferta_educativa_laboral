@@ -27,61 +27,57 @@ results_subdir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projec
 
 # ////////////
 # ===
-# Open a connection to XAMPP MariaDB server, needs to be running, see notes for db_interactivo:
-con <- dbConnect(
-    MariaDB(),
-    user     = "root",
-    password = "",                  # or your root password
-    host     = "127.0.0.1",         # avoid 'localhost' so you use TCP
-    port     = 3306,                # default XAMPP port
-    dbname     = "personalaps",
-    unix.socket = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
-)
-    # if you run into socket-errors, you can also specify:
-    # unix.socket = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
-
-# tables:
-dbListTables(con)
+# # Open a connection to XAMPP MariaDB server, needs to be running, see notes for db_interactivo:
+# con <- dbConnect(
+#     MariaDB(),
+#     user     = "root",
+#     password = "",                  # or your root password
+#     host     = "127.0.0.1",         # avoid 'localhost' so you use TCP
+#     port     = 3306,                # default XAMPP port
+#     dbname     = "personalaps",
+#     unix.socket = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
+# )
+#     # if you run into socket-errors, you can also specify:
+#     # unix.socket = "/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock"
+#
+# # tables:
+# dbListTables(con)
 # ===
 
 # ===
-# Read one table into R:
-df <- dbReadTable(con, "unidades_imss")
-epi_head_and_tail(df)
-colnames(df)
+# # Read one table into R:
+# df <- dbReadTable(con, "unidades_imss")
+# epi_head_and_tail(df)
+# colnames(df)
 # ===
 
 # ===
 # Run query
 # "/Applications/XAMPP/xamppfiles/htdocs/MODELO/php/get_unidades.php"
-# Get UAM coords:
-df2 <- dbGetQuery(con, 'SELECT
-                nombre_unidad AS nombre,
-                latitud,
-                longitud,
-                nivel_atencion AS nivel
-            FROM personalaps.unidades_imss ui
-            WHERE clave_institucion = "IMS"
-              AND estatus_operacion = "EN OPERACION"
-              AND nivel_atencion != "NO APLICA";'
-                  )
-dim(df2)
-epi_head_and_tail(df2, cols = 4)
-colnames(df2)
-summary(as.factor(df2$latitud))
+# # Get UAM coords:
+# df2 <- dbGetQuery(con, 'SELECT nombre_unidad AS nombre, latitud, longitud, nivel_atencion AS nivel
+#                         FROM personalaps.unidades_imss ui
+#                         WHERE clave_institucion = "IMS"
+#                         AND estatus_operacion = "EN OPERACION"
+#                         AND nivel_atencion != "NO APLICA";'
+#                   )
+# dim(df2)
+# epi_head_and_tail(df2, cols = 4)
+# colnames(df2)
+# summary(as.factor(df2$latitud))
+#
+#
+# # Save:
+# file_n <- 'db_djaine_personalaps_unidades_imss'
+# suffix <- 'txt'
+# outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+# outfile
+# epi_write(df2, outfile)
 
-
-# Save:
-file_n <- 'db_djaine_personalaps_unidades_imss'
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
-outfile
-epi_write(df2, outfile)
-
-# # Already saved:
-# df2 <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades/db_djaine_personalaps_unidades_imss.txt"
-# file.exists(df2)
-# df2 <- epi_read(df2)
+# Already saved:
+df2 <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades/db_djaine_personalaps_unidades_imss.txt"
+file.exists(df2)
+df2 <- epi_read(df2)
 
 # Remove NAs:
 df2 <- df2 %>% drop_na(longitud, latitud)
@@ -110,7 +106,8 @@ df_ism <- df_ism[, c("Estado", #"Delegación",
                      "PLAZAS_OCUPADAS_172024",
                      "Derechohabientes_DIR_03_2025",
                      "medicos_por_mil_derechohabientes_172024",
-                     "medicos_por_mil_derechohabientes_072025"
+                     "medicos_por_mil_derechohabientes_072025",
+                     "total_072025"
                      ),
                  ]
 epi_head_and_tail(df_ism, cols = 5)
@@ -122,6 +119,10 @@ summary(df_ism$medicos_por_mil_derechohabientes_172024)
 # View(df_ism)
 # TO DO: for OOADs needs palzas ocupads, original calc
 
+# plazas por DH 2025:
+df_ism$plazas_por_mil_derechohabientes_072025 <- round((df_ism$total_072025 / df_ism$Derechohabientes_DIR_03_2025) * 1000, 2)
+df_ism$plazas_por_mil_derechohabientes_072025
+summary(df_ism$plazas_por_mil_derechohabientes_072025)
 
 # Use Estados, not OOADs, to have 2024 vs 2025
 epi_head_and_tail(df_ism)
@@ -259,7 +260,8 @@ mex_sf_ism <- mex_sf %>%
     mutate(
         nivel_cat = cut(
             # medicos_por_mil_derechohabientes_172024,
-            medicos_por_mil_derechohabientes_072025,
+            # medicos_por_mil_derechohabientes_072025,
+            plazas_por_mil_derechohabientes_072025,
             breaks = c(-Inf, 1.19, 1.5, 1.7, 1.9, Inf),
             labels = c(
                 "<1.2",
@@ -275,7 +277,8 @@ mex_sf_ism <- mex_sf %>%
 p <- ggplot(mex_sf_ism) +
     geom_sf(aes(fill = nivel_cat), color = "white", size = 0.1) +
     scale_fill_manual(
-        name   = "Médicos por 1,000\nderechohabientes",
+        # name   = "Médicos por 1,000\nderechohabientes",
+        name   = "Plazas por 1,000\nderechohabientes",
         values = c(
             "<1.2" = "#C62828",
             "1.2 – 1.49" = "#FFD93D",
@@ -286,15 +289,17 @@ p <- ggplot(mex_sf_ism) +
         na.value = "grey90"
     ) +
     labs(
-        title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
+        # title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
         # title = "Índice de Médicos por Derechohabiente (Abril 2025)"
+        title = "Índice de Plazas Ocupadas y Vacantes por Derechohabiente (Abril 2025)"
     ) +
     theme_minimal()
 p
 
 # Save:
-file_n <- 'plot_mapa_mx_meds_DH_172024'
+# file_n <- 'plot_mapa_mx_meds_DH_172024'
 # file_n <- 'plot_mapa_mx_meds_DH_072025'
+file_n <- 'plot_mapa_mx_plz_totales_DH_072025'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
@@ -334,7 +339,8 @@ joint_p <- ggplot() +
     # ) +
     # custom IMSS palette
     scale_fill_manual(
-        name   = "Médicos por 1,000\nderechohabientes",
+        # name   = "Médicos por 1,000\nderechohabientes",
+        name   = "Plazas por 1,000\nderechohabientes",
         values = c(
             "<1.2" = "#C62828",
             "1.2 – 1.49" = "#FFD93D",
@@ -348,14 +354,16 @@ joint_p <- ggplot() +
     theme_minimal() +
     labs(
         # title = "Índice de Médicos por Derechohabiente (Diciembre 2024)"
-        title = "Índice de Médicos por Derechohabiente (Abril 2025)"
+        # title = "Índice de Médicos por Derechohabiente (Abril 2025)"
+        title = "Índice de Plazas Ocupadas y Vacantes por Derechohabiente (Abril 2025)"
         # caption = "Unidades médicas sobre el índice IMSS"
     )
 joint_p
 
 # Save:
 # file_n <- 'plot_mapa_mx_meds_DH_unidades_172024'
-file_n <- 'plot_mapa_mx_meds_DH_unidades_072025'
+# file_n <- 'plot_mapa_mx_meds_DH_unidades_072025'
+file_n <- 'plot_mapa_mx_plz_totales_DH_unidades_072025'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
@@ -371,5 +379,5 @@ ggsave(outfile,
 
 # ////////////
 # To finish:
-dbDisconnect(con)
+# dbDisconnect(con)
 # ////////////

@@ -60,7 +60,7 @@ getwd()
 # scale base_size accordingly. e.g. for fonts to appear ~12pt in the final PDF, set:
 
 # font_size <- 12 / 0.6  # Final appearance size after scaling (≈20), where scaling is at eg 60% for latex PDF output
-font_size <- 14
+font_size <- 18
 font_size_x <- font_size - 0 # axis ticks (x-axis)
 font_size_y <- font_size - 0 # y-axis ticks
 
@@ -557,12 +557,13 @@ meds_OOAD_merged[meds_OOAD_merged$DELEGACION == "Aguascalientes", "Derechohabien
 
 # View(meds_OOAD_merged)
 
+# TO DO:
 # "Total" is plazas totales, not ocupadas!
 meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- round(meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000), 2)
 # No rounding, for maps with very few specialists, will appear as zero otherwise:
 # meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000)
 
-View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])
+# View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])
 
 DIR_num_DH
 # View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])
@@ -689,7 +690,7 @@ safe_name <- function(x) {
 # unique values:
 dels <- unique(df$DELEGACION)
 
-for(del in dels) {
+for (del in dels) {
     df_sub <- df %>%
         filter(DELEGACION == del)
 
@@ -699,13 +700,19 @@ for(del in dels) {
         y = `Tasa por 10 mil derechohabientes`
     )) +
         geom_col(fill = "steelblue") +
+        geom_text(aes(label = round(`Tasa por 10 mil derechohabientes`, 1)),
+                  hjust = -0.1,  # negative to push label outside the bar
+                  size = 8
+                  ) +
         coord_flip() +
-        theme_minimal() +
         labs(
             title = del,
             x     = NULL,
-            y     = "Tasa por 10 000 derechohabientes"
-        )
+            y     = "Tasa por 10,000 derechohabientes"
+        ) +
+      expand_limits(y = max(df_sub$`Tasa por 10 mil derechohabientes`,
+                            na.rm = TRUE) * 1.1)  # extra space for labels
+
 
     # Save:
     file_n <- paste0("plot_tasa_10k_meds_esp_top_10_", safe_name(del))

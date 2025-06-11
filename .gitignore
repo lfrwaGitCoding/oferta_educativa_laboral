@@ -65,6 +65,13 @@ vignettes/*.pdf
 */*/*.dir_bash_history
 */*/*/*.dir_bash_history
 
+# translation temp files
+po/*~
+
+# RStudio Connect folder
+rsconnect/
+__pycache__/
+
 .DS_Store
 .ipynb_checkpoints
 # Vim:

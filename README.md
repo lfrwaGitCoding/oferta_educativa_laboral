@@ -1,3 +1,7 @@
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Python CI](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yml)
+
+
 # oferta_educativa_laboral
 
 This project contains scripts and a Ruffus/CGATCore pipeline used to analyse workforce databases from the *Sistema de Administración del Personal* (SIAP) of IMSS. The pipeline cleans the raw tables exported from Microsoft Access, generates summary statistics and produces PDF reports with Quarto.

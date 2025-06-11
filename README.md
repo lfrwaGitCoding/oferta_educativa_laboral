@@ -1,5 +1,5 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Python CI](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yml)
+[![Python CI](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yaml/badge.svg?branch=main)](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yaml)
 
 
 # oferta_educativa_laboral

@@ -103,3 +103,10 @@ my_other_cmd_tool:
 # These need to be picked up by the pipeline itself
     some_option:
 ################################################################
+
+# Paths used by the analysis scripts
+paths:
+    project_root: .
+    data_dir: data
+    results_dir: results
+    fonts_dir: report/resources/fonts

@@ -16,14 +16,14 @@
 print(getwd())
 
 project_name <- 'oferta_educativa_laboral'
-projects_dir <- '~/Documents/work/comp_med_medicina_datos/projects/int_op'
+projects_dir <- here::here()
 
-project_root <- sprintf('%s/%s', projects_dir, project_name)
-setwd(project_root)
+project_root <- here::here()
+setwd(here::here())
 print(getwd())
 
 data_dir <- sprintf('%s/%s', project_root, 'data/')
-devel_dir <- '~/Documents/work/science/devel/github/antoniojbt'
+devel_dir <- here::here()
 code_dir <- sprintf('%s/%s',
                     devel_dir,
                     paste0(project_name, '/', project_name)

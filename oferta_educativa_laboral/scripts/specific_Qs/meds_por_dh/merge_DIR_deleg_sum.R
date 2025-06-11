@@ -3,7 +3,7 @@
 
 library(episcout)
 
-setwd("~/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/scripts/specific_Qs")
+setwd(here::here())
 dir()
 
 # Data in:

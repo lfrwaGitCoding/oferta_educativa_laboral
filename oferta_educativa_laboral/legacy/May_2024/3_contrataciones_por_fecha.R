@@ -10,7 +10,7 @@
 
 
 ############
-project_loc <- "/Users/antoniob/Documents/work/science/comp_med_medicina_datos/int_op/movilizacion_residentes/results/"
+project_loc <- here::here("results")
 getwd()
 setwd(project_loc)
 ############

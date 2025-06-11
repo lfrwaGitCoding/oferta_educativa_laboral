@@ -50,7 +50,7 @@ metadata:
 # Pipeline general options:
 general:
 # Specify the location of the scripts for this project. Needs to be set.
-    project_scripts_dir: ../code/pq_example
+    project_scripts_dir: ../scripts
 
 # Specify the python executable, this is if running on a Mac and using matplotlib (which needs pythonw):
     py_exec: pythonw

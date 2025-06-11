@@ -177,7 +177,7 @@ def get_py_exec():
 def getINIpaths():
     '''
     Get the path to scripts for this project, e.g.
-    project_xxxx/code/project_xxxx/:
+    ../scripts/:
     e.g. my_cmd = "%(scripts_dir)s/bam2bam.py" % P.Parameters.get_params()
     '''
     # Check getParams as was updated to get_params but

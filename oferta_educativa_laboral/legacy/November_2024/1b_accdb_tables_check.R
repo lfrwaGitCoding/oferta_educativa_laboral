@@ -27,14 +27,14 @@ library(tidyverse)
 # Load rdata file with directory locations
 
 # Set working directory to the project root:
-setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+setwd(here::here())
 
 # Load the .rdata.gzip file:
 load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
 ls()
 
 print(project_root)
-setwd(project_root)
+setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 

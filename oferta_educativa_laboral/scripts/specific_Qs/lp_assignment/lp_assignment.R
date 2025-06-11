@@ -44,10 +44,10 @@ library(scales)
 # ////////////
 # Set working directory to the project root  ----
 # Should be there already if loaded as RStudio project
-setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+setwd(here::here())
 # TO DO:
 # Mac24:
-# setwd("/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral")
+# setwd(here::here())
 # project_root <- "/Users/antoniob/Library/Mobile Documents/com~apple~CloudDocs/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral"
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
@@ -81,7 +81,7 @@ num_cols <- num_cols
 data_f <- data_f
 
 print(project_root)
-setwd(project_root)
+setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 

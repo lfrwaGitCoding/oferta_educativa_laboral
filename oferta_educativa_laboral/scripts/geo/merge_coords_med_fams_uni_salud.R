@@ -26,7 +26,7 @@ library(tidyverse)
 
 # ===
 # Set working directory to the project root:
-setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+setwd(here::here())
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
 
@@ -45,7 +45,7 @@ results_dir <- results_dir
 code_dir <- code_dir
 
 print(project_root)
-setwd(project_root)
+setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 

@@ -21,7 +21,7 @@ library(skimr)
 # Load rdata file with directory locations
 
 # Load renv properly and set working directory to the project root:
-setwd("~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/")
+setwd(here::here())
 getwd()
 # Load the .rdata.gzip file:
 # TO DO: needs a yaml with a results dir, this saves in scripts dir

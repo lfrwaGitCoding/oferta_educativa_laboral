@@ -1,0 +1,3 @@
+[flake8]
+exclude = oferta_educativa_laboral/pipeline/*
+max-line-length = 88

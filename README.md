@@ -22,6 +22,18 @@ Output files (tables, figures and the final report) are written to the `results/
    A conda environment also works; the pipeline will save environment details when run.
 3. Install [Quarto](https://quarto.org/) if you want to render the PDF report.
 
+## Conda
+
+Create a conda environment with all Python and R dependencies using the
+provided `environment.yml`:
+
+```bash
+conda env create -f environment.yml
+conda activate oferta_educativa_laboral
+```
+
+
+
 ## Data preparation
 The raw SIAP tables are not included in this repository. Place them under:
 ```

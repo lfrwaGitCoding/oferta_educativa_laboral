@@ -27,6 +27,7 @@ import sys
 import os
 import re
 import subprocess
+import pprint
 
 # Pipeline:
 from ruffus import *
@@ -285,7 +286,7 @@ def make_report():
 
 ################
 # Create the "full" pipeline target to run all functions specified
-@follows(make_report))
+@follows(make_report)
 @originate('pipeline_complete.touch')
 def full(outfile):
     statement = 'touch %(outfile)s'

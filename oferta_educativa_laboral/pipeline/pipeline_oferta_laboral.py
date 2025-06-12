@@ -227,6 +227,29 @@ def connect():
 
 # TO DO: continue here
 
+# ----------------------------------------------------------------------
+# Example tasks for converting Access databases and running R scripts.
+# These are minimal placeholders so the pipeline can be imported and its
+# task graph examined during testing.
+
+results_dir = PARAMS.get("paths", {}).get("results_dir", "results")
+
+@follows(mkdir(results_dir))
+@originate(os.path.join(results_dir, "convert_to_csv.done"))
+def convert_to_csv(outfile):
+    """Dummy step that would convert .accdb tables to CSV files."""
+    statement = "touch %(outfile)s"
+    P.run(statement)
+
+
+@follows(convert_to_csv)
+@originate(os.path.join(results_dir, "1b_accdb_tables_check.done"))
+def run_1b_accdb_tables_check(outfile):
+    """Dummy step that would run the 1b_accdb_tables_check.R script."""
+    statement = "touch %(outfile)s"
+    P.run(statement)
+
+
 INI_file = PARAMS
 
 @transform((INI_file, "conf.py"),

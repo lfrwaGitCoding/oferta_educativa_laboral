@@ -61,6 +61,7 @@ import sys
 import os
 import re
 import subprocess
+import glob
 
 # Pipeline: attempt to import ruffus but fall back to no-op stubs for
 # testing environments where the package is missing.
@@ -293,6 +294,7 @@ def connect():
 
 # Tools called need the full path or be directly callable
 
+
 # TO DO: continue here
 
 # ----------------------------------------------------------------------
@@ -425,6 +427,7 @@ def conda_info(outfile):
 
 
 # Create the "full" pipeline target to run all functions specified
+
 @follows(conda_info)
 @originate("pipeline_complete.touch")
 def full(outfile):

@@ -33,6 +33,19 @@ library(log4r)
 # library(renv)
 # ////////////
 
+############
+# Basic error handling
+options(error = function() {q(status = 1)})
+
+############
+# Parse command line arguments
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 1) {
+  stop("Usage: Rscript 3_explore.R <infile> [results_dir]")
+}
+infile <- args[1]
+results_dir_arg <- if (length(args) >= 2) args[2] else NA
+
 
 # ////////////
 # Set working directory to the project root  ----
@@ -81,6 +94,11 @@ theme_set(my_theme)
 # ===
 rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 
+# Load locations
+load(file.path(rdata_dir, 'dir_locations.rdata.gzip'))
+if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
+rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
+
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
 # infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
@@ -92,13 +110,8 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
 
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
-
-# Double filter:
-# infile <- "2b_clean_subset_Qna_17_Plantilla_2024_meds_Chiapas.rdata.gzip"
-
 # Full path and file name:
-infile_path <- paste0(rdata_dir, infile)
+infile_path <- file.path(rdata_dir, infile)
 print(infile_path)
 
 print(dir(path = normalizePath(rdata_dir), all.files = TRUE))

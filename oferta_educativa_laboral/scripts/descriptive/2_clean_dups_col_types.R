@@ -44,6 +44,19 @@ library(skimr)
 library(knitr)
 library(htmltools)
 library(log4r)
+
+############
+# Basic error handling so Ruffus sees failures
+options(error = function() {q(status = 1)})
+
+############
+# Parse command line arguments
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) < 1) {
+  stop("Usage: Rscript 2_clean_dups_col_types.R <infile> [results_dir]")
+}
+infile <- args[1]
+results_dir_arg <- if (length(args) >= 2) args[2] else NA
 # ////////////
 
 
@@ -70,6 +83,9 @@ data_dir <- data_dir
 results_dir <- results_dir
 code_dir <- code_dir
 
+# Assign command line results_dir if provided
+if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
+
 print(project_root)
 setwd(here::here())
 getwd()
@@ -93,14 +109,8 @@ source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # Dataset ----
 print(dir(path = normalizePath(data_dir), all.files = TRUE))
 
-infiles_dir <- 'data_UP/access_SIAP_18092024/processed/'
+infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
 
-# TO DO: Manually set:
-# infile <- 'Qna_17_Bienestar_2024.csv'
-infile <- 'Qna_07_Plantilla_2025.csv'
-infile_path <- paste0(data_dir, infiles_dir, infile)
-
-# Full path and file loaded:
 print(infile_path)
 # ////////////
 

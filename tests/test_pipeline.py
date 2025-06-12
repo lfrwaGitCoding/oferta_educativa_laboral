@@ -19,9 +19,7 @@ def test_pipeline_tasks_present():
         "oferta_educativa_laboral.pipeline.pipeline_oferta_laboral"
     )
     functions = {
-        name
-        for name, obj in inspect.getmembers(module)
-        if inspect.isfunction(obj)
+        name for name, obj in inspect.getmembers(module) if inspect.isfunction(obj)
     }
     expected = {"convert_to_csv", "run_1b_accdb_tables_check"}
     assert expected.issubset(functions)

@@ -186,12 +186,11 @@ def getParamsFiles(paths=ini_paths):
     return p_params_files
 
 
+config_path = os.path.join(
+    os.path.dirname(__file__), "configuration", "pipeline.yml"
+)
 P.get_parameters(
-    [
-        "%s/pipeline.yml" % os.path.splitext(__file__)[0],
-        "../pipeline.yml",
-        "pipeline.yml",
-    ],
+    [config_path, "../pipeline.yml", "pipeline.yml"],
 )
 
 

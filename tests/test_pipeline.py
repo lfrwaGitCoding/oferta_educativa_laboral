@@ -1,4 +1,7 @@
 from pathlib import Path
+import importlib
+import inspect
+import sys
 
 
 def test_pipeline_exists():
@@ -8,11 +11,15 @@ def test_pipeline_exists():
     assert path.is_file()
 
 
-def test_main_pipeline_has_convert():
-    """Check convert_to_csv task is defined."""
+def test_pipeline_tasks_present():
+    """Import the real pipeline and verify key tasks are defined."""
     base = Path(__file__).resolve().parents[1]
-    pipeline_path = (
-        base / "oferta_educativa_laboral" / "pipeline" / "pipeline_oferta_laboral.py"
+    sys.path.insert(0, str(base))
+    module = importlib.import_module(
+        "oferta_educativa_laboral.pipeline.pipeline_oferta_laboral"
     )
-    text = pipeline_path.read_text()
-    assert "def convert_to_csv" in text
+    functions = {
+        name for name, obj in inspect.getmembers(module) if inspect.isfunction(obj)
+    }
+    expected = {"convert_to_csv", "run_1b_accdb_tables_check"}
+    assert expected.issubset(functions)

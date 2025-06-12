@@ -29,7 +29,7 @@ mkdir -p "$OUTDIR"
 
 # Log if encodings fail:
 LOGFILE="$OUTDIR/failed_tables.log"
-> "$LOGFILE"   # empty the logfile
+: > "$LOGFILE"   # empty the logfile
 
 # Get tables safely:
 mapfile -t TABLES < <(mdb-tables -1 "$DB_FILE")

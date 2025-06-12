@@ -67,10 +67,11 @@ cd oferta_educativa_laboral/pipeline
 python pipeline_oferta_laboral.py --help              # list tasks
 python pipeline_oferta_laboral.py make full -v5       # execute all steps
 ```
-Individual tasks can be run by replacing `full` with the task name (e.g. `countWords`).
+Individual tasks can be run by replacing `full` with the task name.
 
 ## Generating reports
-Navigate to the `report` directory and run Quarto:
+The `full` target renders `report/SIAP_desc_stats.qmd` with Quarto automatically.
+You can also render manually from the `report` directory:
 ```bash
 cd ../report
 quarto render SIAP_desc_stats.qmd

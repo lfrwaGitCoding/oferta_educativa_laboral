@@ -31,7 +31,14 @@ import subprocess
 import pprint
 
 # Pipeline:
-from ruffus import *
+from ruffus import (
+    follows,
+    originate,
+    transform,
+    regex,
+    suffix,
+    mkdir,
+)
 
 # Database:
 import sqlite3

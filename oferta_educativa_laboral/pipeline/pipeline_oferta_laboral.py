@@ -66,7 +66,14 @@ import glob
 # Pipeline: attempt to import ruffus but fall back to no-op stubs for
 # testing environments where the package is missing.
 try:  # pragma: no cover - simple import guard
-    from ruffus import *  # noqa: F401,F403 - used as Ruffus API surface
+    from ruffus import (
+        follows,
+        originate,
+        transform,
+        suffix,
+        regex,
+        mkdir,
+    )
 except ModuleNotFoundError:  # pragma: no cover - executed only if Ruffus absent
 
     def _stub_decorator(*d_args, **d_kwargs):  # type: ignore

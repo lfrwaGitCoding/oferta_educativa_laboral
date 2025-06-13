@@ -20,10 +20,14 @@ Output files (tables, figures and the final report) are written to the `results/
    install.packages(c("data.table", "tidyverse", "episcout", "skimr", "log4r"))
    ```
 2. Install Python 3 with `ruffus` and `cgatcore` for the pipeline:
-   ```bash
-   pip install ruffus cgatcore
-   ```
-   A conda environment also works; the pipeline will save environment details when run.
+    ```bash
+    pip install ruffus cgatcore
+    ```
+    A conda environment also works; the pipeline will save environment details when run.
+    For a lightweight setup containing only Python tools you can instead:
+    ```bash
+    pip install -r requirements.txt
+    ```
 3. Install [Quarto](https://quarto.org/) if you want to render the PDF report.
 
 ## Conda
@@ -35,6 +39,31 @@ provided `environment.yml`:
 conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
+
+## Project structure
+
+```
+oferta_educativa_laboral/
+├── scripts/      # R data cleaning and analysis scripts
+├── pipeline/     # Ruffus pipeline in Python
+├── report/       # Quarto report and helper R functions
+└── tests/        # pytest and testthat tests
+```
+
+Each script directory has additional README notes describing expected inputs.
+
+### External resources
+Fonts used in the PDF report are stored under `report/resources/fonts`. If the
+directory is empty run:
+
+```bash
+cd oferta_educativa_laboral/report/resources/fonts
+wget -qO- https://github.com/notofonts/noto-cjk/archive/refs/heads/main.zip | \
+  bsdtar -xvf- --strip-components=1
+```
+
+Additional helper scripts referenced by the pipeline should be placed in
+`scripts/` and configured via `pipeline.yml` rather than using personal paths.
 
 
 
@@ -60,6 +89,16 @@ project_root/
 └── oferta_educativa_laboral/
 ```
 
+### Example R script usage
+After generating `dir_locations.rdata.gzip`, run the cleaning steps individually:
+
+```bash
+Rscript oferta_educativa_laboral/scripts/descriptive/2_clean_dups_col_types.R \
+  Qna_17_Plantilla_2024.csv results/cleaned_Q17.rdata.gzip
+```
+
+Modify the input file names as needed for your dataset.
+
 ## Running the pipeline
 From the `pipeline` folder run:
 ```bash
@@ -77,3 +116,13 @@ cd ../report
 quarto render SIAP_desc_stats.qmd
 ```
 The rendered PDF will appear in `_report_outputs/`.
+
+Example invocation with parameters:
+
+```bash
+quarto render SIAP_desc_stats.qmd \
+  --to pdf --execute
+```
+
+## Performance
+See `PERFORMANCE.md` for notes on optimising the more intensive scripts.

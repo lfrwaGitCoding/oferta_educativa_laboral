@@ -1,0 +1,5 @@
+cgatcore
+ruffus
+pytest
+coverage
+flake8

@@ -23,3 +23,21 @@ def test_pipeline_tasks_present():
     }
     expected = {"convert_to_csv", "run_1b_accdb_tables_check"}
     assert expected.issubset(functions)
+
+
+def test_config_path_exists():
+    """Ensure pipeline config path variable points to the correct file."""
+    base = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(base))
+    module = importlib.import_module(
+        "oferta_educativa_laboral.pipeline.pipeline_oferta_laboral"
+    )
+    expected = (
+        base
+        / "oferta_educativa_laboral"
+        / "pipeline"
+        / "configuration"
+        / "pipeline.yml"
+    )
+    assert hasattr(module, "config_path")
+    assert Path(module.config_path).resolve() == expected.resolve()

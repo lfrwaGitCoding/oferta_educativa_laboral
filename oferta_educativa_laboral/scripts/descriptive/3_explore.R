@@ -111,12 +111,12 @@ rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 
 
 # Full path and file name:
-infile_path <- file.path(rdata_dir, infile)
-print(infile_path)
+# infile_path <- file.path(rdata_dir, infile)
+print(infile)
 
 print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
 
-load(infile_path)
+load(infile)
 ls()
 # ===
 

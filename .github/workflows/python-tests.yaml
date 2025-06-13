@@ -57,3 +57,10 @@ jobs:
 
       - name: Run tests
         run: coverage run -m pytest && coverage report
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: antoniojbt/oferta_educativa_laboral
+            

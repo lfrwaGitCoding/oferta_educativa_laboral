@@ -70,7 +70,7 @@ Additional helper scripts referenced by the pipeline should be placed in
 ## Data preparation
 The raw SIAP tables are not included in this repository. Place them under:
 ```
-project_root/data/data_UP/access_SIAP_18092024/processed/
+project_root/data/data_UP/raw/
 ```
 Example files referenced in the scripts are `Qna_17_Plantilla_2024.csv` and `Qna_07_Plantilla_2025.csv`.
 
@@ -84,9 +84,14 @@ Expected top-level layout after placing data:
 ```
 project_root/
 ├── data/
-│   └── data_UP/access_SIAP_18092024/processed/
+│   └── data_UP/raw/
+│   └── data_UP/processed/
+│   └── for_reuse_and_processed/datos_abiertos
+│   └── for_reuse_and_processed/internal_IMSS
+│   └── for_reuse_and_processed/internal_UEI
+│   └── data_CES
 ├── results/            # generated outputs
-└── oferta_educativa_laboral/
+└── oferta_educativa_laboral/ # code
 ```
 
 ### Example R script usage
@@ -97,7 +102,7 @@ Rscript oferta_educativa_laboral/scripts/descriptive/2_clean_dups_col_types.R \
   Qna_17_Plantilla_2024.csv results/cleaned_Q17.rdata.gzip
 ```
 
-Modify the input file names as needed for your dataset.
+Modify the input file names as needed for new datasets
 
 ## Running the pipeline
 From the `pipeline` folder run:
@@ -125,4 +130,4 @@ quarto render SIAP_desc_stats.qmd \
 ```
 
 ## Performance
-See `PERFORMANCE.md` for notes on optimising the more intensive scripts.
+See `PERFORMANCE.md` for notes on optimising the more intensive scripts if ever needed.

@@ -1,10 +1,7 @@
 # TO DO: continue here
 
 
-library(scales)
-library(grid)
-library(ggplot2)
-library(ggthemes)
+# Avoid loading packages at source time; check inside the function instead.
 
 # IMSS colours:
 custom_palette <- c(

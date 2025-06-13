@@ -17,18 +17,55 @@ jobs:
 
       - name: Install R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
-
-      - name: Install R dependencies from list
+        
+        - name: Install R dependencies from list (CRAN + GitHub)
         run: |
-         Rscript -e 'repos <- "https://packagemanager.rstudio.com/all/latest"
-         pkgs  <- scan("r-requirements.txt", what = "character")
-         install.packages(pkgs, repos = repos)
+         Rscript -e '
+         repos <- "https://packagemanager.rstudio.com/all/latest"
+         reqs  <- scan("r-requirements.txt", what = "character", comment.char = "#")
+         # split CRAN vs GitHub
+         cran  <- reqs[!grepl("^github::", reqs)]
+         gh    <- sub("^github::", "", reqs[ grepl("^github::", reqs) ])
+         if (length(cran) > 0)
+         install.packages(cran, repos = repos, dependencies = TRUE)
+         if (length(gh) > 0) {
+         if (!requireNamespace("remotes", quietly = TRUE))
+           install.packages("remotes", repos = repos)
+         remotes::install_github(gh)
+         }
          '
 
-      - name: Run R coverage and export XML
+      - name: Test coverage
         run: |
-          Rscript -e "covr::report(type='cobertura', file='coverage-r.xml')"
+          cov <- covr::package_coverage(
+            quiet = FALSE,
+            clean = FALSE,
+            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
+          )
+          covr::to_cobertura(cov)
+        shell: Rscript {0}
 
+      - uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
+          file: ./cobertura.xml
+          plugin: noop
+          disable_search: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Show testthat output
+        if: always()
+        run: |
+          ## --------------------------------------------------------------------
+          find '${{ runner.temp }}/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-test-failures
+          path: ${{ runner.temp }}/package
 
       # --- Python setup & dependencies ---
       - name: Set up Python
@@ -49,5 +86,5 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: coverage.xml, coverage-r.xml
+          files: coverage.xml
           flags: python, r

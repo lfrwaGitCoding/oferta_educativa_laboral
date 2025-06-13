@@ -306,47 +306,34 @@ results_dir = PARAMS.get("paths", {}).get("results_dir", "results")
 
 
 @follows(mkdir(results_dir))
-@originate(os.path.join(results_dir, "convert_to_csv.done"))
+@originate(os.path.join(results_dir, "dummy.csv"))
 def convert_to_csv(outfile):
     """Dummy step that would convert .accdb tables to CSV files."""
     statement = "touch %(outfile)s"
     P.run(statement)
 
 
-@follows(convert_to_csv)
-@originate(os.path.join(results_dir, "1b_accdb_tables_check.done"))
-def run_1b_accdb_tables_check(outfile):
+@transform(convert_to_csv, suffix(".csv"), "_tables_check.rdata.gzip")
+def run_tables_check(infile, outfile):
     """Dummy step that would run the 1b_accdb_tables_check.R script."""
     statement = "touch %(outfile)s"
     P.run(statement)
 
 
-INI_file = PARAMS
+# Backwards compatibility for older tests
+run_1b_accdb_tables_check = run_tables_check
 
 
-@transform((INI_file, "conf.py"), regex(r"(.*)\.(.*)"), r"\1.counts")
+@transform(run_tables_check, suffix(".rdata.gzip"), "_summary.rdata.gzip")
 def countWords(infile, outfile):
-    """count the number of words in the pipeline configuration files."""
-
-    # the command line statement we want to execute
-    statement = """awk 'BEGIN { printf("word\\tfreq\\n"); }
-    {for (i = 1; i <= NF; i++) freq[$i]++}
-    END { for (word in freq) printf "%%s\\t%%d\\n", word, freq[word] }'
-    < %(infile)s > %(outfile)s"""
-
-    # execute command in variable statement.
-    #
-    # The command will be sent to the cluster.  The statement will be
-    # interpolated with any options that are defined in in the
-    # configuration files or variable that are declared in the calling
-    # function.  For example, %(infile)s will we substituted with the
-    # contents of the variable "infile".
+    """Dummy processing of the checked tables output."""
+    statement = "touch %(outfile)s"
     P.run(statement)
 
 
-@transform(countWords, suffix(".counts"), "_counts.load")
+@transform(countWords, suffix("_summary.rdata.gzip"), "_counts.load")
 def loadWordCounts(infile, outfile):
-    """load results of word counting into database."""
+    """Load results of word counting into database."""
     P.load(infile, outfile, "--add-index=word")
 
 
@@ -427,6 +414,7 @@ def conda_info(outfile):
 
 
 # Create the "full" pipeline target to run all functions specified
+
 
 @follows(conda_info)
 @originate("pipeline_complete.touch")

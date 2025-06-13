@@ -1,3 +1,6 @@
+# Not an R package, data science project
+# So only for some basic tests when calling R scripts
+
 on:
   push:
     branches: [main, master]
@@ -8,7 +11,15 @@ name: R tests
 
 jobs:
   r-tests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macos-latest,   r: 'release'}
+          - {os: ubuntu-latest,  r: 'release'}
+
     steps:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
@@ -18,7 +29,8 @@ jobs:
         run: |
           install.packages(c(
             'testthat', 'magrittr', 'knitr',
-            'kableExtra', 'dplyr', 'data.table', 'episcout'
+            'kableExtra', 'dplyr', 'data.table', 'episcout',
+            'covr', 'lintr', 'styler'
           ))
         shell: Rscript {0}
       - name: Run tests

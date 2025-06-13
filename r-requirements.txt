@@ -1,0 +1,9 @@
+covr
+xml2
+remotes
+dplyr
+ggplot2
+data.table
+knitr
+kableExtra
+tidyverse

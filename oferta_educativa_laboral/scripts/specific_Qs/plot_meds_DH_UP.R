@@ -40,15 +40,16 @@ dir()
 
 # ===
 # rdata_dir <- '/results/19_02_2025_UP_meds_por_DH/'
-rdata_dir <- '/results/specific_Qs/31_03_2025_medicos_por_mil_derechohabientes/'
-code_dir <- '/Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/'
-results_dir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/'
+rdata_dir <- 'results/specific_Qs/31_03_2025_medicos_por_mil_derechohabientes/'
+project_dir <- here::here()
+code_dir <- file.path(project_dir, 'oferta_educativa_laboral')
+results_dir <- file.path(project_dir, 'results')
 
 # TO DO: Manually set:
 infile <- 'medicos_por_mil_derechohabientes_utf8.csv'
 
 # Full path and file name:
-infile_path <- paste0(getwd(), rdata_dir, infile)
+infile_path <- file.path(project_dir, rdata_dir, infile)
 print(infile_path)
 
 

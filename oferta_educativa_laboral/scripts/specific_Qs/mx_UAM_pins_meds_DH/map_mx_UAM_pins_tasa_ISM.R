@@ -21,7 +21,9 @@ library(RColorBrewer)
 
 # ////////////
 # TO DO: manual
-results_subdir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades"
+project_dir <- here::here()
+results_subdir <- file.path(project_dir,
+                            "results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades")
 # ////////////
 
 
@@ -75,7 +77,8 @@ results_subdir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projec
 # epi_write(df2, outfile)
 
 # Already saved:
-df2 <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/20_05_2025_meds_DH_mx_unidades/db_djaine_personalaps_unidades_imss.txt"
+df2 <- file.path(results_subdir,
+                 "db_djaine_personalaps_unidades_imss.txt")
 file.exists(df2)
 df2 <- epi_read(df2)
 
@@ -91,10 +94,11 @@ summary(as.factor(df2$longitud))
 # Add OOAD colouring by ISM:
 # TO DO: manual
 # Was created for sharing, only has 07 2025 data, missing 17 2024:
-# df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/15_05_2025_2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds/tasas_meds_qna_07_2025.txt"
+# df_ism <- file.path(results_subdir, "tasas_meds_qna_07_2025.txt")
 
 # Messier but has estado, OOAD, INEGI, 17 2024, 2025, etc.:
-df_ism <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/results/specific_Qs/meds_por_DH/31_03_2025_medicos_por_mil_derechohabientes/medicos_por_mil_derechohabientes_utf8.csv"
+df_ism <- file.path(project_dir,
+                    "results/specific_Qs/meds_por_DH/31_03_2025_medicos_por_mil_derechohabientes/medicos_por_mil_derechohabientes_utf8.csv")
 df_ism <- epi_read(df_ism)
 colnames(df_ism)
 epi_head_and_tail(df_ism, cols = 6)

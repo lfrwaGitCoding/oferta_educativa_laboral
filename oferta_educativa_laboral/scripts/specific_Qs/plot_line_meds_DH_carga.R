@@ -30,11 +30,11 @@ library(episcout)
 # ////////////
 # Set working directory to the project root  ----
 getwd()
-project_dir <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/"
+project_dir <- here::here()
 results_dir <- "results/specific_Qs/meds_por_DH/"
 infile <- "meds_OOAD_DH.txt"
 # infile <- "medicos_por_mil_derechohabientes_utf8.csv"
-infile_path <- file.path(paste0(project_dir, results_dir, infile))
+infile_path <- file.path(project_dir, results_dir, infile)
 infile_path
 # ////////////
 

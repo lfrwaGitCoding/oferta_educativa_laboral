@@ -109,9 +109,9 @@ source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # Dataset ----
 print(dir(path = normalizePath(data_dir), all.files = TRUE))
 
-infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
+# infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
 
-print(infile_path)
+print(infile)
 # ////////////
 
 
@@ -169,7 +169,7 @@ if (!interactive()) { # TRUE if not interactive, will then log output
 
 # ////////////
 # Read in ----
-data_f <- epi_read(infile_path)
+data_f <- epi_read(infile)
 dim(data_f)
 str(data_f)
 

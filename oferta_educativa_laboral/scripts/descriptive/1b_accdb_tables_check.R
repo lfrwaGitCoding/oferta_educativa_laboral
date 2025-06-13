@@ -61,8 +61,8 @@ print(all_locs)
 
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
-infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
-infile2_path <- if (file.exists(infile2)) infile2 else file.path(data_dir, infile2)
+# infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
+# infile2_path <- if (file.exists(infile2)) infile2 else file.path(data_dir, infile2)
 
 results_outdir <- epi_create_dir(results_dir)
 typeof(results_outdir)
@@ -75,8 +75,8 @@ infile_prefix <- 'setup'
 
 ############
 # Read in:
-infile <- episcout::epi_read(infile_path)
-infile2 <- episcout::epi_read(infile2_path)
+infile <- episcout::epi_read(infile)
+infile2 <- episcout::epi_read(infile2)
 
 epi_head_and_tail(infile)
 epi_head_and_tail(infile, last_cols = TRUE)

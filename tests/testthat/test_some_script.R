@@ -1,4 +1,5 @@
 library(testthat)
+library(withr)
 
 # Basic smoke test for scripts/some_script.R
 
@@ -27,8 +28,11 @@ test_that("output has expected columns", {
 test_that("missing input triggers error", {
   missing <- tempfile(fileext = ".csv")
   out_csv <- tempfile(fileext = ".csv")
-  expect_error(
-    system2("Rscript", c(script_loc, missing, out_csv), stderr = TRUE, stdout = TRUE),
-    "cannot open"
-  )
+  output <- system2("Rscript",
+                    c(script_loc, missing, out_csv),
+                    stderr = TRUE,
+                    stdout = TRUE)
+  exit_code <- attr(output, "status")
+  expect_true(exit_code != 0)
+  expect_match(paste(output, collapse = "\n"), "cannot open")
 })

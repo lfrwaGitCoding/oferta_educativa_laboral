@@ -7,7 +7,7 @@ on:
   pull_request:
     branches: [main, master]
 
-name: R tests
+name: R-CI
 
 jobs:
   r-tests:

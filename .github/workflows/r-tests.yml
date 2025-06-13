@@ -30,7 +30,7 @@ jobs:
           install.packages(c(
             'testthat', 'magrittr', 'knitr',
             'kableExtra', 'dplyr', 'data.table', 'episcout',
-            'covr', 'lintr', 'styler', 'here', 'ggplot2'
+            'covr', 'lintr', 'styler', 'here', 'ggplot2', 'ggthemes'
           ))
         shell: Rscript {0}
       - name: Run tests

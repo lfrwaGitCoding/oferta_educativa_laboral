@@ -1,24 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Get files for Quarto PDF generation
-# 01 04 2025
+# Copy or symlink supporting files for Quarto PDF generation.
+# Usage: ./cp_files_qmd.sh [project_root]
+# If no project root is provided, the script uses `git rev-parse`.
 
+PROJECT_ROOT="${1:-$(git rev-parse --show-toplevel)}"
+REPORT_DIR="$PROJECT_ROOT/oferta_educativa_laboral/report"
 
-ln -s /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/_extended_appendices.qmd .
-ln -s /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/_extended_ord_meds_Qna_17_2024.qmd .
+ln -s "$REPORT_DIR/_extended_appendices.qmd" .
+ln -s "$REPORT_DIR/_extended_ord_meds_Qna_17_2024.qmd" .
+ln -s "$REPORT_DIR"/*.yml .
+ln -s "$REPORT_DIR/_report_outputs" .
+ln -s "$REPORT_DIR/resources" .
+ln -s "$REPORT_DIR/_scripts" .
+cp "$REPORT_DIR/SIAP_desc_stats.qmd" .
 
-ln -s /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/*yml .
-ln -s /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/_report_outputs .
-ln -s /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/resources .
-ln -s /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/_scripts .
+# Example of copying additional figures (edit as needed)
+# cp -f ../31_03_2025_medicos_por_mil_derechohabientes/plot_bar_* .
 
-cp /Users/antoniob/Documents/work/science/devel/github/antoniojbt/oferta_educativa_laboral/oferta_educativa_laboral/report/SIAP_desc_stats.qmd .
-
-
-cp -f ../31_03_2025_medicos_por_mil_derechohabientes/plot_bar_* .
-cp -f ../31_03_2025_2_clean_dups_col_types_Qna_17_Plantilla_2024/plot_bar_med_esp_OOAD_top.pdf .
-cp -f ../specific_Qs/meds_por_DH/31_03_2025_meds_OOAD_DH/plot_line_med_estado_DH.pdf .
-
-
-
-
-cp _report_outputs/SIAP_desc_stats.pdf /Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/documents/reports/freeze_01042025/estaticos/

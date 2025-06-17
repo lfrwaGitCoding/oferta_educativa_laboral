@@ -15,9 +15,6 @@ report_test_files
 ./*/*/*tex
 
 
-
-
-
 # R files to ignore:
 # History files
 .Rhistory
@@ -105,13 +102,12 @@ Meta
 /doc/
 /Meta/
 
-
-
 # RStudio project files
 *.Rproj
 */*.Rproj
 */*/*.Rproj
 */*/*/*.Rproj
+oferta_educativa_laboral/pipeline/pipeline.Rproj
 
 # Pipeline log
 oferta_educativa_laboral/pipeline/pipeline.log

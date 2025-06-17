@@ -1,8 +1,7 @@
-# Performance Notes
+# Rendimiento
 
-Several R scripts in `scripts/descriptive` perform iterative conversions on data frames.
-For example, `2_clean_dups_col_types.R` loops over each date column and converts
-values individually:
+Varios scripts en R ubicados en `scripts/descriptive` realizan conversiones iterativas sobre data frames.  
+Por ejemplo, el script `2_clean_dups_col_types.R` recorre cada columna de fechas y convierte los valores individualmente:
 
 ```r
 for (i in date_cols) {
@@ -10,13 +9,12 @@ for (i in date_cols) {
 }
 ```
 
-For large datasets this repeated subsetting can be slow. A vectorised approach
-with `data.table` is faster:
+Si es necesario optiimizar estas secciones pueden ser las primeras en cambiar.
+Código vectorizado con p.ej. `data.table` es mucho más eficiente:
 
 ```r
 df_dates[, (date_cols) := lapply(.SD, as.Date, format = "%m/%d/%y"),
          .SDcols = date_cols]
 ```
 
-Whenever possible avoid repeated disk reads. Cache intermediate objects with
-`saveRDS()` and load them with `readRDS()` instead of recreating them.
+Varios scripts ya generan datos intermedios en rdata. 

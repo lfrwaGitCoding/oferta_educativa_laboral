@@ -5,57 +5,63 @@
 
 # oferta_educativa_laboral
 
-This project contains scripts and a Ruffus/CGATCore pipeline used to analyse workforce databases from the *Sistema de Administración del Personal* (SIAP) of IMSS. The pipeline cleans the raw tables exported from Microsoft Access, generates summary statistics and produces PDF reports with Quarto.
+Este proyecto contiene scripts y un pipeline basado en **Ruffus/CGATCore** para analizar datos del **Sistema de Administración del Personal (SIAP)** del IMSS.
+El pipeline limpia las tablas exportadas desde Microsoft Access, genera estadísticas descriptivas y produce informes en PDF con **Quarto**.
 
-## Goals and outputs
-* Convert the SIAP Access tables into tidy CSV files.
-* Remove duplicates, fix column types and perform basic quality checks.
-* Compute descriptive statistics and create visualisations.
-* Build a PDF report describing each dataset.
+## Objetivos y productos
 
-Output files (tables, figures and the final report) are written to the `results/` directory with subfolders named by date and input file.
+- Convierte las tablas de Access del SIAP a archivos CSV ordenados (mdb-tools)
+- Elimina duplicados, adjudica tipos de columnas, realiza controles de calidad (scripts en R)
+- Calcula estadísticas descriptivas y crea visualizaciones para cada variable
+- Construye un informe en PDF (Quarto)
+- Los archivos de salida (tablas, figuras e informe final) se escriben en el directorio `results/`, con subcarpetas nombradas por fecha y archivo de entrada.
 
-## Installation
-1. Install [R](https://cran.r-project.org/) (\>=4.1) and the packages used by the scripts:
-   ```R
-   install.packages(c("data.table", "tidyverse", "episcout", "skimr", "log4r"))
-   ```
-2. Install Python 3 with `ruffus` and `cgatcore` for the pipeline:
-    ```bash
-    pip install ruffus cgatcore
-    ```
-    A conda environment also works; the pipeline will save environment details when run.
-    For a lightweight setup containing only Python tools you can instead:
-    ```bash
-    pip install -r requirements.txt
-    ```
-3. Install [Quarto](https://quarto.org/) if you want to render the PDF report.
+## Instalación
+
+### R (≥ 4.1) y los paquetes requeridos:
+
+```r
+install.packages(c("data.table", "tidyverse", "episcout", "skimr", "log4r"))
+```
+
+### Python 3 con `ruffus` y `cgatcore` para el pipeline:
+
+```bash
+pip install ruffus cgatcore
+```
+
+También se puede usar un entorno conda; el pipeline guardará los detalles del entorno al ejecutarse. Para una instalación ligera con sólo las herramientas de Python:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Quarto si deseas generar el informe en PDF
+
+Ver [Quarto](https://quarto.org/docs/get-started/)
 
 ## Conda
 
-Create a conda environment with all Python and R dependencies using the
-provided `environment.yml`:
+Para crear un entorno conda con todas las dependencias de Python y R:
 
 ```bash
 conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
 
-## Project structure
+## Estructura del proyecto
 
 ```
 oferta_educativa_laboral/
-├── scripts/      # R data cleaning and analysis scripts
-├── pipeline/     # Ruffus pipeline in Python
-├── report/       # Quarto report and helper R functions
-└── tests/        # pytest and testthat tests
+├── scripts/      # Scripts en R para limpieza y análisis
+├── pipeline/     # Pipeline en Python usando Ruffus
+├── report/       # Informe en Quarto y funciones auxiliares en R
+└── tests/        # Pruebas con pytest y testthat
 ```
 
-Each script directory has additional README notes describing expected inputs.
+## Recursos externos
 
-### External resources
-Fonts used in the PDF report are stored under `report/resources/fonts`. If the
-directory is empty run:
+Las fuentes tipográficas usadas en el informe PDF se almacenan en `report/resources/fonts`. Si esa carpeta está vacía, ejecuta:
 
 ```bash
 cd oferta_educativa_laboral/report/resources/fonts
@@ -63,72 +69,76 @@ wget -qO- https://github.com/notofonts/noto-cjk/archive/refs/heads/main.zip | \
   bsdtar -xvf- --strip-components=1
 ```
 
-Additional helper scripts referenced by the pipeline should be placed in
-`scripts/` and configured via `pipeline.yml` rather than using personal paths.
+Los scripts auxiliares adicionales que se referencian desde el pipeline deben colocarse en `scripts/` y configurarse en `pipeline.yml`.
 
+## Preparación de datos
 
+Las tablas originales del SIAP **no están incluidas** en este repositorio. Deben colocarse en:
 
-## Data preparation
-The raw SIAP tables are not included in this repository. Place them under:
 ```
 project_root/data/data_UP/raw/
 ```
-Example files referenced in the scripts are `Qna_17_Plantilla_2024.csv` and `Qna_07_Plantilla_2025.csv`.
 
-Before running the pipeline create the directory description file by executing:
-```R
-Rscript pipeline/scripts/1_dir_locations.R
-```
-This writes `dir_locations.rdata.gzip` to the processed data directory which other R scripts load.
+Ejemplos de archivos esperados en los scripts:  
+`Qna_17_Plantilla_2024.csv`, `Qna_17_Bienestar_2024.csv`
 
-Expected top-level layout after placing data:
+### Estructura esperada del proyecto con datos originales:
+
 ```
 project_root/
-├── data/
+├── data/ # inputs
 │   └── data_UP/raw/
 │   └── data_UP/processed/
-│   └── for_reuse_and_processed/datos_abiertos
+│   └── for_reuse_and_processed/datos_abiertos # outputs a inputs
 │   └── for_reuse_and_processed/internal_IMSS
 │   └── for_reuse_and_processed/internal_UEI
-│   └── data_CES
-├── results/            # generated outputs
-└── oferta_educativa_laboral/ # code
+│   └── data_CES/
+├── results/                    # outputs
+└── oferta_educativa_laboral/   # código fuente
 ```
 
-### Example R script usage
-After generating `dir_locations.rdata.gzip`, run the cleaning steps individually:
+## Ejemplo de uso de un script individual en R
+
+Puedes ejecutar los pasos de limpieza individualmente:
 
 ```bash
 Rscript oferta_educativa_laboral/scripts/descriptive/2_clean_dups_col_types.R \
   Qna_17_Plantilla_2024.csv results/cleaned_Q17.rdata.gzip
 ```
 
-Modify the input file names as needed for new datasets
+Modifica los nombres de archivo según los nuevos datos.
 
-## Running the pipeline
-From the `pipeline` folder run:
+## Ejecutar el pipeline
+
+Desde la carpeta del pipeline:
+
 ```bash
 cd oferta_educativa_laboral/pipeline
-python pipeline_oferta_laboral.py --help              # list tasks
-python pipeline_oferta_laboral.py make full -v5       # execute all steps
+python pipeline_oferta_laboral.py --help         # lista de tareas
+python pipeline_oferta_laboral.py make full -v5  # ejecuta todos los pasos
 ```
-Individual tasks can be run by replacing `full` with the task name.
 
-## Generating reports
-The `full` target renders `report/SIAP_desc_stats.qmd` with Quarto automatically.
-You can also render manually from the `report` directory:
+Puedes ejecutar tareas individuales reemplazando `full` con el nombre de la tarea deseada.
+
+## Generar informes
+
+La tarea `full` ejecuta y renderiza automáticamente `report/SIAP_desc_stats.qmd` con **Quarto**.  
+También puedes renderizarlo manualmente desde el directorio `report/`:
+
 ```bash
 cd ../report
 quarto render SIAP_desc_stats.qmd
 ```
-The rendered PDF will appear in `_report_outputs/`.
 
-Example invocation with parameters:
+El PDF renderizado se guarda en la carpeta `_report_outputs/`.
+
+### Ejemplo con parámetros:
 
 ```bash
 quarto render SIAP_desc_stats.qmd \
   --to pdf --execute
 ```
 
-## Performance
-See `PERFORMANCE.md` for notes on optimising the more intensive scripts if ever needed.
+## Rendimiento
+
+Consulta el archivo `PERFORMANCE.md` para recomendaciones sobre cómo optimizar los scripts más intensivos si es necesario.

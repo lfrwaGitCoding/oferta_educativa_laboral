@@ -1,5 +1,6 @@
 library(testthat)
 library(withr)
+library(here)
 
 # Basic smoke test for scripts/some_script.R
 

@@ -18,21 +18,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Set up Python (if needed)
+      # Set up Python:
       - name: Set up Python
         if: matrix.language == 'python'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # Set up R (if needed)
+      # Set up R:
       - name: Set up R
         if: matrix.language == 'r'
         uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
 
-      # Install R dependencies (from r-requirements.txt)
+      # Install R dependencies (from r-requirements.txt):
       - name: Install R dependencies
         if: matrix.language == 'r'
         run: |
@@ -41,7 +41,7 @@ jobs:
             Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)" PKGS="$pkgs"
           fi
 
-      # Install Python dependencies
+      # Install Python dependencies:
       - name: Install Python dependencies
         if: matrix.language == 'python'
         run: |
@@ -49,7 +49,7 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install pytest pytest-cov
 
-      # Run R tests and measure coverage (data science project, not a package)
+      # Run R tests and measure coverage (data science project, not a package):
       - name: Run R tests with coverage
         if: matrix.language == 'r'
         run: |
@@ -57,14 +57,16 @@ jobs:
           Rscript -e "if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', repos='https://cloud.r-project.org')"
           Rscript -e "cov <- covr::file_coverage('tests/testthat/testthat.R', list.files('R', full.names=TRUE, pattern=\"\\\\\\.R$\")); covr::to_cobertura(cov)"
         shell: bash
+# Third line can cause escape hell, try otherwise: Rscript -e "pattern = \"\\\\.R$\"; cov <- covr::file_coverage('tests/testthat/testthat.R', list.files('R', full.names=TRUE, pattern=pattern)); covr::to_cobertura(cov)"
 
-      # Run Python tests and measure coverage
+
+      # Run Python tests and measure coverage:
       - name: Run Python tests with coverage
         if: matrix.language == 'python'
         run: |
           pytest --cov=. --cov-report=xml
 
-      # Upload R coverage to Codecov
+      # Upload R coverage to Codecov:
       - name: Upload R coverage to Codecov
         if: matrix.language == 'r' && hashFiles('cobertura.xml') != ''
         uses: codecov/codecov-action@v5
@@ -73,7 +75,7 @@ jobs:
           file: cobertura.xml
           flags: r
 
-      # Upload Python coverage to Codecov
+      # Upload Python coverage to Codecov:
       - name: Upload Python coverage to Codecov
         if: matrix.language == 'python' && hashFiles('coverage.xml') != ''
         uses: codecov/codecov-action@v5

@@ -56,9 +56,13 @@ jobs:
       - name: Run R tests with coverage
         if: matrix.language == 'r'
         run: |
-          Rscript -e "if (!requireNamespace('covr', quietly=TRUE)) install.packages('covr', repos='https://cloud.r-project.org')"
-          Rscript -e "if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', repos='https://cloud.r-project.org')"
-          Rscript -e "cov <- covr::file_coverage('tests/testthat/testthat.R', list.files('R', full.names=TRUE, pattern=\"\\\\\\.R$\")); covr::to_cobertura(cov)"
+          Rscript -e 'if (!requireNamespace("covr", quietly=TRUE)) install.packages("covr", repos="https://cloud.r-project.org")'
+          Rscript -e 'if (!requireNamespace("testthat", quietly=TRUE)) install.packages("testthat", repos="https://cloud.r-project.org")'
+          Rscript -e 'test_files <- list.files("tests/testthat", full.names=TRUE, pattern="^test.*\\.R$");\
+                       src_files  <- list.files(c("scripts", "oferta_educativa_laboral/scripts"),\
+                                             recursive=TRUE, full.names=TRUE, pattern="\\.R$");\
+                       cov <- covr::file_coverage(test_files, src_files);\
+                       covr::to_cobertura(cov)'
         shell: bash
 # Third line can cause escape hell, try otherwise: Rscript -e "pattern = \"\\\\.R$\"; cov <- covr::file_coverage('tests/testthat/testthat.R', list.files('R', full.names=TRUE, pattern=pattern)); covr::to_cobertura(cov)"
 

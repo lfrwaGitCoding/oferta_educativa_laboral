@@ -56,7 +56,7 @@ jobs:
       - name: Run R tests with coverage
         if: matrix.language == 'r'
         run: |
-          Rscript -e "test_files <- list.files('tests/testthat', full.names=TRUE, pattern='^test.*\\.R$');\
+          Rscript -e "test_files <- list.files('tests/testthat', full.names=TRUE, pattern=\"^test.*\\\\\\.R$\");\
                        src_files  <- list.files(c('scripts', 'oferta_educativa_laboral/scripts'),\
                                              recursive=TRUE, full.names=TRUE, pattern=\"\\\\\\.R$\");\
                        cov <- covr::file_coverage(test_files, src_files);\

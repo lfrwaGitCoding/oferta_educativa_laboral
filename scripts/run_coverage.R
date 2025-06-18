@@ -2,10 +2,12 @@
 
 # Identify test files and source files
 
-test_files <- list.files('tests/testthat',
-                         full.names = TRUE,
-                         pattern = '^test.*\\.R$' # pattern = '^test.*\\\\\\.R$'
-                        )
+test_files <- list.files(
+  "tests/testthat",
+  full.names = TRUE,
+  # Only include actual test files, exclude helper scripts like testthat.R
+  pattern = '^test_.*\\.R$'
+)
 src_files <- list.files(c('scripts', 'oferta_educativa_laboral/scripts'),
                         recursive = TRUE,
                         full.names = TRUE,

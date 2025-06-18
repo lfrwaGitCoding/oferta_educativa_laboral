@@ -8,6 +8,7 @@ knitr
 kableExtra
 tidyverse
 here
+testthat
 
 # GitHub remotes:
 github::AntonioJBT/episcout

@@ -3,8 +3,10 @@ library(testthat)
 # When tests run via covr or devtools the working directory is the
 # repository root, so we refer to the script using a path relative to
 # that root rather than from the test file location.
-script_path <- file.path("oferta_educativa_laboral", "scripts", "descriptive",
-                         "plots_theme_imss_palette.R")
+script_path <- testthat::test_path(
+  "..", "..", "oferta_educativa_laboral", "scripts",
+  "descriptive", "plots_theme_imss_palette.R"
+)
 source(script_path)
 
 test_that("epi_plot_theme_imss returns a ggplot object", {

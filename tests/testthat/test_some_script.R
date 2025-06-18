@@ -4,7 +4,7 @@ library(withr)
 # Basic smoke test for scripts/some_script.R
 
 #script <- file.path("..", "..", "scripts", "some_script.R")
-script_loc <- file.path("scripts", "some_script.R")
+script_loc <- testthat::test_path("..", "..", "scripts", "some_script.R")
 
 test_that("some_script.R executes and creates output", {
   in_csv <- local_tempfile(fileext = ".csv")

@@ -42,7 +42,7 @@ jobs:
         run: |
           if [ -f r-requirements.txt ]; then
             pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')
-            Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)" PKGS="$pkgs"
+            PKGS="$pkgs" Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)"
           fi
 
       # Install Python dependencies:

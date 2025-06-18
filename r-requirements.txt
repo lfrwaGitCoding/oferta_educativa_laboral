@@ -7,7 +7,7 @@ data.table
 knitr
 kableExtra
 tidyverse
-
+here
 
 # GitHub remotes:
 github::AntonioJBT/episcout

@@ -32,6 +32,9 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: List test files
+        run: ls -lhR tests/testthat
+  
       # Install R dependencies (from r-requirements.txt):
       - name: Install R dependencies
         if: matrix.language == 'r'

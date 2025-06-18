@@ -58,7 +58,7 @@ jobs:
         run: |
           Rscript -e "test_files <- list.files('tests/testthat', full.names=TRUE, pattern='^test.*\\.R$');\
                        src_files  <- list.files(c('scripts', 'oferta_educativa_laboral/scripts'),\
-                                             recursive=TRUE, full.names=TRUE, pattern='\\.R$');\
+                                             recursive=TRUE, full.names=TRUE, pattern=\"\\\\\\.R$\");\
                        cov <- covr::file_coverage(test_files, src_files);\
                        covr::to_cobertura(cov)"
         shell: bash

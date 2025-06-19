@@ -61,37 +61,23 @@ results_dir_arg <- if (length(args) >= 2) args[2] else NA
 
 
 # ////////////
-# Load rdata file with directory locations ----
+# Directory locations ----
 
 # ===
 # Set working directory to the project root:
 setwd(here::here())
-# renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
 
-# Load the .rdata.gzip file:
-load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
-ls()
-# ===
-
-# ===
-# Get rid of RStudio warnings for loaded objects:
-# Leave this here so it gets logged
-project_root <- project_root
-all_locs <- all_locs
-data_dir <- data_dir
-results_dir <- results_dir
-code_dir <- code_dir
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 
 # Assign command line results_dir if provided
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
 print(project_root)
-setwd(here::here())
-getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
-
-print(all_locs)
 # ===
 # ////////////
 

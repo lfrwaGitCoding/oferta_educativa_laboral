@@ -53,19 +53,17 @@ getwd()
 
 
 # ////////////
-# Load rdata file ----
+# Directory locations ----
 
 # ===
-rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
-
-# Load locations
-load(file.path(rdata_dir, 'dir_locations.rdata.gzip'))
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
+rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 
 # Override results_dir if provided
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
-
-# Use data_dir from locations
-rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 
 # Full path and file name:
 # infile_path <- file.path(rdata_dir, infile)
@@ -105,19 +103,6 @@ subset_n <- 'resids'
 
 
 # ===
-# Get rid of RStudio warnings for loaded objects:
-project_root <- project_root
-data_dir <- data_dir
-results_dir <- results_dir
-
-all_colnames <- all_colnames
-char_cols <- char_cols
-date_cols <- date_cols
-fact_cols <- fact_cols
-int_cols <- int_cols
-id_cols <- id_cols
-num_cols <- num_cols
-
 print(project_root)
 setwd(here::here())
 getwd()

@@ -109,9 +109,10 @@ if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
+infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
 
 # Full path and file name:
-# infile_path <- file.path(rdata_dir, infile)
+infile <- file.path(rdata_dir, infile)
 print(infile)
 
 print(dir(path = normalizePath(rdata_dir), all.files = TRUE))

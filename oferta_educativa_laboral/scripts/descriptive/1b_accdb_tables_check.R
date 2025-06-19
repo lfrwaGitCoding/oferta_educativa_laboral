@@ -48,6 +48,8 @@ data_dir <- file.path(project_root, 'data')
 results_dir <- file.path(project_root, 'results')
 code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 
+# project_root <- here::here()
+project_root <- project_root
 print(project_root)
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))

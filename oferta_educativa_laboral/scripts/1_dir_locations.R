@@ -16,18 +16,13 @@
 print(getwd())
 
 project_name <- 'oferta_educativa_laboral'
-projects_dir <- here::here()
-
 project_root <- here::here()
-setwd(here::here())
+setwd(project_root)
 print(getwd())
 
 data_dir <- sprintf('%s/%s', project_root, 'data/')
-devel_dir <- here::here()
-code_dir <- sprintf('%s/%s',
-                    devel_dir,
-                    paste0(project_name, '/', project_name)
-                    )
+# devel_dir <- file.path(project_root, project_name)
+code_dir <- file.path(project_root, project_name)
 results_dir <- sprintf('%s/%s', project_root, 'results')
 
 cat('CWD is:', '\n',
@@ -36,8 +31,6 @@ cat('CWD is:', '\n',
       project_root, '\n', '\n',
       'data_dir is:', '\n',
       data_dir, '\n', '\n',
-      'devel_dir is:', '\n',
-      devel_dir, '\n', '\n',
       'code_dir is:', '\n',
       code_dir, '\n', '\n',
       results_dir
@@ -49,7 +42,7 @@ cat('CWD is:', '\n',
 all_locs <- c(getwd(),
               project_root,
               data_dir,
-              devel_dir,
+              # devel_dir,
               code_dir,
               results_dir
               )
@@ -69,6 +62,8 @@ for (dir in all_locs) {
     cat("Directory does not exist:", "\n", dir, "\n", "\n")
   }
 }
+
+# TO DO: add a stop if not true
 ############
 
 
@@ -78,11 +73,12 @@ for (dir in all_locs) {
 print(data_dir)
 dir(data_dir)
 
-processed_data_dir <- sprintf('%s/data_UP/access_SIAP_18092024/processed/', data_dir)
+processed_data_dir <- sprintf('%s/data_UP/processed/', data_dir)
 script_n <- 'dir_locations'
 suffix <- 'rdata.gzip'
 outfile <- sprintf(fmt = '%s/%s.%s', processed_data_dir, script_n, suffix)
 outfile
+dir.exists(processed_data_dir)
 
 # Objects with directory information
 objects_to_save <- c(
@@ -97,10 +93,6 @@ objects_to_save <- c(
 message('Skipping save to ', outfile)
 
 # Clean up session
-all_objects <- ls()
-rm_list <- which(!all_objects %in% objects_to_save)
-rm(list = all_objects[rm_list])
 ls()
-
 sessionInfo()
 ############

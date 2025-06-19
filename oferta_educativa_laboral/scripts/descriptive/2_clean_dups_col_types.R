@@ -44,10 +44,13 @@ library(skimr)
 library(knitr)
 library(htmltools)
 library(log4r)
+############
+
 
 ############
 # Basic error handling so Ruffus sees failures
 options(error = function() {q(status = 1)})
+############
 
 ############
 # Parse command line arguments
@@ -82,12 +85,13 @@ print(dir(path = normalizePath(project_root), all.files = TRUE))
 # ////////////
 
 
-# ////////////
-# Source functions/scripts/etc
-# TO DO:
-# Source (until I update episcout)
-source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
-# ////////////
+# TO DO: Can delete
+# # ////////////
+# # Source functions/scripts/etc
+# # TO DO:
+# # Source (until I update episcout)
+# source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
+# # ////////////
 
 
 
@@ -95,7 +99,8 @@ source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # Dataset ----
 print(dir(path = normalizePath(data_dir), all.files = TRUE))
 
-# infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
+infile <- ""
+infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
 
 print(infile)
 # ////////////

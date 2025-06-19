@@ -59,26 +59,11 @@ getwd()
 
 # ===
 # Load the .rdata.gzip file:
-# load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
 load("data/data_UP/access_SIAP_18092024/processed/2_clean_dups_col_types_Qna_07_Plantilla_2025.rdata.gzip")
 ls()
 
 
 # Get rid of RStudio warnings for loaded objects:
-project_root <- project_root
-data_dir <- data_dir
-results_dir <- results_dir
-code_dir <- code_dir
-
-all_colnames <- all_colnames
-char_cols <- char_cols
-date_cols <- date_cols
-fact_cols <- fact_cols
-int_cols <- int_cols
-id_cols <- id_cols
-num_cols <- num_cols
-
-data_f <- data_f
 
 print(project_root)
 setwd(here::here())

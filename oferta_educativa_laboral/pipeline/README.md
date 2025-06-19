@@ -40,7 +40,7 @@ Raw MS Access data (.accdb)         → accdb_to_csv_encodings_copy.sh
                                      ↳ CSV tables (Qna_XX_*.csv)
           │
           ▼
-1_dir_locations.R                    → dir_locations.rdata.gzip
+1_dir_locations.R                    → prints directory info
           │
           ▼
 1b_accdb_tables_check.R              → *_tables_check.rdata.gzip

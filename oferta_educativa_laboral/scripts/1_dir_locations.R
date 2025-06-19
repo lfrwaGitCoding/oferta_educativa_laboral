@@ -84,34 +84,23 @@ suffix <- 'rdata.gzip'
 outfile <- sprintf(fmt = '%s/%s.%s', processed_data_dir, script_n, suffix)
 outfile
 
-# Check and remove objects that are not necessary to save:
-object_sizes <- sapply(ls(), function(x) object.size(get(x)))
-object_sizes <- as.matrix(rev(sort(object_sizes))[1:10])
-object_sizes
+# Objects with directory information
+objects_to_save <- c(
+  'all_locs',
+  'project_root',
+  'data_dir',
+  'devel_dir',
+  'code_dir',
+  'results_dir'
+)
 
-objects_to_save <- (c('all_locs',
-                      'project_root',
-                      'data_dir',
-                      'devel_dir',
-                      'code_dir',
-                      'results_dir'
-                      )
-                    )
+message('Skipping save to ', outfile)
 
-# Save:
-save(list = objects_to_save,
-     file = outfile,
-     compress = 'gzip'
-     )
-
-# Remove/clean up session:
+# Clean up session
 all_objects <- ls()
-all_objects
 rm_list <- which(!all_objects %in% objects_to_save)
-all_objects[rm_list]
 rm(list = all_objects[rm_list])
-ls() # Anything defined after objects_to_save will still be here
+ls()
 
 sessionInfo()
-# q()
 ############

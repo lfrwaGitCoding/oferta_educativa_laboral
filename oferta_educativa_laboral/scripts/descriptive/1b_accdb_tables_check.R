@@ -44,11 +44,13 @@ results_dir_arg <- if (length(args) >= 3) args[3] else NA
 setwd(here::here())
 
 # Load the .rdata.gzip file:
-load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
+# TO DO: check if this is needed any longer
+load("data/data_UP/processed/dir_locations.rdata.gzip")
 ls()
 
+# project_root <- here::here()
+project_root <- project_root
 print(project_root)
-setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 

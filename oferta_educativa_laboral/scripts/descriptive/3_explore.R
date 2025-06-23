@@ -96,7 +96,7 @@ theme_set(my_theme)
 load("data/data_UP/processed/dir_locations.rdata.gzip")
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
-
+data_dir <- data_dir
 rdata_dir <- file.path(data_dir, "data/data_UP/processed")
 
 # TO DO: Manually set:
@@ -124,7 +124,6 @@ ls()
 # ===
 # Get rid of RStudio warnings for loaded objects:
 project_root <- project_root
-data_dir <- data_dir
 results_dir <- results_dir
 data_f <- data_f
 
@@ -144,14 +143,6 @@ setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 # ===
-# ////////////
-
-
-# ////////////
-# Source functions/scripts/etc
-# TO DO:
-# Source (until I update episcout)
-source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # ////////////
 
 

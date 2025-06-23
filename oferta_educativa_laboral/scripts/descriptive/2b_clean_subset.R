@@ -64,6 +64,8 @@ load(file.path(rdata_dir, 'dir_locations.rdata.gzip'))
 # Override results_dir if provided
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
+data_dir <- data_dir
+
 # Use data_dir from locations
 rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 
@@ -107,7 +109,6 @@ subset_n <- 'resids'
 # ===
 # Get rid of RStudio warnings for loaded objects:
 project_root <- project_root
-data_dir <- data_dir
 results_dir <- results_dir
 
 all_colnames <- all_colnames

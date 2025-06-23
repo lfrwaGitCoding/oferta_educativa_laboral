@@ -42,9 +42,13 @@ jobs:
         run: |
           CRAN_PKGS=$(grep -v '^#' r-requirements.txt | grep -v '^$' | grep -v '^github::')
           GITHUB_PKGS=$(grep '^github::' r-requirements.txt | sed 's/^github:://')
-          echo "CRAN_PKGS=$CRAN_PKGS" >> $GITHUB_ENV
-          echo "GITHUB_PKGS=$GITHUB_PKGS" >> $GITHUB_ENV
-    
+          echo "CRAN_PKGS<<EOF" >> $GITHUB_ENV
+          echo "$CRAN_PKGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "GITHUB_PKGS<<EOF" >> $GITHUB_ENV
+          echo "$GITHUB_PKGS" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
         #run: |          
           #if [ -f r-requirements.txt ]; then
           #  pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')

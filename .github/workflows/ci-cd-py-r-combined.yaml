@@ -40,6 +40,7 @@ jobs:
       - name: Install pak
         if: matrix.language == 'r'
         run: install.packages('pak')
+        shell: Rscript {0}
 
       - name: Restore R dependencies from pkg.lock
         if: matrix.language == 'r'

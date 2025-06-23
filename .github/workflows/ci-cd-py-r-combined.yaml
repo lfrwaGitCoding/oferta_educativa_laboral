@@ -41,19 +41,10 @@ jobs:
         if: matrix.language == 'r'
         run: |
           CRAN_PKGS=$(grep -v '^#' r-requirements.txt | grep -v '^$' | grep -v '^github::' | sed 's/^/any::/')
-            pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')
           GITHUB_PKGS=$(grep '^github::' r-requirements.txt | sed 's/^github:://')
-            PKGS="$pkgs" Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)"
-          {
-          fi
-            echo 'CRAN_PKGS<<"EOF"'
-            echo "$CRAN_PKGS"
-            echo EOF
-            echo 'GITHUB_PKGS<<"EOF"'
-            echo "$GITHUB_PKGS"
-            echo EOF
-          } >> "$GITHUB_ENV"
-          
+          echo "CRAN_PKGS=$CRAN_PKGS" >> $GITHUB_ENV
+          echo "GITHUB_PKGS=$GITHUB_PKGS" >> $GITHUB_ENV
+    
         #run: |          
           #if [ -f r-requirements.txt ]; then
           #  pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')

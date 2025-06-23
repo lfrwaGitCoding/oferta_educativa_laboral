@@ -37,13 +37,29 @@ jobs:
         run: ls -lhR tests/testthat
   
       # Install R dependencies (from r-requirements.txt):
-      - name: Install R dependencies
+      - name: Parse R requirements
         if: matrix.language == 'r'
         run: |
-          if [ -f r-requirements.txt ]; then
+          CRAN_PKGS=$(grep -v '^#' r-requirements.txt | grep -v '^$' | grep -v '^github::' | sed 's/^/any::/' | tr '\n' ',' | sed 's/,$//')
             pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')
+          GITHUB_PKGS=$(grep '^github::' r-requirements.txt | sed 's/^github:://' | tr '\n' ',' | sed 's/,$//')
             PKGS="$pkgs" Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)"
+          echo "CRAN_PKGS=$CRAN_PKGS" >> "$GITHUB_ENV"
           fi
+          echo "GITHUB_PKGS=$GITHUB_PKGS" >> "$GITHUB_ENV"
+
+        #run: |          
+          #if [ -f r-requirements.txt ]; then
+          #  pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')
+          #  PKGS="$pkgs" Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)"
+          #fi
+
+      - name: Install R dependencies
+        if: matrix.language == 'r'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: ${{ env.CRAN_PKGS }}
+          extra-packages: ${{ env.GITHUB_PKGS }}
 
       # Install Python dependencies:
       - name: Install Python dependencies

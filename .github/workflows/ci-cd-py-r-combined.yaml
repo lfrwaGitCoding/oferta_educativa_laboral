@@ -40,7 +40,7 @@ jobs:
       - name: Parse R requirements
         if: matrix.language == 'r'
         run: |
-          CRAN_PKGS=$(grep -v '^#' r-requirements.txt | grep -v '^$' | grep -v '^github::' | sed 's/^/any::/')
+          CRAN_PKGS=$(grep -v '^#' r-requirements.txt | grep -v '^$' | grep -v '^github::')
           GITHUB_PKGS=$(grep '^github::' r-requirements.txt | sed 's/^github:://')
           echo "CRAN_PKGS=$CRAN_PKGS" >> $GITHUB_ENV
           echo "GITHUB_PKGS=$GITHUB_PKGS" >> $GITHUB_ENV

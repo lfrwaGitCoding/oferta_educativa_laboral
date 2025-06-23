@@ -99,6 +99,9 @@ code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
+data_dir <- data_dir
+rdata_dir <- file.path(data_dir, "data/data_UP/processed")
+
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
 # infile <- '2_clean_dups_col_types_Qna_17_Plantilla_2024.rdata.gzip'
@@ -119,20 +122,30 @@ print(dir(path = normalizePath(rdata_dir), all.files = TRUE))
 
 load(infile)
 ls()
+# ===
+
+# ===
+# Get rid of RStudio warnings for loaded objects:
+project_root <- project_root
+results_dir <- results_dir
+data_f <- data_f
+
+# TO DO: needs updating:
+code_dir <- code_dir
+
+all_colnames <- all_colnames
+char_cols <- char_cols
+date_cols <- date_cols
+fact_cols <- fact_cols
+int_cols <- int_cols
+id_cols <- id_cols
+num_cols <- num_cols
 
 print(project_root)
 setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 # ===
-# ////////////
-
-
-# ////////////
-# Source functions/scripts/etc
-# TO DO:
-# Source (until I update episcout)
-source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # ////////////
 
 

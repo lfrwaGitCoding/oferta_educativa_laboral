@@ -45,7 +45,7 @@ jobs:
       - name: Restore R dependencies from pkg.lock
         if: matrix.language == 'r'
         run: |
-          pak::pkg_install(lockfile = ".github/pkg.lock")
+          pak::pkg_install(".github/pkg.lock")
         shell: Rscript {0}
 
       # Install Python dependencies:

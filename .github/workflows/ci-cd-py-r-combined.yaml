@@ -37,30 +37,15 @@ jobs:
         run: ls -lhR tests/testthat
   
       # Install R dependencies (from r-requirements.txt):
-      - name: Parse R requirements
+      - name: Install pak
+        if: matrix.language == 'r'
+        run: install.packages('pak')
+
+      - name: Restore R dependencies from pkg.lock
         if: matrix.language == 'r'
         run: |
-          CRAN_PKGS=$(grep -v '^#' r-requirements.txt | grep -v '^$' | grep -v '^github::')
-          GITHUB_PKGS=$(grep '^github::' r-requirements.txt | sed 's/^github:://')
-          echo "CRAN_PKGS<<EOF" >> $GITHUB_ENV
-          echo "$CRAN_PKGS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "GITHUB_PKGS<<EOF" >> $GITHUB_ENV
-          echo "$GITHUB_PKGS" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
-        #run: |          
-          #if [ -f r-requirements.txt ]; then
-          #  pkgs=$(grep -v '^#' r-requirements.txt | grep -v '^$' | tr '\n' ' ')
-          #  PKGS="$pkgs" Rscript -e "install.packages(strsplit(Sys.getenv('PKGS'), ' ')[[1]], repos='https://cloud.r-project.org', dependencies=TRUE)"
-          #fi
-
-      - name: Install R dependencies
-        if: matrix.language == 'r'
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: ${{ env.CRAN_PKGS }}
-          extra-packages: ${{ env.GITHUB_PKGS }}
+          pak::pkg_install(lockfile = ".github/pkg.lock")
+        shell: Rscript {0}
 
       # Install Python dependencies:
       - name: Install Python dependencies

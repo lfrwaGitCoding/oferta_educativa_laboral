@@ -188,7 +188,7 @@ for (i in fact_cols) {
     print(p)
     # Save each plot:
     file_n <- sprintf("plot_bar_%s", i)
-    outfile <- sprintf(fmt = '%s/%s.pdf', results_subdir, file_n)
+    outfile <- sprintf(fmt = '%s/graf_barras/%s.pdf', results_subdir, file_n)
     ggsave(filename = outfile, plot = p, width = 12, height = 12)
 }
 # ////////////
@@ -292,7 +292,7 @@ alluv_plot4
 # Save:
 file_n <- 'plot_alluvial_egresables_2026_EDO_NACIMIENTO_OOAD'
 suffix <- 'pdf'
-outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile <- sprintf(fmt = '%s/alluvials/%s.%s', results_subdir, file_n, suffix)
 outfile
 ggsave(outfile,
        plot = alluv_plot4,
@@ -340,7 +340,7 @@ parallel_alluvials <- function(i) {
     # Save file
     file_n <- sprintf("plot_alluvial_egresables_2026_EDO_NACIMIENTO_OOAD_%s", i)
     suffix <- "pdf"
-    outfile <- sprintf("%s/por_especialidad/%s.%s", results_subdir, file_n, suffix)
+    outfile <- sprintf("%s/alluvials/por_especialidad/%s.%s", results_subdir, file_n, suffix)
     ggsave(outfile, plot = alluv_plot, height = 20, width = 20, units = "in")
 
     return(outfile)
@@ -393,7 +393,7 @@ parallel_alluvials_estado <- function(state_name) {
 
     # Save plot
     file_n <- sprintf("plot_alluvial_egresables_2026_NACIMIENTO_%s", state_name)
-    outfile <- sprintf("%s/por_estado/%s.pdf", results_subdir, file_n)
+    outfile <- sprintf("%s/alluvials/por_estado/%s.pdf", results_subdir, file_n)
     ggsave(outfile, plot = combined_plot, height = 20, width = 20, units = "in")
 
     return(outfile)
@@ -430,7 +430,7 @@ epi_head_and_tail(flow_counts)
 # save:
 file_n <- 'table_flow_counts'
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile <- sprintf(fmt = '%s/tablas/%s.%s', results_subdir, file_n, suffix)
 outfile
 epi_write(flow_counts, outfile)
 
@@ -449,7 +449,7 @@ mat_birth_resid[1:5, 1:5]      # first 5×5 corner
 # save:
 file_n <- 'matrix_flow_counts_nac_OOAD'
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile <- sprintf(fmt = '%s/tablas/%s.%s', results_subdir, file_n, suffix)
 outfile
 epi_write(mat_birth_resid, outfile, row.names = TRUE)
 
@@ -531,7 +531,7 @@ sankey
 # standalone HTML:
 file_n <- 'interactivo_alluvial_egresables_2026'
 suffix <- 'html'
-outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
+outfile <- sprintf(fmt = '%s/aluvial_interactivo_simple/%s.%s', results_subdir, file_n, suffix)
 outfile
 saveWidget(sankey, file = outfile, selfcontained = TRUE)
 # ////////////

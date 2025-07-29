@@ -195,7 +195,7 @@ for (i in fact_cols) {
 
 
 # ////////////
-# Generate Snakey / Alluvial plots
+# Generate Sankey / Alluvial plots
 # for two-way flows of counts of:
 # EDO_NACIMIENTO to "OOAD"
 

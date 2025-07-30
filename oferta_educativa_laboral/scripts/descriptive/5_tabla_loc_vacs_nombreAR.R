@@ -132,7 +132,7 @@ str(data_f[, vars_loc_vac_min])
 vac_lookup <- function(df,
                        grouping_vars,
                        vac_var    = "PLZOCU",
-                       vac_value  = "1") {
+                       vac_value  = "0") {
 
     # Summarise vacancy counts
     df %>%
@@ -145,10 +145,47 @@ vac_lookup <- function(df,
                 across(all_of(grouping_vars))
         )
     }
-lookup_tbl <- vac_lookup(data_f, vars_loc_vac_min)
-dim(lookup_tbl)
-str(lookup_tbl)
-# View(lookup_tbl)
+lookup_tbl_vacs <- vac_lookup(data_f, vars_loc_vac_min, vac_var = "PLZOCU", vac_value = "0")
+dim(lookup_tbl_vacs)
+str(lookup_tbl_vacs)
+sum(lookup_tbl_vacs$vacantes, na.rm = TRUE)
+
+length(which(lookup_tbl_vacs$vacantes == 0))
+length(which(lookup_tbl_vacs$vacantes == 1))
+# View(lookup_tbl_vacs)
+
+
+# Ocupadas:
+lookup_tbl_ocu <- vac_lookup(data_f, vars_loc_vac_min, vac_var = "PLZOCU", vac_value = "1")
+dim(lookup_tbl_ocu)
+str(lookup_tbl_ocu)
+sum(lookup_tbl_ocu$vacantes, na.rm = TRUE)
+
+length(which(lookup_tbl_ocu$vacantes == 0))
+length(which(lookup_tbl_ocu$vacantes == 1))
+# View(lookup_tbl_ocu)
+
+# Check:
+sum(data_f$PLZOCU == "0", na.rm = TRUE) # vacantes
+sum(data_f$PLZOCU == "1", na.rm = TRUE) # ocupadas
+dim(data_f)
+
+sum(lookup_tbl_vacs$vacantes, na.rm = TRUE) == sum(data_f$PLZOCU == "0", na.rm = TRUE)
+sum(lookup_tbl_ocu$vacantes, na.rm = TRUE) == sum(data_f$PLZOCU == "1", na.rm = TRUE)
+
+dim(data_f)[1] == (sum(lookup_tbl_vacs$vacantes, na.rm = TRUE) + sum(lookup_tbl_ocu$vacantes, na.rm = TRUE))
+
+dim(data_f)
+sum(data_f$PLZOCU == "0", na.rm = TRUE)
+sum(data_f$PLZOCU == "1", na.rm = TRUE)
+length(which(is.na(data_f$PLZOCU)))
+
+lapply(data_f[, vars_loc_vac_min], function(x) sum(is.na(x)))
+
+
+sum(lookup_tbl_vacs$vacantes, na.rm = TRUE)
+sum(lookup_tbl_ocu$vacantes, na.rm = TRUE)
+
 
 # Save:
 infile_prefix
@@ -161,7 +198,7 @@ outfile <- sprintf(fmt = '%s/%s.%s',
                    )
 
 outfile
-epi_write(lookup_tbl, outfile)
+epi_write(lookup_tbl_vacs, outfile)
 # ////////////
 
 
@@ -182,16 +219,6 @@ vac_lookup_interact <- function(df,
         arrange(desc(vacantes), across(all_of(grouping_vars)))
 
     # Create interactive DataTable with export buttons and search
-    # DT::datatable(
-    #     tbl,
-    #     extensions = "Buttons",
-    #     options = list(dom = "Bfrtip",                              # Show Buttons, filter, table
-    #                    buttons = c("copy", "csv", "excel", "pdf", "print"),
-    #                    pageLength = 25,                                    # Rows per page
-    #                    order = list(list( which(names(tbl) == "vacantes") - 1, "desc" ))
-    #                    ),
-    #     rownames = FALSE
-    # )
     # add global search + column filters
     DT::datatable(
         tbl,

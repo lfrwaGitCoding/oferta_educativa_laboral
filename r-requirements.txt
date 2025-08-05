@@ -7,3 +7,6 @@ scales
 testthat
 withr
 here
+
+# GitHub remotes:
+github::AntonioJBT/episcout

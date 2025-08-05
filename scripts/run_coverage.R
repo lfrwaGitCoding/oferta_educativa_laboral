@@ -12,7 +12,7 @@ test_files <- list.files(
 
 # Derive source file paths from test file names
 rel_paths <- file.path(
-  dirname(sub("^tests/testthat/?", "", test_files)),
+  dirname(sub("^tests/testthat/(.*)$", "\\1", test_files)),
   sub("^test_", "", basename(test_files))
 )
 src_candidates <- c(

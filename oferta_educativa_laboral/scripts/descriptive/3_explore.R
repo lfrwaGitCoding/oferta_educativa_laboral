@@ -100,7 +100,7 @@ rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
 data_dir <- data_dir
-rdata_dir <- file.path(data_dir, "data/data_UP/processed")
+rdata_dir <- file.path(data_dir, "/data_UP/processed")
 
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'

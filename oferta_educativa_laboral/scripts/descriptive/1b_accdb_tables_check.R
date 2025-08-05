@@ -24,7 +24,9 @@ library(tidyverse)
 
 ############
 # Basic error handling so Ruffus sees failures
-options(error = function() {q(status = 1)})
+options(error = function() {
+  q(status = 1)
+})
 
 ############
 # Parse command line arguments
@@ -68,7 +70,7 @@ typeof(results_outdir)
 print(results_outdir)
 
 # For saving/naming outputs:
-infile_prefix <- 'setup'
+infile_prefix <- "setup"
 ############
 
 
@@ -103,10 +105,10 @@ column_names_dfs <- data.frame(df1 = colnames(infile),
                                df2 = colnames(infile2)
                                )
 # View(column_names_dfs)
-file_n <- 'df_shared_col_names'
-suffix <- 'txt'
-outfile <- sprintf(fmt = '%s.%s', file_n, suffix)
-outfile <- sprintf('%s/%s', results_outdir, outfile)
+file_n <- "df_shared_col_names"
+suffix <- "txt"
+outfile <- sprintf(fmt = "%s.%s", file_n, suffix)
+outfile <- sprintf("%s/%s", results_outdir, outfile)
 outfile
 epi_write(column_names_dfs, outfile)
 ###

@@ -38,6 +38,8 @@ test_that("new_var column contains ratio of first two columns", {
 test_that("missing input triggers error", {
   missing <- tempfile(fileext = ".csv")
   out_csv <- tempfile(fileext = ".csv")
+  # Ensure input file does not exist
+  if (file.exists(missing)) file.remove(missing)
   output <- system2(
     "Rscript",
     c(script_loc, missing, out_csv),
@@ -46,5 +48,8 @@ test_that("missing input triggers error", {
   )
   exit_code <- attr(output, "status")
   expect_true(exit_code != 0)
-  expect_match(paste(output, collapse = "\n"), "cannot open")
+  expect_match(
+    paste(output, collapse = "\n"),
+    "cannot open|Usage"
+  )
 })

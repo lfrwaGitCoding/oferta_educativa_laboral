@@ -21,6 +21,17 @@ src_candidates <- c(
 )
 src_files <- src_candidates[file.exists(src_candidates)]
 
+# Warn about missing source files
+missing_src_files <- src_candidates[!file.exists(src_candidates)]
+if (length(missing_src_files) > 0) {
+  warning(
+    paste(
+      "The following expected source files are missing:",
+      paste(missing_src_files, collapse = "\n"),
+      sep = "\n"
+    )
+  )
+}
 # Run coverage and output in Cobertura format
 cov <- covr::file_coverage(test_files, src_files)
 covr::to_cobertura(cov)

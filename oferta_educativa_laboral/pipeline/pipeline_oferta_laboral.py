@@ -32,7 +32,7 @@ Ejecuta los scripts para el analisis descriptivo de cada quincena del SIAP.
 
 # Load:
 # funcs_epi_source.R
-# plots_theme_imss_palette.R
+# epi_plot_theme_imss provided by episcout
 
 # Not needed:
 # 2c_subset_PLZOCU.R
@@ -193,9 +193,7 @@ def getParamsFiles(paths=ini_paths):
     return p_params_files
 
 
-config_path = os.path.join(
-    os.path.dirname(__file__), "configuration", "pipeline.yml"
-)
+config_path = os.path.join(os.path.dirname(__file__), "configuration", "pipeline.yml")
 P.get_parameters(
     [config_path, "../pipeline.yml", "pipeline.yml"],
 )

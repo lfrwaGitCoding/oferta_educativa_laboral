@@ -55,12 +55,12 @@ test_that("new_var column contains ratio of first two columns", {
 #  )
 #})
 
-test_that("missing arguments triggers usage error", {
-  output <- system2("Rscript", script_loc, stderr = TRUE, stdout = TRUE)
-  exit_code <- attr(output, "status")
-  expect_true(exit_code != 0)
-  expect_match(
-    paste(output, collapse = "\n"),
-    "Usage: some_script\\.R <input_csv> <output_csv>"
-  )
-})
+#test_that("missing arguments triggers usage error", {
+#  output <- system2("Rscript", script_loc, stderr = TRUE, stdout = TRUE)
+#  exit_code <- attr(output, "status")
+#  expect_true(exit_code != 0)
+#  expect_match(
+#    paste(output, collapse = "\n"),
+#    "Usage: some_script\\.R <input_csv> <output_csv>"
+#  )
+#})

@@ -64,6 +64,7 @@ docker load < oferta-laboral.tar.gz
 docker compose run --rm oel python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
 ```
 
+**Nota:** Este comando ejecuta el pipeline dentro del contenedor, pero los archivos generados (resultados, tablas, figuras, informes) permanecerán dentro del contenedor y se perderán al finalizar. Úsalo para pruebas rápidas o ejecuciones efímeras.  
 Para que los resultados persistan, monta explícitamente los directorios `data` y
 `results` al ejecutar el comando anterior:
 

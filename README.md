@@ -1,7 +1,6 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Python CI](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yaml/badge.svg?branch=main)](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/python-tests.yaml)
-[![R](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/r-tests.yml/badge.svg)](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/r-tests.yml)
-[![codecov](https://codecov.io/gh/AntonioJBT/oferta_educativa_laboral/branch/master/graph/badge.svg)](https://codecov.io/gh/antoniojbt/oferta_educativa_laboral/graphs/tree.svg?token=Z1CCVHIERZ)
+[![Py and R CI](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/ci-cd-py-r-combined.yaml/badge.svg)](https://github.com/antoniojbt/oferta_educativa_laboral/actions/workflows/ci-cd-py-r-combined.yaml)
+[![codecov](https://codecov.io/gh/antoniojbt/oferta_educativa_laboral/graph/badge.svg?token=Z1CCVHIERZ)](https://codecov.io/gh/antoniojbt/oferta_educativa_laboral)
 
 # oferta_educativa_laboral
 

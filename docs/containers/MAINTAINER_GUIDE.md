@@ -27,5 +27,5 @@ This document describes how to manage container images for the project.
 Before publishing any image, run the project tests inside the container to ensure the environment works as expected. For example:
 
 ```bash
-docker run --rm ghcr.io/<owner>/oferta_educativa_laboral:dev pytest --maxfail=1 --disable-warnings -q
+docker run --rm ghcr.io/{GITHUB_ORG_OR_USERNAME}/oferta_educativa_laboral:dev pytest --maxfail=1 --disable-warnings -q
 ```

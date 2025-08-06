@@ -25,13 +25,13 @@ jobs:
           file: Dockerfile
           platforms: ${{ matrix.platform }}
           push: false
-          outputs: type=oci,dest=oferta_educativa_laboral-${{ matrix.platform }}.tar
+          outputs: type=oci,dest=oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar
 
       - name: Compress image
-        run: gzip oferta_educativa_laboral-${{ matrix.platform }}.tar
+        run: gzip oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar
 
       - name: Upload image artifact
         uses: actions/upload-artifact@v3
         with:
-          name: oferta_educativa_laboral-${{ matrix.platform }}.tar.gz
-          path: oferta_educativa_laboral-${{ matrix.platform }}.tar.gz
+          name: oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar.gz
+          path: oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar.gz

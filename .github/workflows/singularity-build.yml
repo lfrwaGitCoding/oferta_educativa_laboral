@@ -28,7 +28,7 @@ jobs:
         with:
           files: oferta-laboral.sif
       - name: Push to Apptainer registry
-        if: secrets.APPTAINER_REGISTRY != ''
+        if: env.APPTAINER_REGISTRY != ''
         env:
           APPTAINER_REGISTRY: ${{ secrets.APPTAINER_REGISTRY }}
           APPTAINER_USERNAME: ${{ secrets.APPTAINER_USERNAME }}

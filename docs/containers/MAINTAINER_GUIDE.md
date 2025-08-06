@@ -6,9 +6,10 @@ This document describes how to manage container images for the project.
 
 1. Edit [`environment.yml`](../../environment.yml) when dependencies change.
 2. Rebuild the development image and push it to GHCR (authenticate with a token that has `write:packages` scope):
+   > **Note:** Replace `{YOUR_GITHUB_USERNAME}` with your actual GitHub username or organization name in the commands below.
    ```bash
-   docker build -t ghcr.io/<owner>/oferta_educativa_laboral:dev .
-   docker push ghcr.io/<owner>/oferta_educativa_laboral:dev
+   docker build -t ghcr.io/{YOUR_GITHUB_USERNAME}/oferta_educativa_laboral:dev .
+   docker push ghcr.io/{YOUR_GITHUB_USERNAME}/oferta_educativa_laboral:dev
    ```
 3. The workflow [`docker-build.yml`](../../.github/workflows/docker-build.yml) builds the image in CI and pushes it to GHCR using the `GHCR_TOKEN` secret. Ensure this secret is defined in the repository settings with appropriate scopes.
 

@@ -48,6 +48,16 @@ conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
 
+## Container workflow
+
+El proyecto también puede ejecutarse dentro de contenedores.
+Consulta las guías dedicadas para instrucciones paso a paso:
+
+- [Guía de usuario](docs/containers/USER_GUIDE.md)
+- [Guía de mantenimiento](docs/containers/MAINTAINER_GUIDE.md)
+
+Ambas guías cubren el uso de **Docker** y **Apptainer**.
+
 ## Estructura del proyecto
 
 ```

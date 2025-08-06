@@ -1,0 +1,37 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          platforms: ${{ matrix.platform }}
+          push: false
+          outputs: type=oci,dest=oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar
+
+      - name: Compress image
+        run: gzip oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar.gz
+          path: oferta_educativa_laboral-${{ matrix.platform.replace('/', '-') }}.tar.gz

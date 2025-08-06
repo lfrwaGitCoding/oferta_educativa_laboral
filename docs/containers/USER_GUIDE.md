@@ -6,6 +6,7 @@ This guide shows how to run the pipeline using the prebuilt image from the GitHu
 
 Pull the image from GHCR and execute the pipeline:
 
+> **Important:** Replace `<owner>` in the commands below with the GitHub organization or username that hosts the image. For example, if your organization is `acme-corp`, use `ghcr.io/acme-corp/oferta_educativa_laboral:latest`.
 ```bash
 docker pull ghcr.io/<owner>/oferta_educativa_laboral:latest
 docker run --rm -v "$PWD/data:/data" ghcr.io/<owner>/oferta_educativa_laboral:latest \

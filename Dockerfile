@@ -5,7 +5,7 @@ COPY environment.yml /tmp/environment.yml
 RUN micromamba env create -f /tmp/environment.yml -n oferta_educativa_laboral \
     && micromamba clean --all --yes
 
-ENV PATH=/opt/conda/envs/oferta_educativa_laboral/bin:$PATH
+ENV PATH=$MAMBA_ROOT_PREFIX/envs/oferta_educativa_laboral/bin:$PATH
 
 COPY . /workspace/oferta_educativa_laboral
 

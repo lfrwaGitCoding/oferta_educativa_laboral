@@ -50,24 +50,34 @@ conda activate oferta_educativa_laboral
 
 ## Container workflow y Docker compose
 
-El proyecto también puede ejecutarse dentro de contenedores.
-Consulta las guías dedicadas para instrucciones paso a paso:
-
-- [Guía de usuario](docs/containers/USER_GUIDE.md)
-- [Guía de mantenimiento](docs/containers/MAINTAINER_GUIDE.md)
-
-Las guías cubren el uso de **Docker** y **Apptainer**.
-
-En breve:
-
-Asegúrate de contar con la imagen `oel` ya construida.
-Los directorios locales `data` y `results` se montan en el contenedor.
+Construye la imagen localmente y empaquétala como un archivo `tar.gz`:
 
 ```bash
-docker compose run --rm oel bash
-# o ejecuta directamente el pipeline
-docker compose run --rm oel python pipeline_oferta_laboral.py make full -v5
+docker build -t oferta-laboral:latest .
+docker save oferta-laboral:latest | gzip > oferta-laboral.tar.gz
 ```
+
+Para cargar la imagen desde el tarball y ejecutar el pipeline:
+
+```bash
+docker load < oferta-laboral.tar.gz
+docker run --rm \
+  -v $PWD/data:/data \
+  -v $PWD/results:/results \
+  oferta-laboral:latest \
+  python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
+```
+
+Para ejecutar las pruebas dentro del contenedor:
+
+```bash
+docker run --rm -v $PWD:/work -w /work oferta-laboral:latest pytest --maxfail=1 --disable-warnings -q
+docker run --rm -v $PWD:/work -w /work oferta-laboral:latest Rscript -e "devtools::test(reporter='summary')"
+```
+
+Para instrucciones más detalladas consulta [docs/containers/USER_GUIDE.md](docs/containers/USER_GUIDE.md) y [docs/containers/MAINTAINER_GUIDE.md](docs/containers/MAINTAINER_GUIDE.md).
+
+Las guías cubren el uso de **Docker** y **Apptainer**.
 
 ## Estructura del proyecto
 

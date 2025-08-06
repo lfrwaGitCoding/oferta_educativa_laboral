@@ -35,6 +35,6 @@ jobs:
           APPTAINER_PASSWORD: ${{ secrets.APPTAINER_PASSWORD }}
         run: |
           apptainer remote add --no-login registry $APPTAINER_REGISTRY
-          apptainer remote login registry -u $APPTAINER_USERNAME -p $APPTAINER_PASSWORD
+          echo "$APPTAINER_PASSWORD" | apptainer remote login registry -u $APPTAINER_USERNAME --password-stdin
           apptainer push oferta-laboral.sif oras://$APPTAINER_REGISTRY/oferta-laboral:latest
 

@@ -48,6 +48,17 @@ conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
 
+## Docker Compose
+
+Si prefieres usar contenedores, asegúrate de contar con la imagen `oel` ya construida.
+Los directorios locales `data` y `results` se montan en el contenedor.
+
+```bash
+docker compose run --rm oel bash
+# o ejecuta directamente el pipeline
+docker compose run --rm oel python pipeline_oferta_laboral.py make full -v5
+```
+
 ## Estructura del proyecto
 
 ```

@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  oel:
+    image: oel
+    command: bash
+    volumes:
+      - ./data:/data
+      - ./results:/results

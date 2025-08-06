@@ -1,0 +1,16 @@
+Bootstrap: docker
+From: mambaorg/micromamba:1.5
+
+%files
+    environment.yml /tmp/environment.yml
+    . /workspace/oferta_educativa_laboral
+
+%post
+    micromamba env create -f /tmp/environment.yml -n oferta_educativa_laboral
+    echo 'export PATH=/opt/conda/envs/oferta_educativa_laboral/bin:$PATH' >> /etc/profile.d/conda_env.sh
+
+%environment
+    export PATH=/opt/conda/envs/oferta_educativa_laboral/bin:$PATH
+
+%runscript
+    exec /bin/bash "$@"

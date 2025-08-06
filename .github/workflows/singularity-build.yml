@@ -1,0 +1,40 @@
+name: Build Apptainer Image
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Singularity.def'
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Apptainer image
+        uses: apptainer/apptainer-action@v1
+        with:
+          args: build oferta-laboral.sif Singularity.def
+      - name: Upload SIF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: oferta-laboral
+          path: oferta-laboral.sif
+      - name: Attach SIF to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: oferta-laboral.sif
+      - name: Push to Apptainer registry
+        if: env.APPTAINER_REGISTRY != ''
+        env:
+          APPTAINER_REGISTRY: ${{ secrets.APPTAINER_REGISTRY }}
+          APPTAINER_USERNAME: ${{ secrets.APPTAINER_USERNAME }}
+          APPTAINER_PASSWORD: ${{ secrets.APPTAINER_PASSWORD }}
+        run: |
+          apptainer remote add --no-login registry $APPTAINER_REGISTRY
+          echo "$APPTAINER_PASSWORD" | apptainer remote login registry -u $APPTAINER_USERNAME --password-stdin
+          apptainer push oferta-laboral.sif oras://$APPTAINER_REGISTRY/oferta-laboral:latest
+

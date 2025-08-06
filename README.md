@@ -48,7 +48,7 @@ conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
 
-## Docker
+## Container workflow y Docker compose
 
 Construye la imagen localmente y empaquétala como un archivo `tar.gz`:
 
@@ -76,6 +76,8 @@ docker run --rm -v $PWD:/work -w /work oferta-laboral:latest Rscript -e "devtool
 ```
 
 Para instrucciones más detalladas consulta [docs/containers/USER_GUIDE.md](docs/containers/USER_GUIDE.md) y [docs/containers/MAINTAINER_GUIDE.md](docs/containers/MAINTAINER_GUIDE.md).
+
+Las guías cubren el uso de **Docker** y **Apptainer**.
 
 ## Estructura del proyecto
 

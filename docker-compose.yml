@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   oel:
+    # To build the 'oel' image locally, run: docker build -t oel . (assuming Dockerfile is in the project root)
     image: oel
     command: bash
     volumes:

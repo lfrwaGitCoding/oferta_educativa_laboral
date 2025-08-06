@@ -89,11 +89,14 @@ theme_set(my_theme)
 
 
 # ////////////
-# Load rdata file ----
+# Directory locations ----
 
 # ===
-# Load locations
-load("data/data_UP/processed/dir_locations.rdata.gzip")
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
+rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
 
 data_dir <- data_dir

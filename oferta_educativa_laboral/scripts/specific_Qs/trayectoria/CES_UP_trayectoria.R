@@ -40,21 +40,13 @@ getwd()
 
 
 # ////////////
-# Load files ----
+# Directory locations ----
 
 # ===
-# Load the .rdata.gzip file:
-load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
-ls()
-
-
-# Get rid of RStudio warnings for loaded objects:
-project_root <- project_root
-data_dir <- data_dir
-results_dir <- results_dir
-
-code_dir <- code_dir
-all_locs <- all_locs
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 
 
 # TO DO: needs updating:
@@ -70,7 +62,6 @@ print(project_root)
 setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
-print(all_locs)
 # ===
 
 

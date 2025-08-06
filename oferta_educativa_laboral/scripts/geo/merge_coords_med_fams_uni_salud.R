@@ -30,26 +30,19 @@ setwd(here::here())
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
 
-# Load the .rdata.gzip file:
-load("data/data_UP/access_SIAP_18092024/processed/dir_locations.rdata.gzip")
-ls()
-# ===
+# Directory locations ----
 
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 # ===
-# Get rid of RStudio warnings for loaded objects:
-# Leave this here so it gets logged
-project_root <- project_root
-all_locs <- all_locs
-data_dir <- data_dir
-results_dir <- results_dir
-code_dir <- code_dir
 
 print(project_root)
 setwd(here::here())
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 
-print(all_locs)
 # ===
 # ////////////
 

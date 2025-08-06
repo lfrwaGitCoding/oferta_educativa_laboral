@@ -5,30 +5,6 @@
   "platform": "aarch64-apple-darwin20",
   "packages": [
     {
-      "ref": "deps::oferta_educativa_laboral",
-      "package": "localprojectautoscan-deps",
-      "version": "1.0.0",
-      "type": "deps",
-      "direct": true,
-      "binary": false,
-      "dependencies": ["arules", "arulesViz", "broom", "car", "circlize", "corrplot", "cowplot", "data.table", "DBI", "dplyr", "e1071", "episcout", "factoextra", "FactoMineR", "geosphere", "ggalluvial", "ggplot2", "ggrepel", "ggthemes", "gridExtra", "here", "Hmisc", "htmltools", "htmlwidgets", "janitor", "kableExtra", "knitr", "leaflet", "leaflet.extras", "log4r", "lpSolve", "lubridate", "magrittr", "MASS", "naniar", "networkD3", "nnet", "openxlsx", "pander", "patchwork", "plotly", "purrr", "quarto", "RColorBrewer", "reshape2", "rlang", "RMariaDB", "rmarkdown", "rnaturalearth", "rnaturalearthdata", "scales", "sf", "skimr", "stringi", "tibble", "tidyr", "tidyverse", "vcd", "viridis"],
-      "vignettes": false,
-      "metadata": {
-        "RemotePkgRef": "deps::oferta_educativa_laboral",
-        "RemoteType": "deps"
-      },
-      "sources": [],
-      "target": "src/contrib/localprojectautoscan-deps_1.0.0.tar.gz",
-      "platform": "source",
-      "rversion": "*",
-      "directpkg": true,
-      "license": "Unknown",
-      "dep_types": ["Depends", "Imports", "LinkingTo"],
-      "params": [],
-      "install_args": "",
-      "sysreqs": ""
-    },
-    {
       "ref": "DBI",
       "package": "DBI",
       "version": "1.2.3",

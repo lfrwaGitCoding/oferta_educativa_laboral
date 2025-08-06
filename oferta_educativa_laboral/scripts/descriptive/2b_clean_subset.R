@@ -53,13 +53,14 @@ getwd()
 
 
 # ////////////
-# Load rdata file ----
+# Directory locations ----
 
 # ===
-rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
-
-# Load locations
-load(file.path(rdata_dir, 'dir_locations.rdata.gzip'))
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
+rdata_dir <- file.path(data_dir, 'data_UP/access_SIAP_18092024/processed/')
 
 # Override results_dir if provided
 if (!is.na(results_dir_arg)) results_dir <- results_dir_arg

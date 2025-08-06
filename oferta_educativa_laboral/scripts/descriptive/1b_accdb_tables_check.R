@@ -40,23 +40,20 @@ results_dir_arg <- if (length(args) >= 3) args[3] else NA
 
 
 ############
-# Load rdata file with directory locations
+# Directory locations
 
 # Set working directory to the project root:
 setwd(here::here())
 
-# Load the .rdata.gzip file:
-# TO DO: check if this is needed any longer
-load("data/data_UP/processed/dir_locations.rdata.gzip")
-ls()
+project_root <- here::here()
+data_dir <- file.path(project_root, 'data')
+results_dir <- file.path(project_root, 'results')
+code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 
 # project_root <- here::here()
-project_root <- project_root
 print(project_root)
 getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
-
-print(all_locs)
 ############
 
 

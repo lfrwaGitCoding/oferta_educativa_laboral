@@ -1,13 +1,13 @@
+# R packages required to run tests
+# See r-requirements-full.txt for the full list of packages used
 covr
-xml2
-remotes
-dplyr
 ggplot2
-data.table
-knitr
-kableExtra
+ggthemes
+scales
+testthat
+withr
+here
 tidyverse
-
 
 # GitHub remotes:
 github::AntonioJBT/episcout

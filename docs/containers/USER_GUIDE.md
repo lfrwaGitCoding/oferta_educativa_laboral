@@ -16,6 +16,8 @@ docker run --rm -v "$PWD/data:/data" -v "$PWD/results:/results" ghcr.io/<owner>/
 - `-v "$PWD/data:/data"` mounts the host `data` directory inside the container.
 - `-v "$PWD/results:/results"` mounts the host `results` directory for outputs.
 - Outputs are written to `results/` in the container and appear directly in the host `results/` directory.
+
+> **Note:** If the `results` directory does not exist on the host, Docker and Apptainer will create it automatically when running the container. Alternatively, you can create the directory beforehand to ensure it exists.
 - The image bundles all dependencies so no manual environment activation is required.
 
 ## Using Apptainer (rootless HPC)

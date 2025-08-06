@@ -48,7 +48,7 @@ conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
 
-## Container workflow
+## Container workflow y Docker compose
 
 El proyecto también puede ejecutarse dentro de contenedores.
 Consulta las guías dedicadas para instrucciones paso a paso:
@@ -56,7 +56,18 @@ Consulta las guías dedicadas para instrucciones paso a paso:
 - [Guía de usuario](docs/containers/USER_GUIDE.md)
 - [Guía de mantenimiento](docs/containers/MAINTAINER_GUIDE.md)
 
-Ambas guías cubren el uso de **Docker** y **Apptainer**.
+Las guías cubren el uso de **Docker** y **Apptainer**.
+
+En breve:
+
+Asegúrate de contar con la imagen `oel` ya construida.
+Los directorios locales `data` y `results` se montan en el contenedor.
+
+```bash
+docker compose run --rm oel bash
+# o ejecuta directamente el pipeline
+docker compose run --rm oel python pipeline_oferta_laboral.py make full -v5
+```
 
 ## Estructura del proyecto
 

@@ -16,12 +16,12 @@ docker run --rm -v "$PWD/data:/data" ghcr.io/<owner>/oferta_educativa_laboral:la
 - `-v "$PWD/data:/data"` mounts a host `data` directory inside the container.
 - Outputs are written to `results/` in the container. With the above mount, the host will see them at `data/results/`.
 - The image bundles all dependencies so no manual environment activation is required.
-- Replace `<owner>` with the GitHub organization or username hosting the image.
 
 ## Using Apptainer (rootless HPC)
 
 Build an Apptainer image from the GHCR image and run the pipeline:
 
+**Remember to replace `<owner>` with your GitHub organization or username as described above.**
 ```bash
 apptainer build oferta-laboral.sif docker://ghcr.io/<owner>/oferta_educativa_laboral:latest
 apptainer run --bind "$PWD/data:/data" oferta-laboral.sif \

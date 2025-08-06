@@ -1,0 +1,16 @@
+# Exclude data and intermediate results
+data/
+results/
+
+# Exclude test fixtures
+tests/fixtures/
+
+# Exclude Git and GitHub directories
+.git
+.github
+
+# Exclude Python cache directories
+**/__pycache__/
+
+# Exclude RStudio project user directories
+*.Rproj.user

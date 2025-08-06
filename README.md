@@ -48,9 +48,19 @@ conda env create -f environment.yml
 conda activate oferta_educativa_laboral
 ```
 
-## Docker Compose
+## Container workflow y Docker compose
 
-Si prefieres usar contenedores, asegúrate de contar con la imagen `oel` ya construida.
+El proyecto también puede ejecutarse dentro de contenedores.
+Consulta las guías dedicadas para instrucciones paso a paso:
+
+- [Guía de usuario](docs/containers/USER_GUIDE.md)
+- [Guía de mantenimiento](docs/containers/MAINTAINER_GUIDE.md)
+
+Las guías cubren el uso de **Docker** y **Apptainer**.
+
+En breve:
+
+Asegúrate de contar con la imagen `oel` ya construida.
 Los directorios locales `data` y `results` se montan en el contenedor.
 
 ```bash

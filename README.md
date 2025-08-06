@@ -61,10 +61,17 @@ Para cargar la imagen desde el tarball y ejecutar el pipeline:
 
 ```bash
 docker load < oferta-laboral.tar.gz
-docker run --rm \
-  -v $PWD/data:/data \
-  -v $PWD/results:/results \
-  oferta-laboral:latest \
+docker compose run --rm oel python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
+```
+
+Para que los resultados persistan, monta explícitamente los directorios `data` y
+`results` al ejecutar el comando anterior:
+
+```bash
+docker compose run --rm \
+  -v "$PWD/data:/data" \
+  -v "$PWD/results:/results" \
+  oel \
   python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
 ```
 

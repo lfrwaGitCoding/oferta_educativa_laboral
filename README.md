@@ -71,8 +71,8 @@ docker run --rm \
 Para ejecutar las pruebas dentro del contenedor:
 
 ```bash
-docker run --rm -v $PWD:/work oferta-laboral:latest pytest --maxfail=1 --disable-warnings -q
-docker run --rm -v $PWD:/work oferta-laboral:latest Rscript -e "devtools::test(reporter='summary')"
+docker run --rm -v $PWD:/work -w /work oferta-laboral:latest pytest --maxfail=1 --disable-warnings -q
+docker run --rm -v $PWD:/work -w /work oferta-laboral:latest Rscript -e "devtools::test(reporter='summary')"
 ```
 
 Para instrucciones más detalladas consulta [docs/containers/USER_GUIDE.md](docs/containers/USER_GUIDE.md) y [docs/containers/MAINTAINER_GUIDE.md](docs/containers/MAINTAINER_GUIDE.md).

@@ -3,7 +3,9 @@ From: mambaorg/micromamba:1.5
 
 %files
     environment.yml /tmp/environment.yml
-    . /workspace/oferta_educativa_laboral
+    oferta_educativa_laboral /workspace/oferta_educativa_laboral
+    scripts /workspace/scripts
+    oferta_educativa_laboral/pipeline /workspace/pipeline
 
 %post
     export MAMBA_ENV_NAME=oferta_educativa_laboral

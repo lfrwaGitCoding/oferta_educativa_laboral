@@ -4,7 +4,9 @@ on:
   pull_request:
     branches: [main, master]
   push:
-    branches: [main, master]
+    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   # Linux tests run on every PR and on pushes to main/master

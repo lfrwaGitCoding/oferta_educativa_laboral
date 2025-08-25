@@ -25,6 +25,7 @@ class _DummyP:
         pass
 
     def load(self, infile: str, outfile: str, options: str) -> None:  # noqa: D401
+        """Mock load method: creates the output file."""
         Path(outfile).touch()
 
 

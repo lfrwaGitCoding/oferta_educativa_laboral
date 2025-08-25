@@ -140,7 +140,7 @@ def number_generator(
     mean: float = 1,
     sd: float = 1,
     sample_size: int = 1000,
-) -> pandas.Series:
+) -> pd.Series:
     """Generate a truncated normal sample as a pandas Series.
 
     The :func:`scipy.stats.truncnorm` distribution expects the ``a`` and

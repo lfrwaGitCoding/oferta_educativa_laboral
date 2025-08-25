@@ -1,0 +1,11 @@
+# Exclude version control metadata
+.git
+.gitignore
+.github
+
+# Exclude data and results directories
+data/
+results/
+
+# Avoid duplicating pipeline copied separately
+oferta_educativa_laboral/pipeline

@@ -217,23 +217,17 @@ def get_py_exec():
     which needs pythonw for matplotlib for instance.
     """
 
+    py_exec = "python"
     try:
-        if str("python") in PARAMS["general"]["py_exec"]:
-            py_exec = "{}".format(PARAMS["general"]["py_exec"])
-    except NameError:
-        E.warn(
-            """
-               You need to specify the python executable, just "python" or
-               "pythonw" is needed in pipeline.yml.
-               """
-        )
-    # else:
-    #    test_cmd = subprocess.check_output(['which', 'pythonw'])
-    #    sys_return = re.search(r'(.*)pythonw', str(test_cmd))
-    #    if sys_return:
-    #        py_exec = 'pythonw'
-    #    else:
-    #        py_exec = 'python'
+        config_exec = PARAMS["general"]["py_exec"]
+    except KeyError as exc:
+        raise KeyError(
+            "Missing 'py_exec' setting under 'general' in pipeline configuration"
+        ) from exc
+    if not config_exec:
+        raise ValueError("Configuration 'general.py_exec' must not be empty")
+    if "python" in str(config_exec):
+        py_exec = str(config_exec)
     return py_exec
 
 

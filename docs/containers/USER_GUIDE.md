@@ -1,33 +1,37 @@
 # Container User Guide
 
-This guide shows how to run the pipeline using the prebuilt image from the GitHub Container Registry (GHCR) and how to convert that image to Apptainer for high-performance computing (HPC) environments.
+This guide shows how to run the pipeline using a prebuilt Docker image distributed as a tarball or by building the image locally. It also covers converting the image to Apptainer for high-performance computing (HPC) environments.
 
 ## Using Docker
 
-Pull the image from GHCR and execute the pipeline:
+Load the prebuilt image tarball and execute the pipeline:
 
-> **Important:** Replace `<owner>` in the commands below with the GitHub organization or username that hosts the image. For example, if your organization is `acme-corp`, use `ghcr.io/acme-corp/oferta_educativa_laboral:latest`.
 ```bash
-docker pull ghcr.io/<owner>/oferta_educativa_laboral:latest
-docker run --rm -v "$PWD/data:/data" -v "$PWD/results:/results" ghcr.io/<owner>/oferta_educativa_laboral:latest \
+docker load < oferta-laboral.tar.gz
+docker run --rm -v "$PWD/data:/data" oferta-laboral:latest \
     python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
 ```
 
-- `-v "$PWD/data:/data"` mounts the host `data` directory inside the container.
-- `-v "$PWD/results:/results"` mounts the host `results` directory for outputs.
-- Outputs are written to `results/` in the container and appear directly in the host `results/` directory.
+If you do not have the tarball, build the image locally:
+
+```bash
+docker build -t oferta-laboral:latest .
+```
+
+- `-v "$PWD/data:/data"` mounts a host `data` directory inside the container.
+- Outputs are written to `results/` in the container. With the above mount, the host will see them at `data/results/`.
 
 > **Note:** If the `results` directory does not exist on the host, Docker and Apptainer will create it automatically when running the container. Alternatively, you can create the directory beforehand to ensure it exists.
+
 - The image bundles all dependencies so no manual environment activation is required.
 
 ## Using Apptainer (rootless HPC)
 
-Build an Apptainer image from the GHCR image and run the pipeline:
+Build an Apptainer image from the repository's `Singularity.def` and run the pipeline:
 
-**Remember to replace `<owner>` with your GitHub organization or username as described above.**
 ```bash
-apptainer build oferta-laboral.sif docker://ghcr.io/<owner>/oferta_educativa_laboral:latest
-apptainer run --bind "$PWD/data:/data" --bind "$PWD/results:/results" oferta-laboral.sif \
+apptainer build oferta-laboral.sif Singularity.def
+apptainer run --bind "$PWD/data:/data" oferta-laboral.sif \
     python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
 ```
 

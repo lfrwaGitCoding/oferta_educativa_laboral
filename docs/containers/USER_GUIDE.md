@@ -20,6 +20,9 @@ docker build -t oferta-laboral:latest .
 
 - `-v "$PWD/data:/data"` mounts a host `data` directory inside the container.
 - Outputs are written to `results/` in the container. With the above mount, the host will see them at `data/results/`.
+
+> **Note:** If the `results` directory does not exist on the host, Docker and Apptainer will create it automatically when running the container. Alternatively, you can create the directory beforehand to ensure it exists.
+
 - The image bundles all dependencies so no manual environment activation is required.
 
 ## Using Apptainer (rootless HPC)
@@ -32,4 +35,4 @@ apptainer run --bind "$PWD/data:/data" oferta-laboral.sif \
     python oferta_educativa_laboral/pipeline/pipeline_oferta_laboral.py make full -v5
 ```
 
-The `--bind` flag performs the same volume mount as Docker. Results appear under `data/results/` on the host, and the container's environment is automatically available during execution.
+The `--bind` flags perform the same volume mounts as Docker. Outputs appear directly in the host `results/` directory, and the container's environment is automatically available during execution.

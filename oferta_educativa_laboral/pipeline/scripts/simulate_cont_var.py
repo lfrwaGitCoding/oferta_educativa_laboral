@@ -253,7 +253,7 @@ def createDF(
     lower_bound: float = 0.0,
     upper_bound: float = 20.0,
     outfile: str = "continuous_var_simulation.tsv",
-) -> pandas.DataFrame:
+) -> pd.DataFrame:
     """Generate a DataFrame of simulated continuous variables.
 
     Parameters

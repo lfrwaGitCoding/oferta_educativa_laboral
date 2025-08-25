@@ -74,7 +74,7 @@ import sys
 import docopt
 
 # Data science:
-import pandas
+import pandas as pd
 import numpy as np
 import scipy.stats as stats
 
@@ -90,13 +90,28 @@ import random
 
 
 def id_generator(
-    text="ID_",
-    size=6,
-    chars=string.ascii_uppercase + string.digits,
-    sample_size=1000,
-):
-    """Generates a random sequence of letters and numbers and outputs a pandas
-    series  of a given sample size that is is
+    text: str = "ID_",
+    size: int = 6,
+    chars: str = string.ascii_uppercase + string.digits,
+    sample_size: int = 1000,
+) -> pd.Series:
+    """Generate a pandas Series of random alphanumeric identifiers.
+
+    Parameters
+    ----------
+    text : str, default "ID_"
+        Prefix to prepend to every generated identifier.
+    size : int, default 6
+        Number of random characters to generate for each identifier.
+    chars : str, default ``string.ascii_uppercase + string.digits``
+        Alphabet from which characters are sampled.
+    sample_size : int, default 1000
+        Total number of identifiers to produce.
+
+    Returns
+    -------
+    pd.Series
+        Series containing ``sample_size`` unique identifiers.
     """
 
     # Modified from:
@@ -110,7 +125,7 @@ def id_generator(
         i = str(text + i)
         ID_list.append(i)
 
-    ID_list = pandas.Series(ID_list)
+    ID_list = pd.Series(ID_list)
     # print(ID_list.head(),
     #      ID_list.tail(),
     #      ID_list.describe(),
@@ -120,12 +135,12 @@ def id_generator(
 
 
 def number_generator(
-    lower_bound=0,
-    upper_bound=1001,
-    mean=1,
-    sd=1,
-    sample_size=1000,
-):
+    lower_bound: float = 0,
+    upper_bound: float = 1001,
+    mean: float = 1,
+    sd: float = 1,
+    sample_size: int = 1000,
+) -> pd.Series:
     """Generate a truncated normal sample as a pandas Series.
 
     The :func:`scipy.stats.truncnorm` distribution expects the ``a`` and
@@ -143,7 +158,7 @@ def number_generator(
     b = (float(upper_bound) - float(mean)) / float(sd)
 
     sample = stats.truncnorm.rvs(a=a, b=b, loc=mean, scale=sd, size=sample_size)
-    sample = pandas.Series(sample)
+    sample = pd.Series(sample)
 
     return sample
 
@@ -153,7 +168,7 @@ def create_df_from_config(
     sample_size: int = 1000,
     outfile: str | None = None,
     seed: int | None = None,
-) -> pandas.DataFrame:
+) -> pd.DataFrame:
     """Generate a DataFrame based on a CSV configuration file.
 
     Parameters
@@ -172,8 +187,8 @@ def create_df_from_config(
         random.seed(seed)
         np.random.seed(seed)
 
-    config = pandas.read_csv(config_path)
-    df = pandas.DataFrame(index=range(sample_size))
+    config = pd.read_csv(config_path)
+    df = pd.DataFrame(index=range(sample_size))
 
     for _, row in config.iterrows():
         name = str(row.get("col_name"))
@@ -187,12 +202,12 @@ def create_df_from_config(
         if dist == "categorical":
             levels = str(row.get("levels", "")).split("|")
             probs = row.get("probabilities")
-            if pandas.isna(probs):
+            if pd.isna(probs):
                 weights = None
             else:
                 weights = [float(x) for x in str(probs).split("|")]
             values = random.choices(levels, weights=weights, k=sample_size)
-            series = pandas.Series(values, dtype="category")
+            series = pd.Series(values, dtype="category")
         elif dist == "uniform":
             series = stats.uniform.rvs(loc=lower, scale=upper - lower, size=sample_size)
         elif dist == "lognormal":
@@ -211,16 +226,16 @@ def create_df_from_config(
             )
 
         if dtype == "int":
-            series = pandas.Series(series).round().astype("Int64")
+            series = pd.Series(series).round().astype("Int64")
         elif dtype == "string":
-            series = pandas.Series(series).astype(str)
+            series = pd.Series(series).astype(str)
         else:
-            series = pandas.Series(series)
+            series = pd.Series(series)
 
         miss = row.get("missing_rate", 0)
         if miss and float(miss) > 0:
             mask = np.random.rand(sample_size) < float(miss)
-            series[mask] = pandas.NA
+            series[mask] = pd.NA
 
         df[name] = series
 
@@ -231,28 +246,47 @@ def create_df_from_config(
 
 
 def createDF(
-    var_size=10000,
-    sample_size=1000,
-    mean=2.0,
-    sd=0.10,
-    lower_bound=0.0,
-    upper_bound=20.0,
-    outfile="continuous_var_simulation.tsv",
-):
-    """
-    Generate a pandas dataframe that uses random IDs and random values from
-    a given distribution given a mean, standard
-    deviation, list size and range from a normal distribution.
+    var_size: int = 10000,
+    sample_size: int = 1000,
+    mean: float = 2.0,
+    sd: float = 0.10,
+    lower_bound: float = 0.0,
+    upper_bound: float = 20.0,
+    outfile: str = "continuous_var_simulation.tsv",
+) -> pd.DataFrame:
+    """Generate a DataFrame of simulated continuous variables.
+
+    Parameters
+    ----------
+    var_size : int, default 10000
+        Number of variables (columns) to create.
+    sample_size : int, default 1000
+        Number of samples (rows) for each variable.
+    mean : float, default 2.0
+        Mean of the truncated normal distribution.
+    sd : float, default 0.10
+        Standard deviation of the distribution.
+    lower_bound : float, default 0.0
+        Minimum value allowed in the distribution.
+    upper_bound : float, default 20.0
+        Maximum value allowed in the distribution.
+    outfile : str, default "continuous_var_simulation.tsv"
+        File path where the resulting DataFrame will be stored.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing ``var_size`` variables across ``sample_size`` samples.
     """
 
     # Generate an empty dataframe:
-    #    var_df = pandas.DataFrame({'sample_ID': id_generator(text = 'sample_',
+    #    var_df = pd.DataFrame({'sample_ID': id_generator(text = 'sample_',
     #                                                         size = 6,
     #                                                         chars = string.ascii_uppercase + string.digits,
     #                                                         sample_size = sample_size),
     #                               },
     #                                )
-    var_df = pandas.DataFrame()
+    var_df = pd.DataFrame()
     values = []
     for i in range(sample_size):
         value = str("per" + str(i))
@@ -327,9 +361,11 @@ def createDF(
 
 
 ##############
-def main():
-    """with docopt main() expects a dictionary with arguments from docopt()
-    docopt will automatically check your docstrings for usage, set -h, etc.
+def main() -> None:
+    """Entry point for command-line execution using ``docopt``.
+
+    This function parses command-line options and triggers data-frame
+    generation accordingly.
     """
     version = "0.2.0"
     options = docopt.docopt(__doc__, version=version)

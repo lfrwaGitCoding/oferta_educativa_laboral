@@ -240,7 +240,7 @@ def get_py_exec():
 # get_py_exec()
 
 
-def get_ini_paths() -> str:
+def get_ini_path() -> str:
     """
     Get the path to scripts for this project, e.g.
     ../scripts/:

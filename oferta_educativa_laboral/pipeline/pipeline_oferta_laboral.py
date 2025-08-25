@@ -62,6 +62,7 @@ import os
 import re
 import subprocess
 import glob
+from typing import List
 
 # Pipeline: attempt to import ruffus but fall back to no-op stubs for
 # testing environments where the package is missing.
@@ -158,7 +159,7 @@ except ModuleNotFoundError:  # pragma: no cover
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
-def getDir(path=_ROOT):
+def get_dir(path: str = _ROOT) -> str:
     """Get the absolute path to where this function resides. Useful for
     determining the user's path to a package. If a sub-directory is given it
     will be added to the path returned. Use '..' to go up directory levels."""
@@ -176,21 +177,20 @@ ini_paths = [
 ]
 
 
-def getParamsFiles(paths=ini_paths):
+def get_params_files(paths: List[str] = ini_paths) -> List[str]:
     """
     Search for python ini files in given paths, append files with full
-    paths for P.getParameters() to read.
-    Current paths given are:
-    where this code is executing, one up, current directory
+    paths for :func:`P.get_parameters` to read. The current default paths are
+    where this code is executing, one directory up, and the current directory.
     """
-    p_params_files = []
-    for path in ini_paths:
+    params_files: List[str] = []
+    for path in paths:
         for f in os.listdir(os.path.abspath(path)):
             ini_file = re.search(r"pipelin(.*).yml", f)
             if ini_file:
                 ini_file = os.path.join(os.path.abspath(path), ini_file.group())
-                p_params_files.append(ini_file)
-    return p_params_files
+                params_files.append(ini_file)
+    return params_files
 
 
 config_path = os.path.join(os.path.dirname(__file__), "configuration", "pipeline.yml")
@@ -240,14 +240,14 @@ def get_py_exec():
 # get_py_exec()
 
 
-def getINIpaths():
+def get_ini_path() -> str:
     """
     Get the path to scripts for this project, e.g.
     ../scripts/:
     e.g. my_cmd = "%(scripts_dir)s/bam2bam.py" % P.Parameters.get_params()
     """
     # Check getParams as was updated to get_params but
-    # PARAMS = P.Parameters.get_parameters(getParamsFiles())
+    # PARAMS = P.Parameters.get_parameters(get_params_files())
     # is what seems to work
     try:
         project_scripts_dir = "{}/".format(PARAMS["general"]["project_scripts_dir"])
@@ -372,19 +372,15 @@ def make_report():
         and os.path.isdir(report_dir)
         and os.listdir(report_dir)
     ):
-        sys.exit(
-            """ {} exists, not overwriting.
-                       Delete the folder and re-run make_report
-                 """.format(
+        raise RuntimeError(
+            """{} exists, not overwriting. Delete the folder and re-run make_report""".format(
                 report_dir
             )
         )
 
     else:
-        sys.exit(
-            """ The directory "pipeline_report" does not exist.
-                     Are the paths correct?
-                 """.format(
+        raise RuntimeError(
+            """The directory "pipeline_report" does not exist. Are the paths correct? {}""".format(
                 report_path
             )
         )

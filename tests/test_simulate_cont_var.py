@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import pytest
 
 
 def _load_module():
@@ -43,3 +44,4 @@ def test_id_generator_handles_zero_sample_size():
     simulate_cont_var = _load_module()
     series = simulate_cont_var.id_generator(sample_size=0)
     assert series.empty
+

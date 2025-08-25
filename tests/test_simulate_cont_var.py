@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import pytest
 
 
 def _load_module():
@@ -30,3 +31,9 @@ def test_number_generator_respects_bounds():
     )
     assert sample.min() >= 10
     assert sample.max() <= 20
+
+
+def test_number_generator_invalid_bounds():
+    simulate_cont_var = _load_module()
+    with pytest.raises(ValueError):
+        simulate_cont_var.number_generator(lower_bound=5, upper_bound=5)

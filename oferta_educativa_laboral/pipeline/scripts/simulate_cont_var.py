@@ -94,7 +94,7 @@ def id_generator(
     size: int = 6,
     chars: str = string.ascii_uppercase + string.digits,
     sample_size: int = 1000,
-) -> pandas.Series:
+) -> pd.Series:
     """Generate a pandas Series of random alphanumeric identifiers.
 
     Parameters

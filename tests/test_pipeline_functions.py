@@ -21,6 +21,7 @@ class _DummyP:
     PARAMS: dict = {}
 
     def run(self, statement: str) -> None:  # noqa: D401
+        """Mock implementation of run; does nothing."""
         pass
 
     def load(self, infile: str, outfile: str, options: str) -> None:  # noqa: D401

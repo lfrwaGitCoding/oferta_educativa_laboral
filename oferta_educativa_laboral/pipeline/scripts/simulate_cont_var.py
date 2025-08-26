@@ -74,7 +74,7 @@ import sys
 import docopt
 
 # Data science:
-import pandas
+import pandas as pd
 import numpy as np
 import scipy.stats as stats
 
@@ -110,7 +110,7 @@ def id_generator(
 
     Returns
     -------
-    pandas.Series
+    pd.Series
         Series containing ``sample_size`` unique identifiers.
 
     Each identifier consists of ``text`` followed by ``size`` random characters
@@ -153,7 +153,7 @@ def number_generator(
     b = (float(upper_bound) - float(mean)) / float(sd)
 
     sample = stats.truncnorm.rvs(a=a, b=b, loc=mean, scale=sd, size=sample_size)
-    sample = pandas.Series(sample)
+    sample = pd.Series(sample)
 
     return sample
 
@@ -163,7 +163,7 @@ def create_df_from_config(
     sample_size: int = 1000,
     outfile: str | None = None,
     seed: int | None = None,
-) -> pandas.DataFrame:
+) -> pd.DataFrame:
     """Generate a DataFrame based on a CSV configuration file.
 
     Parameters
@@ -182,8 +182,8 @@ def create_df_from_config(
         random.seed(seed)
         np.random.seed(seed)
 
-    config = pandas.read_csv(config_path)
-    df = pandas.DataFrame(index=range(sample_size))
+    config = pd.read_csv(config_path)
+    df = pd.DataFrame(index=range(sample_size))
 
     for _, row in config.iterrows():
         name = str(row.get("col_name"))
@@ -197,12 +197,12 @@ def create_df_from_config(
         if dist == "categorical":
             levels = str(row.get("levels", "")).split("|")
             probs = row.get("probabilities")
-            if pandas.isna(probs):
+            if pd.isna(probs):
                 weights = None
             else:
                 weights = [float(x) for x in str(probs).split("|")]
             values = random.choices(levels, weights=weights, k=sample_size)
-            series = pandas.Series(values, dtype="category")
+            series = pd.Series(values, dtype="category")
         elif dist == "uniform":
             series = stats.uniform.rvs(loc=lower, scale=upper - lower, size=sample_size)
         elif dist == "lognormal":
@@ -221,16 +221,16 @@ def create_df_from_config(
             )
 
         if dtype == "int":
-            series = pandas.Series(series).round().astype("Int64")
+            series = pd.Series(series).round().astype("Int64")
         elif dtype == "string":
-            series = pandas.Series(series).astype(str)
+            series = pd.Series(series).astype(str)
         else:
-            series = pandas.Series(series)
+            series = pd.Series(series)
 
         miss = row.get("missing_rate", 0)
         if miss and float(miss) > 0:
             mask = np.random.rand(sample_size) < float(miss)
-            series[mask] = pandas.NA
+            series[mask] = pd.NA
 
         df[name] = series
 
@@ -270,18 +270,18 @@ def createDF(
 
     Returns
     -------
-    pandas.DataFrame
+    pd.DataFrame
         DataFrame containing ``var_size`` variables across ``sample_size`` samples.
     """
 
     # Generate an empty dataframe:
-    #    var_df = pandas.DataFrame({'sample_ID': id_generator(text = 'sample_',
+    #    var_df = pd.DataFrame({'sample_ID': id_generator(text = 'sample_',
     #                                                         size = 6,
     #                                                         chars = string.ascii_uppercase + string.digits,
     #                                                         sample_size = sample_size),
     #                               },
     #                                )
-    var_df = pandas.DataFrame()
+    var_df = pd.DataFrame()
     values = []
     for i in range(sample_size):
         value = str("per" + str(i))
@@ -493,8 +493,6 @@ def main() -> None:
     except docopt.DocoptExit:
         print(docopt_error_msg)
         raise
-
-
 ##############
 
 

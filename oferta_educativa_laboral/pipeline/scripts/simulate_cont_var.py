@@ -122,8 +122,7 @@ def id_generator(
     for _ in range(sample_size):
         rand = "".join(random.choice(chars) for _ in range(size))
         id_list.append(f"{text}{rand}")
-
-    return pandas.Series(id_list)
+    return pd.Series(id_list)
 
 
 def number_generator(
@@ -493,6 +492,8 @@ def main() -> None:
     except docopt.DocoptExit:
         print(docopt_error_msg)
         raise
+
+
 ##############
 
 

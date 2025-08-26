@@ -1,4 +1,4 @@
-##!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 simulate_cont_var.py
 ======================
@@ -112,26 +112,18 @@ def id_generator(
     -------
     pd.Series
         Series containing ``sample_size`` unique identifiers.
+
+    Each identifier consists of ``text`` followed by ``size`` random characters
+    drawn from ``chars``. The returned :class:`pandas.Series` contains
+    ``sample_size`` such identifiers.
     """
 
-    # Modified from:
-    # https://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python?rq=1
+    id_list = []
+    for _ in range(sample_size):
+        rand = "".join(random.choice(chars) for _ in range(size))
+        id_list.append(f"{text}{rand}")
 
-    ID_list = []
-    sample_size = sample_size + 1  # Python index is 0-based, stop number is
-    # excluded
-    for i in range(1, sample_size):
-        i = "".join(random.choice(chars) for i in range(size))
-        i = str(text + i)
-        ID_list.append(i)
-
-    ID_list = pd.Series(ID_list)
-    # print(ID_list.head(),
-    #      ID_list.tail(),
-    #      ID_list.describe(),
-    #      )
-
-    return ID_list
+    return pandas.Series(id_list)
 
 
 def number_generator(
@@ -150,6 +142,9 @@ def number_generator(
     interval.  This function now converts the bounds appropriately so the
     returned sample respects the requested range.
     """
+
+    if float(lower_bound) >= float(upper_bound):
+        raise ValueError("lower_bound must be less than upper_bound.")
 
     if float(sd) <= 0:
         raise ValueError("Standard deviation (sd) must be positive and non-zero.")
@@ -498,8 +493,6 @@ def main() -> None:
     except docopt.DocoptExit:
         print(docopt_error_msg)
         raise
-
-
 ##############
 
 

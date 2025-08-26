@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import pytest
 
 
 def _load_module():
@@ -30,3 +31,35 @@ def test_number_generator_respects_bounds():
     )
     assert sample.min() >= 10
     assert sample.max() <= 20
+
+
+def test_number_generator_invalid_sd():
+    simulate_cont_var = _load_module()
+    with pytest.raises(ValueError):
+        simulate_cont_var.number_generator(sd=0)
+
+
+def test_create_df_from_config_missing_file():
+    simulate_cont_var = _load_module()
+    with pytest.raises(FileNotFoundError):
+        simulate_cont_var.create_df_from_config("no_such_file.csv")
+
+
+def test_id_generator_length():
+    simulate_cont_var = _load_module()
+    ids = simulate_cont_var.id_generator(sample_size=3)
+    assert len(ids) == 3
+
+
+def test_id_generator_returns_prefix_and_length():
+    simulate_cont_var = _load_module()
+    series = simulate_cont_var.id_generator(text="sample_", size=4, sample_size=3)
+    assert len(series) == 3
+    assert series.str.startswith("sample_").all()
+
+
+def test_id_generator_handles_zero_sample_size():
+    simulate_cont_var = _load_module()
+    series = simulate_cont_var.id_generator(sample_size=0)
+    assert series.empty
+

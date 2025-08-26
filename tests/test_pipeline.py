@@ -2,6 +2,7 @@ from pathlib import Path
 import importlib
 import inspect
 import sys
+import pytest
 
 
 def test_pipeline_exists():
@@ -41,3 +42,54 @@ def test_config_path_exists():
     )
     assert hasattr(module, "config_path")
     assert Path(module.config_path).resolve() == expected.resolve()
+
+
+def test_get_py_exec_missing_config(monkeypatch):
+    """get_py_exec should raise when configuration is missing."""
+    base = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(base))
+    module = importlib.import_module(
+        "oferta_educativa_laboral.pipeline.pipeline_oferta_laboral"
+    )
+    monkeypatch.setattr(module, "PARAMS", {"general": {}})
+    with pytest.raises(KeyError, match="py_exec"):
+        module.get_py_exec()
+
+
+def test_get_py_exec_empty_config(monkeypatch):
+    """Empty configuration should raise a ValueError."""
+    base = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(base))
+    module = importlib.import_module(
+        "oferta_educativa_laboral.pipeline.pipeline_oferta_laboral"
+    )
+    monkeypatch.setattr(module, "PARAMS", {"general": {"py_exec": ""}})
+    with pytest.raises(ValueError, match="general.py_exec"):
+        module.get_py_exec()
+
+
+def _load_pipeline_module():
+    base = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(base))
+    return importlib.import_module(
+        "oferta_educativa_laboral.pipeline.pipeline_oferta_laboral"
+    )
+
+
+def test_make_report_raises_if_exists(tmp_path, monkeypatch):
+    module = _load_pipeline_module()
+    report_dir = tmp_path / "pipeline_report"
+    report_dir.mkdir()
+    (report_dir / "dummy.txt").write_text("data")
+    monkeypatch.setattr(module, "report_dir", str(report_dir))
+    with pytest.raises(RuntimeError, match="exists, not overwriting"):
+        module.make_report()
+
+
+def test_make_report_raises_if_missing(tmp_path, monkeypatch):
+    module = _load_pipeline_module()
+    report_dir = tmp_path / "pipeline_report"
+    monkeypatch.setattr(module, "report_dir", str(report_dir))
+    with pytest.raises(RuntimeError, match="does not exist"):
+        module.make_report()
+

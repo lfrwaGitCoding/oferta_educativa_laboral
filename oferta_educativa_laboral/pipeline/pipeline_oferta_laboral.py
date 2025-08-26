@@ -177,12 +177,26 @@ ini_paths = [
 ]
 
 
-def get_params_files(paths: List[str] = ini_paths) -> List[str]:
+def get_params_files(paths: List[str] | None = None) -> List[str]:
+    """Return a list of configuration files found in ``paths``.
+
+    Parameters
+    ----------
+    paths:
+        Iterable of directory paths to search.  If ``None`` (default), the
+        module level :data:`ini_paths` list is used.  Passing ``None`` ensures
+        that runtime modifications to :data:`ini_paths` (e.g. by tests) are
+        respected.
+
+    Returns
+    -------
+    list of str
+        Full paths to ``pipeline*.yml`` files within the supplied directories.
     """
-    Search for python ini files in given paths, append files with full
-    paths for :func:`P.get_parameters` to read. The current default paths are
-    where this code is executing, one directory up, and the current directory.
-    """
+
+    if paths is None:
+        paths = ini_paths
+
     params_files: List[str] = []
     for path in paths:
         for f in os.listdir(os.path.abspath(path)):
@@ -191,6 +205,30 @@ def get_params_files(paths: List[str] = ini_paths) -> List[str]:
                 ini_file = os.path.join(os.path.abspath(path), ini_file.group())
                 params_files.append(ini_file)
     return params_files
+
+
+def getParamsFiles(paths: List[str] | None = None) -> List[str]:
+    """Backward compatible wrapper for :func:`get_params_files`."""
+
+    return get_params_files(paths)
+
+
+def get_ini_paths() -> str:
+    """Return the ``project_scripts_dir`` path from :data:`PARAMS`.
+
+    The returned path is guaranteed to end with a trailing ``/`` to match the
+    expectations of legacy code and tests.  A :class:`KeyError` is raised if
+    the required keys are missing from :data:`PARAMS`.
+    """
+
+    scripts_dir = PARAMS["general"]["project_scripts_dir"]
+    return f"{scripts_dir.rstrip('/')}/"
+
+
+def getINIpaths() -> str:
+    """Backward compatible wrapper for :func:`get_ini_paths`."""
+
+    return get_ini_paths()
 
 
 config_path = os.path.join(os.path.dirname(__file__), "configuration", "pipeline.yml")

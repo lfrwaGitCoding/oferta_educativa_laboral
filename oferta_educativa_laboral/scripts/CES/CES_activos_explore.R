@@ -44,15 +44,14 @@ getwd()
 
 # ===
 # Load the .rdata.gzip file:
-
-
-
+# TO DO:
+data_dir <- "data/"
 # ===
 
 
 # ===
 # CES data dir:
-ces_data_dir <- file.path(data_dir, "data_CES/datos/")
+ces_data_dir <- file.path(data_dir, "data_CES/processed/")
 dir.exists(ces_data_dir)
 # ===
 

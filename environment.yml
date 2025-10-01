@@ -5,10 +5,12 @@ channels:
 dependencies:
   - python=3.11
   - pip
-  - r-base=4.2
+  # Modified to version 4.3 instead of 4.2
+  - r-base=4.3
   - r-data.table
   - r-dplyr
-  - r-episcout
+  # Package not found, commenting while getting proper source
+  # - r-episcout
   - r-ggplot2
   - r-ggthemes
   - r-cowplot

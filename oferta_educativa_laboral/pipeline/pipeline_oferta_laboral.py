@@ -377,7 +377,7 @@ def loadWordCounts(infile, outfile):
 report_dir = "pipeline_report"
 
 
-@follows(mkdir(report_dir))
+@follows(mkdir(report_dir), convert_to_csv)
 def make_report():
     """Run a report generator script (e.g. with quarto render options)
     generate_report.R will create an html quarto document.

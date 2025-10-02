@@ -354,7 +354,10 @@ def convert_to_csv(outfile):
     except FileNotFoundError:
         print(f"Error: the file '{file_name}' was not found")
     for filename in file_list:
-        statement2 = "bash scripts/accdb_to_csv_encodings_copy.sh "+filename+" "+project_root+"/results"
+        statement2 = (
+        f"bash scripts/accdb_to_csv_encodings_copy.sh {filename} "
+        f"{project_root}/results"
+        )
         P.run(statement2)
     statement3 = "touch %(outfile)s"
     P.run(statement3)

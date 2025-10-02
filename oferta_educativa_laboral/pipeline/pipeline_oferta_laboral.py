@@ -128,8 +128,6 @@ except ModuleNotFoundError:  # pragma: no cover
     iotools = _Dummy()
     P = _Dummy()
     E = _Dummy()
-
-
 # Import this project's module, uncomment if building something more elaborate:
 # try:
 #    import  pipeline_template.module_template
@@ -345,9 +343,21 @@ results_dir = PARAMS.get("paths", {}).get("results_dir", "results")
 @originate(os.path.join(results_dir, "dummy.csv"))
 def convert_to_csv(outfile):
     """Dummy step that would convert .accdb tables to CSV files."""
-    statement = "touch %(outfile)s"
-    P.run(statement)
-
+    project_root = os.environ.get('PROJECT_ROOT', '../..')
+    statement1 = "ls -1 "+project_root+"/data/"+"*.accdb > accdb_files.txt"
+    P.run(statement1)
+    file_name = "accdb_files.txt"
+    file_list = []
+    try: 
+        with open(file_name, 'r') as f:
+            file_list = [line.strip() for line in f]
+    except FileNotFoundError:
+        print(f"Error: the file '{file_name}' was not found")
+    for filename in file_list:
+        statement2 = "bash scripts/accdb_to_csv_encodings_copy.sh "+filename+" "+project_root+"/results"
+        P.run(statement2)
+    statement3 = "touch %(outfile)s"
+    P.run(statement3)
 
 @transform(convert_to_csv, suffix(".csv"), "_tables_check.rdata.gzip")
 def run_tables_check(infile, outfile):
@@ -397,7 +407,7 @@ def make_report():
             report_dir
         )
         E.info("""Building report in {}.""".format(report_dir))
-        P.run(statement)
+#        P.run(statement)
 
     elif (
         os.path.exists(report_dir)

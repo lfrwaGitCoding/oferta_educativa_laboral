@@ -328,6 +328,7 @@ def get_initial_files():
     convert_to_csv method of the pipeline.
     """
     initial_files = glob.glob("../../data/*.accdb")
+    #TODO: handle unsupported file names, eg: names with spaces
     if not initial_files:
         raise FileNotFoundError("No .accdb files are in the data directory!")
     else:
@@ -352,31 +353,19 @@ results_dir = PARAMS.get("paths", {}).get("results_dir", "results")
 
 
 @follows(mkdir(results_dir))
-#originate(os.path.join(results_dir, "dummy.csv"))
-@transform(get_initial_files(), suffix(".accdb"), r"flags/\1.done")
+@transform(get_initial_files(), regex(".*/([^/]+)\.accdb$"), r"../../results/\1.done")
 def convert_to_csv(infile, outfile):
     """Dummy step that would convert .accdb tables to CSV files."""
-    print("Hello")
     project_root = os.environ.get('PROJECT_ROOT', '../..')
-#    statement1 = "ls -1 "+project_root+"/data/"+"*.accdb > accdb_files.txt"
-#    P.run(statement1)
-#    file_name = "accdb_files.txt"
-#    file_list = []
-#    try:
-#        with open(file_name, 'r') as f:
-#            file_list = [line.strip() for line in f]
-#    except FileNotFoundError:
-#        print(f"Error: the file '{file_name}' was not found")
-#    for filename in file_list:
-    statement = (
+    statement1 = (
     f"bash scripts/accdb_to_csv_encodings_copy.sh {infile} "
     f"{project_root}/results"
     )
-    P.run(statement)
-#    statement3 = "touch %(outfile)s"
-#    P.run(statement3)
-     #print(infile)
-     #print("End of convert to csv")
+    P.run(statement1)
+
+    statement2 = "touch %(outfile)s"
+    P.run(statement2)
+
 
 @transform(convert_to_csv, suffix(".csv"), "_tables_check.rdata.gzip")
 def run_tables_check(infile, outfile):

@@ -362,7 +362,6 @@ def convert_to_csv(infile, outfile):
     f"{project_root}/results"
     )
     P.run(statement1)
-
     statement2 = "touch %(outfile)s"
     P.run(statement2)
 

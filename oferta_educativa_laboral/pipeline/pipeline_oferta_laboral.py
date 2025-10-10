@@ -156,7 +156,6 @@ except ModuleNotFoundError:  # pragma: no cover
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
 
-
 def get_dir(path: str = _ROOT) -> str:
     """Get the absolute path to where this function resides. Useful for
     determining the user's path to a package. If a sub-directory is given it
@@ -321,6 +320,19 @@ def connect():
 
     return dbh
 
+def get_initial_files():
+    """Utility function to retrieve .accdb file names
+
+    Use this function to get names from .accdb files and store it
+    in a python list. The list is used as a ruffus input for the
+    convert_to_csv method of the pipeline.
+    """
+    initial_files = glob.glob("../../data/*.accdb")
+    if not initial_files:
+        raise FileNotFoundError("No .accdb files are in the data directory!")
+    else:
+        print(f"Success, .accdb files found are: {initial_files}")
+    return initial_files
 
 ###################################################
 # Specific pipeline tasks
@@ -340,27 +352,31 @@ results_dir = PARAMS.get("paths", {}).get("results_dir", "results")
 
 
 @follows(mkdir(results_dir))
-@originate(os.path.join(results_dir, "dummy.csv"))
-def convert_to_csv(outfile):
+#originate(os.path.join(results_dir, "dummy.csv"))
+@transform(get_initial_files(), suffix(".accdb"), r"flags/\1.done")
+def convert_to_csv(infile, outfile):
     """Dummy step that would convert .accdb tables to CSV files."""
+    print("Hello")
     project_root = os.environ.get('PROJECT_ROOT', '../..')
-    statement1 = "ls -1 "+project_root+"/data/"+"*.accdb > accdb_files.txt"
-    P.run(statement1)
-    file_name = "accdb_files.txt"
-    file_list = []
-    try: 
-        with open(file_name, 'r') as f:
-            file_list = [line.strip() for line in f]
-    except FileNotFoundError:
-        print(f"Error: the file '{file_name}' was not found")
-    for filename in file_list:
-        statement2 = (
-        f"bash scripts/accdb_to_csv_encodings_copy.sh {filename} "
-        f"{project_root}/results"
-        )
-        P.run(statement2)
-    statement3 = "touch %(outfile)s"
-    P.run(statement3)
+#    statement1 = "ls -1 "+project_root+"/data/"+"*.accdb > accdb_files.txt"
+#    P.run(statement1)
+#    file_name = "accdb_files.txt"
+#    file_list = []
+#    try:
+#        with open(file_name, 'r') as f:
+#            file_list = [line.strip() for line in f]
+#    except FileNotFoundError:
+#        print(f"Error: the file '{file_name}' was not found")
+#    for filename in file_list:
+    statement = (
+    f"bash scripts/accdb_to_csv_encodings_copy.sh {infile} "
+    f"{project_root}/results"
+    )
+    P.run(statement)
+#    statement3 = "touch %(outfile)s"
+#    P.run(statement3)
+     #print(infile)
+     #print("End of convert to csv")
 
 @transform(convert_to_csv, suffix(".csv"), "_tables_check.rdata.gzip")
 def run_tables_check(infile, outfile):

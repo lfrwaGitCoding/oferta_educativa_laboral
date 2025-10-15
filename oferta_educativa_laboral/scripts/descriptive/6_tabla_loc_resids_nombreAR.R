@@ -88,9 +88,14 @@ dir.exists(ces_data_dir)
 
 # ===
 # Dataset:
-spec_loc <- "Julio_2025/"
-infile <- "Egresos_Febrero_2026_14072025.xlsx"
-sheet <- "SIMULACION EGRESO 2026"
+# spec_loc <- "Julio_2025/"
+spec_loc <- "original_transfers/"
+
+# infile <- "Egresos_Febrero_2026_14072025.xlsx"
+infile <- "Copia de Base_Simulacion_Egresos_Febrero_OOAD_UMAE_2026_25082025.xlsx"
+
+# sheet <- "SIMULACION EGRESO 2026"
+sheet <- "EGRESOS FEBRERO 2026"
 
 infile_path <- file.path(sprintf("%s/%s/%s",
                                  ces_data_dir,

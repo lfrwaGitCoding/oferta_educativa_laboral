@@ -128,8 +128,6 @@ except ModuleNotFoundError:  # pragma: no cover
     iotools = _Dummy()
     P = _Dummy()
     E = _Dummy()
-
-
 # Import this project's module, uncomment if building something more elaborate:
 # try:
 #    import  pipeline_template.module_template
@@ -157,7 +155,6 @@ except ModuleNotFoundError:  # pragma: no cover
 # http://stackoverflow.com/questions/4519127/setuptools-package-data-folder-location
 
 _ROOT = os.path.abspath(os.path.dirname(__file__))
-
 
 def get_dir(path: str = _ROOT) -> str:
     """Get the absolute path to where this function resides. Useful for
@@ -323,6 +320,20 @@ def connect():
 
     return dbh
 
+def get_initial_files():
+    """Utility function to retrieve .accdb file names
+
+    Use this function to get names from .accdb files and store it
+    in a python list. The list is used as a ruffus input for the
+    convert_to_csv method of the pipeline.
+    """
+    initial_files = glob.glob("../../data/*.accdb")
+    #TODO: handle unsupported file names, eg: names with spaces
+    if not initial_files:
+        raise FileNotFoundError("No .accdb files are in the data directory!")
+    else:
+        print(f"Success, .accdb files found are: {initial_files}")
+    return initial_files
 
 ###################################################
 # Specific pipeline tasks
@@ -342,11 +353,17 @@ results_dir = PARAMS.get("paths", {}).get("results_dir", "results")
 
 
 @follows(mkdir(results_dir))
-@originate(os.path.join(results_dir, "dummy.csv"))
-def convert_to_csv(outfile):
+@transform(get_initial_files(), regex(".*/([^/]+)\.accdb$"), r"../../results/\1.done")
+def convert_to_csv(infile, outfile):
     """Dummy step that would convert .accdb tables to CSV files."""
-    statement = "touch %(outfile)s"
-    P.run(statement)
+    project_root = os.environ.get('PROJECT_ROOT', '../..')
+    statement1 = (
+    f"bash scripts/accdb_to_csv_encodings_copy.sh {infile} "
+    f"{project_root}/results"
+    )
+    P.run(statement1)
+    statement2 = "touch %(outfile)s"
+    P.run(statement2)
 
 
 @transform(convert_to_csv, suffix(".csv"), "_tables_check.rdata.gzip")
@@ -377,7 +394,7 @@ def loadWordCounts(infile, outfile):
 report_dir = "pipeline_report"
 
 
-@follows(mkdir(report_dir))
+@follows(mkdir(report_dir), convert_to_csv)
 def make_report():
     """Run a report generator script (e.g. with quarto render options)
     generate_report.R will create an html quarto document.
@@ -397,7 +414,7 @@ def make_report():
             report_dir
         )
         E.info("""Building report in {}.""".format(report_dir))
-        P.run(statement)
+#        P.run(statement)
 
     elif (
         os.path.exists(report_dir)

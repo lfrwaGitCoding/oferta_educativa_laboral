@@ -8,12 +8,11 @@
 # 'dir_locations.R'
 
 # Currently tables from SIAP are:
-  # tabla Bienestar
-  # tabla Plantilla, e.g. Qna_17_Bienestar_2024.csv
+# tabla Bienestar
+# tabla Plantilla, e.g. Qna_17_Bienestar_2024.csv
 
 # No output as tables have the same structure
 ############
-
 
 ############
 # Import libraries
@@ -27,17 +26,20 @@ library(tidyverse)
 options(error = function() {
   q(status = 1)
 })
+############
 
 ############
 # Parse command line arguments
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) < 2) {
-  stop("Usage: Rscript 1b_accdb_tables_check.R <infile1> <infile2> [results_dir]")
+  stop(
+    "Usage: Rscript 1b_accdb_tables_check.R <infile1> <infile2> [results_dir]"
+  )
 }
 infile <- args[1]
 infile2 <- args[2]
 results_dir_arg <- if (length(args) >= 3) args[3] else NA
-
+############
 
 ############
 # Directory locations
@@ -56,11 +58,12 @@ getwd()
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 ############
 
-
 ############
 # Datasets:
 
-if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
+if (!is.na(results_dir_arg)) {
+  results_dir <- results_dir_arg
+}
 
 # infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
 # infile2_path <- if (file.exists(infile2)) infile2 else file.path(data_dir, infile2)
@@ -72,7 +75,6 @@ print(results_outdir)
 # For saving/naming outputs:
 infile_prefix <- "setup"
 ############
-
 
 ############
 # Read in:
@@ -87,7 +89,6 @@ colnames(infile)
 colnames(infile2)
 ############
 
-
 ############
 # Check overlap between datasets
 
@@ -101,9 +102,7 @@ colnames(infile)[colnames(infile) != colnames(infile2)]
 
 ###
 # Check manually:
-column_names_dfs <- data.frame(df1 = colnames(infile),
-                               df2 = colnames(infile2)
-                               )
+column_names_dfs <- data.frame(df1 = colnames(infile), df2 = colnames(infile2))
 # View(column_names_dfs)
 file_n <- "df_shared_col_names"
 suffix <- "txt"
@@ -112,7 +111,6 @@ outfile <- sprintf("%s/%s", results_outdir, outfile)
 outfile
 epi_write(column_names_dfs, outfile)
 ###
-
 
 ###
 # Check how many rows match in both databases
@@ -131,7 +129,6 @@ row_matches
 # 0
 # Consider adding origin and merging datasets
 ############
-
 
 ############
 # The end:

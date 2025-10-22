@@ -6,12 +6,9 @@
 # May 2025
 # Meds esp por DH
 
-
-
 # meds esp (cada una) por DH
 # nacional
 # por estado / OOAD
-
 
 # filtrar por sede academica por especialidad
 
@@ -24,7 +21,6 @@
 
 # Output are tables por OOAD, meds esp, por DH
 # ////////////
-
 
 # ////////////
 # Import libraries ----
@@ -45,14 +41,12 @@ library(stringi)
 library(openxlsx)
 # ////////////
 
-
 # ////////////
 # Set working directory to the project root  ----
 setwd(here::here())
 # renv should be picked up automatically, see 0_xx in project_tools if it interrupts
 getwd()
 # ////////////
-
 
 # ////////////
 # Global options for plotting, generally need larger fot size:
@@ -66,11 +60,11 @@ font_size_y <- font_size - 0 # y-axis ticks
 
 my_theme <- theme_minimal(base_size = font_size) +
     theme(
-        plot.title    = element_text(size = font_size, face = "bold"),
-        axis.title.x  = element_text(size = font_size),
-        axis.title.y  = element_text(size = font_size),
-        axis.text.x   = element_text(size = font_size_x),  # x-axis tick labels
-        axis.text.y   = element_text(size = font_size_y)  # y-axis tick labels
+        plot.title = element_text(size = font_size, face = "bold"),
+        axis.title.x = element_text(size = font_size),
+        axis.title.y = element_text(size = font_size),
+        axis.text.x = element_text(size = font_size_x), # x-axis tick labels
+        axis.text.y = element_text(size = font_size_y) # y-axis tick labels
         # panel.grid    = element_blank()
         # panel.background = element_rect(fill = "white", colour = NA),
         # plot.background  = element_rect(fill = "white", colour = NA),
@@ -86,12 +80,12 @@ theme_set(my_theme)
 # these are good options for high quality images
 # ////////////
 
-
 # ////////////
 # Load rdata file ----
 
 # ===
-rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
+# TO DO: clean up paths
+rdata_dir <- "~/Documents/work/comp_med_medicina_datos/projects/datahub/nominales_identificables/oferta_educativa_laboral_data/data_UP/processed/"
 
 # TO DO: Manually set:
 # infile <- '2_clean_dups_col_types_Qna_17_Bienestar_2024.rdata.gzip'
@@ -103,11 +97,11 @@ rdata_dir <- 'data/data_UP/access_SIAP_18092024/processed/'
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_meds.rdata.gzip"
 # infile <- '2b_clean_subset_2_clean_dups_col_types_Qna_17_Plantilla_2024_enfermeras.rdata.gzip'
 
-
-infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
+#infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_meds.rdata.gzip"
 # infile <- "2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
 # "~/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/data//data_UP/access_SIAP_18092024/processed//2b_clean_subset_2_clean_dups_col_types_Qna_07_Plantilla_2025_resids.rdata.gzip"
 
+infile <- "2_clean_dups_col_types_Qna_15_Plantilla_2025.rdata.gzip"
 
 # Full path and file name:
 infile_path <- paste0(rdata_dir, infile)
@@ -143,43 +137,39 @@ print(dir(path = normalizePath(project_root), all.files = TRUE))
 # ===
 # ////////////
 
-
-# ////////////
-# Source functions/scripts/etc ----
-# TO DO:
-# Source (until I update episcout)
-source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
-# ////////////
-
-
 # ////////////
 # Output dir, based on today's date ----
 # script_n <- 'meds_cada_esp_DH_OOADs'
-script_n <- 'resids_cada_esp_DH_OOADs'
+script_n <- 'meds_ads_cada_esp_DH_OOADs'
 infile_prefix <- strsplit(infile, "\\.")[[1]][1]
-results_subdir <- sprintf('%s_%s',
-                          format(Sys.Date(), '%d_%m_%Y'),
-                          infile_prefix
-                          )
+results_subdir <- sprintf(
+    '%s_%s',
+    format(Sys.Date(), '%d_%m_%Y'),
+    infile_prefix
+)
 results_subdir
-results_subdir <- epi_create_dir(base_path = results_dir,
-                                 subdir = results_subdir
-                                 )
+results_subdir <- epi_create_dir(
+    base_path = results_dir,
+    subdir = results_subdir
+)
 # ////////////
-
 
 # ////////////
 # Capture output / log ----
 
 # ===
 # Redirect standard output
-if (!interactive()) { # TRUE if not interactive, will then log output
+if (!interactive()) {
+    # TRUE if not interactive, will then log output
     script_n <- '2_clean_dups_col_types'
     sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
     sink(sink_stdout, split = TRUE)
 
     # Redirect messages and warnings
-    sink_msg <- file(paste0(results_subdir, '/', script_n, '.sink_msg.log'), open = "wt")
+    sink_msg <- file(
+        paste0(results_subdir, '/', script_n, '.sink_msg.log'),
+        open = "wt"
+    )
     sink(sink_msg, type = "message")
 
     # Example outputs
@@ -191,11 +181,12 @@ if (!interactive()) { # TRUE if not interactive, will then log output
 
 # ===
 # Create a logger
-if (!interactive()) { # TRUE if not interactive, will then log output
+if (!interactive()) {
+    # TRUE if not interactive, will then log output
     logger <- create.logger()
     log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
     logfile(logger) <- log_n # Log file location
-    level(logger) <- "INFO"  # Set logging level (DEBUG, INFO, WARN, ERROR)
+    level(logger) <- "INFO" # Set logging level (DEBUG, INFO, WARN, ERROR)
 
     # Add log messages
     # info(logger, "Script started")
@@ -204,7 +195,6 @@ if (!interactive()) { # TRUE if not interactive, will then log output
     # error(logger, "This is an error")
 }
 # ////////////
-
 
 # ////////////
 # Check column types ----
@@ -233,18 +223,20 @@ epi_clean_count_classes(df = data_f)
 # ===
 # ////////////
 
-
 # ////////////
 # ===
 # num derechohabientes  DIR 2025 data ----
-DIR_DH_rdata_dir <- '/results/specific_Qs/meds_por_DH/31_03_2025_medicos_por_mil_derechohabientes/'
+# TO DO: clean up paths
+DIR_DH_rdata_dir <- '/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/datahub/agregados/internal_UEI/meds_por_DH_processed/'
+DIR_DH_rdata_dir
 
 # TO DO: Manually set:
 # has extedned columns with eg carga, carga con vacantes, qna 17 2024, qna 07 2025, etc
 infile <- 'medicos_por_mil_derechohabientes_utf8.csv'
 
 # Full path and file name:
-infile_path <- paste0(getwd(), DIR_DH_rdata_dir, infile)
+#infile_path <- paste0(getwd(), DIR_DH_rdata_dir, infile)
+infile_path <- paste0(DIR_DH_rdata_dir, infile)
 print(infile_path)
 
 
@@ -255,7 +247,6 @@ str(DIR_num_DH)
 # View(DIR_num_DH)
 # ===
 
-
 # ===
 # meds per DH per OOAD ----
 # e.g. Meds Aguascalientes
@@ -263,19 +254,40 @@ str(DIR_num_DH)
 # ===
 # Get meds esp por OOAD, e.g.:
 colnames(data_f)
-summary(data_f$DESCRIP_CLASCATEG)
 summary(data_f$DELEGACION)
 summary(data_f$NOMBREAR)
 
-summary(data_f[data_f$DELEGACION == "Aguascalientes", ])
-summary(data_f[data_f$DELEGACION == "Aguascalientes", c("DESCRIP_CLASCATEG", "NOMBREAR")])
+sum(summary(data_f$NOMBREAR))
 
-meds_OOAD <- data_f %>%
+summary(data_f$DESCRIP_CLASCATEG)
+sum(summary(data_f[data_f$DESCRIP_CLASCATEG == "1.MÉDICOS", "NOMBREAR"]))
+summary(data_f$DESCRIP_CLASCATEG)[1] ==
+    sum(summary(data_f[data_f$DESCRIP_CLASCATEG == "1.MÉDICOS", "NOMBREAR"]))
+
+summary(data_f[data_f$DELEGACION == "Aguascalientes", ])
+summary(data_f[
+    data_f$DELEGACION == "Aguascalientes",
+    c("DESCRIP_CLASCATEG", "NOMBREAR")
+])
+
+# Medicos adscritos:
+data_f_meds <- data_f[data_f$DESCRIP_CLASCATEG == "1.MÉDICOS", ]
+dim(data_f_meds)
+length(unique((data_f_meds$NOMBREAR)))
+length(unique((data_f$NOMBREAR)))
+
+# Medicos adscritos en plazas ocupadas:
+data_f_meds_PLZOCU <- data_f_meds[data_f_meds$PLZOCU == 1, ]
+dim(data_f_meds)
+dim(data_f_meds_PLZOCU)
+
+# Meds ads plz ocu por OOAD:
+meds_OOAD <- data_f_meds_PLZOCU %>%
     count(DELEGACION, NOMBREAR) %>%
     pivot_wider(names_from = NOMBREAR, values_from = n, values_fill = 0) %>%
     arrange(DELEGACION) %>%
-    adorn_totals(where = "row") %>%   # adds bottom “Total”
-    adorn_totals(where = "col")       # adds right-hand “Total”
+    adorn_totals(where = "row") %>% # adds bottom “Total”
+    adorn_totals(where = "col") # adds right-hand “Total”
 
 epi_head_and_tail(meds_OOAD)
 epi_head_and_tail(meds_OOAD, last_cols = T)
@@ -306,14 +318,16 @@ meds_plot <- meds_OOAD %>%
     filter(DELEGACION != "Total", NOMBREAR != "Total") %>%
     mutate(
         DELEGACION = factor(DELEGACION, levels = levels_deleg),
-        NOMBREAR   = factor(NOMBREAR,   levels = levels_nombrear)
+        NOMBREAR = factor(NOMBREAR, levels = levels_nombrear)
     )
 
 # Plot heatmap of meds esp per OOAD ----
+title <- "Número de médicos en plazas ocupadas por Área de Responsabilidad y OOAD \nQuincena 15 2025"
+
 plot_1 <- ggplot(meds_plot, aes(x = NOMBREAR, y = DELEGACION, fill = n)) +
     geom_tile(color = "grey90", size = 0.1) +
     scale_fill_gradient(
-        low  = "white",
+        low = "white",
         high = "steelblue",
         trans = "sqrt"
     ) +
@@ -326,8 +340,8 @@ plot_1 <- ggplot(meds_plot, aes(x = NOMBREAR, y = DELEGACION, fill = n)) +
         x = NULL,
         y = NULL,
         fill = "Frecuencia", # \n(Escala de raíz cuadrada)",
-        title = "Mapa de calor de Área de Responsabilidad y Delegación, quincena 07 2025"
-        )
+        title = title
+    )
 plot_1
 
 # Save:
@@ -335,37 +349,41 @@ file_n <- 'plot_heatmap_NOMBREAR_DELEGACION_1'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
-ggsave(outfile, plot = plot_1,
-       height = 25, width = 25, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
-       )
+ggsave(
+    outfile,
+    plot = plot_1,
+    height = 25,
+    width = 25,
+    units = "in",
+    dpi = 300, # Adjust DPI to maintain font size
+    scale = 1 # Increase scale factor
+)
 
-# Same as above but label non-zero values inside heatmap:
+# Same as above but with values inside heatmap:
 plot_1 <- ggplot(meds_plot, aes(x = NOMBREAR, y = DELEGACION)) +
- # tiles white for zero
- geom_tile(aes(fill = n), color = "grey90", size = 0.1) +
- scale_fill_gradient(
-  low = "white",
-  high = "steelblue",
-  trans = "sqrt"
+    # tiles white for zero
+    geom_tile(aes(fill = n), color = "grey90", size = 0.1) +
+    scale_fill_gradient(
+        low = "white",
+        high = "steelblue",
+        trans = "sqrt"
     ) +
     # label the non-zeros
     geom_text(
-        data = filter(meds_plot, n > 0),
+        #data = filter(meds_plot, n > 0),
         aes(label = n),
-        size  = 2,
+        size = 2,
         color = "black"
     ) +
     theme(
-        axis.text.x  = element_text(angle = 90, vjust = 0.5, hjust = 1),
-        panel.grid   = element_blank()
+        axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+        panel.grid = element_blank()
     ) +
     labs(
-        x    = NULL,
-        y    = NULL,
+        x = NULL,
+        y = NULL,
         fill = "Frecuencia", # \n(Escala de raíz cuadrada)",
-        title = "Mapa de calor de Área de Responsabilidad y Delegación, quincena 07 2025"
+        title = title
     )
 plot_1
 
@@ -374,39 +392,49 @@ file_n <- 'plot_heatmap_NOMBREAR_DELEGACION_2'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
-ggsave(outfile, plot = plot_1,
-       height = 25, width = 25, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
-       )
+ggsave(
+    outfile,
+    plot = plot_1,
+    height = 25,
+    width = 25,
+    units = "in",
+    dpi = 300, # Adjust DPI to maintain font size
+    scale = 1 # Increase scale factor
+)
 
 # ===
 # ////////////
 
-
 # ////////////
 # Interactive plots ----
 # “text” aesthetic o that counts are integers:
-p_int <- ggplot(meds_plot, aes(
-    x     = NOMBREAR,
-    y     = DELEGACION,
-    fill  = n,
-    text  = sprintf("Delegación: %s<br>NOMBREAR: %s<br>Count: %d",
-                    DELEGACION, NOMBREAR, n)
-)) +
+p_int <- ggplot(
+    meds_plot,
+    aes(
+        x = NOMBREAR,
+        y = DELEGACION,
+        fill = n,
+        text = sprintf(
+            "Delegación: %s<br>NOMBREAR: %s<br>Count: %d",
+            DELEGACION,
+            NOMBREAR,
+            n
+        )
+    )
+) +
     geom_tile(color = "grey90", size = 0.1) +
     # label the non-zeros
     geom_text(
         data = filter(meds_plot, n > 0),
         aes(label = n),
-        size  = 2,
+        size = 2,
         color = "black"
     ) +
     scale_fill_gradient(low = "white", high = "steelblue", trans = "sqrt") +
     theme_minimal(base_size = 11) +
     theme(
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
-        panel.grid  = element_blank()
+        panel.grid = element_blank()
     ) +
     labs(x = NULL, y = NULL, fill = "Frecuencia")
 
@@ -422,7 +450,6 @@ outfile
 saveWidget(gg_int, outfile, selfcontained = TRUE)
 # ////////////
 
-
 # ////////////
 # Estimate each med specialty by eg 10,000 users/pop ----
 
@@ -433,9 +460,10 @@ df <- meds_OOAD
 epi_head_and_tail(df)
 epi_head_and_tail(df, last_cols = T)
 
-ord_vect <- order(as.numeric(df[df$DELEGACION == "Total", -1]),
-                  decreasing = TRUE
-                 )
+ord_vect <- order(
+    as.numeric(df[df$DELEGACION == "Total", -1]),
+    decreasing = TRUE
+)
 df <- df[, c(1, ord_vect + 1)] # plus 1 to include "DELEGACION" col
 epi_head_and_tail(df)
 epi_head_and_tail(df, last_cols = T)
@@ -476,7 +504,7 @@ cdmx <- df %>%
 df <- bind_rows(df, cdmx)
 df <- df %>%
     filter(!DELEGACION %in% sum_ids)
-    # bind_rows(cdmx) # to do, not needed but no error?
+# bind_rows(cdmx) # to do, not needed but no error?
 epi_head_and_tail(df)
 
 # Same for "Ciudad de México Sur":
@@ -489,7 +517,7 @@ cdmx <- df %>%
 df <- bind_rows(df, cdmx)
 df <- df %>%
     filter(!DELEGACION %in% sum_ids)
-    # bind_rows(cdmx) # to do, not needed but no error?
+# bind_rows(cdmx) # to do, not needed but no error?
 epi_head_and_tail(df)
 epi_head_and_tail(df, last_cols = TRUE)
 # ===
@@ -519,7 +547,13 @@ epi_head_and_tail(meds_OOAD)
 # Add pop per OOAD to meds_OOAD for each OOAD:
 df <- meds_OOAD
 
-meds_OOAD_merged <- merge(df, num_DH_OOAD, by.x = "DELEGACION", by.y = "Delegación", all.x = TRUE)
+meds_OOAD_merged <- merge(
+    df,
+    num_DH_OOAD,
+    by.x = "DELEGACION",
+    by.y = "Delegación",
+    all.x = TRUE
+)
 epi_head_and_tail(meds_OOAD_merged)
 epi_head_and_tail(meds_OOAD_merged, last_cols = T)
 summary(meds_OOAD_merged$Derechohabientes_DIR_03_2025)
@@ -534,12 +568,17 @@ epi_head_and_tail(meds_OOAD_merged, last_cols = T)
 # TO DO: continue here
 # Get a total for Derechohabientes_DIR_03_2025 and insert in row 'Total':
 get_value <- sum(meds_OOAD_merged$Derechohabientes_DIR_03_2025, na.rm = TRUE)
-meds_OOAD_merged[meds_OOAD_merged$DELEGACION == "Total", "Derechohabientes_DIR_03_2025"] <- get_value
+meds_OOAD_merged[
+    meds_OOAD_merged$DELEGACION == "Total",
+    "Derechohabientes_DIR_03_2025"
+] <- get_value
 epi_head_and_tail(meds_OOAD_merged)
 epi_head_and_tail(meds_OOAD_merged, last_cols = T)
 
 # Drop "Nivel Central" row:
-meds_OOAD_merged <- meds_OOAD_merged[!meds_OOAD_merged$DELEGACION %in% c("Nivel Central"), ]
+meds_OOAD_merged <- meds_OOAD_merged[
+    !meds_OOAD_merged$DELEGACION %in% c("Nivel Central"),
+]
 
 # Drop cols not needed:
 colnames(meds_OOAD_merged)
@@ -549,17 +588,26 @@ epi_head_and_tail(meds_OOAD_merged, last_cols = T)
 rm(df)
 # ===
 
-
 # ===
 # Create new col with meds per eg 10,000 pop, this is total:
 # e.g.:
-meds_OOAD_merged[meds_OOAD_merged$DELEGACION == "Aguascalientes", "Derechohabientes_DIR_03_2025"]
+meds_OOAD_merged[
+    meds_OOAD_merged$DELEGACION == "Aguascalientes",
+    "Derechohabientes_DIR_03_2025"
+]
+# TO DO: Derechohabientes_DIR_03_2025 en "medicos_por_mil_derechohabientes_utf8.csv" fue con conteos de scripts sh en:
+# /Users/antoniob/Documents/work/comp_med_medicina_datos/projects/int_op/oferta_educativa_laboral/oferta_educativa_laboral/oferta_educativa_laboral/scripts/specific_Qs/meds_por_dh/sum_by_first_column.sh
+# que son DH totales, con y sin adscripcion a consultorio
 
 # View(meds_OOAD_merged)
 
-# TO DO:
+# TO DO: continue here, clean up DIR extraction to match PDA PAMF en consultorio con PLZ OCU
 # "Total" is plazas totales, not ocupadas!
-meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- round(meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000), 2)
+meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- round(
+    meds_OOAD_merged$Total /
+        (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000),
+    2
+)
 # No rounding, for maps with very few specialists, will appear as zero otherwise:
 # meds_OOAD_merged$medicos_por_mil_derechohabientes_072025 <- meds_OOAD_merged$Total / (meds_OOAD_merged$Derechohabientes_DIR_03_2025 / 1000)
 
@@ -569,12 +617,16 @@ DIR_num_DH
 # View(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")])
 # View(DIR_num_DH[, c("Delegación", "medicos_por_mil_derechohabientes_072025")])
 
-check_dfs <- merge(meds_OOAD_merged[, c("DELEGACION", "medicos_por_mil_derechohabientes_072025")],
-                   DIR_num_DH[, c("Delegación", "medicos_por_mil_derechohabientes_072025")],
-                   by.x = "DELEGACION",
-                   by.y = "Delegación",
-                   all.x = TRUE
-                   )
+check_dfs <- merge(
+    meds_OOAD_merged[, c(
+        "DELEGACION",
+        "medicos_por_mil_derechohabientes_072025"
+    )],
+    DIR_num_DH[, c("Delegación", "medicos_por_mil_derechohabientes_072025")],
+    by.x = "DELEGACION",
+    by.y = "Delegación",
+    all.x = TRUE
+)
 # View(check_dfs)
 rm(check_dfs)
 # ===
@@ -592,16 +644,17 @@ meds_OOAD_merged_per10k <- meds_OOAD_merged %>%
 epi_head_and_tail(meds_OOAD_merged_per10k)
 epi_head_and_tail(meds_OOAD_merged_per10k, last_cols = T)
 
-meds_OOAD_merged_per10k[, c("DELEGACION", "Total",
-                            "ANESTESIOLOGIA_por10k",
-                            "Total_por10k",
-                            "medicos_por_mil_derechohabientes_072025")
-                        ]
+meds_OOAD_merged_per10k[, c(
+    "DELEGACION",
+    "Total",
+    "ANESTESIOLOGIA_por10k",
+    "Total_por10k",
+    "medicos_por_mil_derechohabientes_072025"
+)]
 colnames(meds_OOAD_merged_per10k)
 # Drop cols not needed:
 meds_OOAD_merged_per10k$medicos_por_mil_derechohabientes_072025_por10k <- NULL
 # ===
-
 
 # ===
 # Plot per 10k ----
@@ -609,7 +662,7 @@ meds_OOAD_merged_per10k_long <- meds_OOAD_merged_per10k %>%
     select(DELEGACION, ends_with("_por10k")) %>%
     pivot_longer(
         -DELEGACION,
-        names_to  = "Área de Responsabilidad",
+        names_to = "Área de Responsabilidad",
         values_to = "Tasa por 10 mil derechohabientes"
     )
 meds_OOAD_merged_per10k_long
@@ -624,17 +677,25 @@ totals_long <- meds_OOAD_merged_per10k_long %>%
 # View(totals_long)
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-totals_long$`Área de Responsabilidad` <- gsub("_por10k", "", totals_long$`Área de Responsabilidad`)
+totals_long$`Área de Responsabilidad` <- gsub(
+    "_por10k",
+    "",
+    totals_long$`Área de Responsabilidad`
+)
 totals_long
 
 df <- totals_long[-1, ] # drop "Total" row
-plot_1 <- ggplot(df, aes(x = reorder(
-    `Área de Responsabilidad`,
-    `Tasa por 10 mil derechohabientes`
-    ),
-                         y = `Tasa por 10 mil derechohabientes`,
-                         fill = `Tasa por 10 mil derechohabientes`)
-       ) +
+plot_1 <- ggplot(
+    df,
+    aes(
+        x = reorder(
+            `Área de Responsabilidad`,
+            `Tasa por 10 mil derechohabientes`
+        ),
+        y = `Tasa por 10 mil derechohabientes`,
+        fill = `Tasa por 10 mil derechohabientes`
+    )
+) +
     geom_col() +
     coord_flip() +
     scale_fill_viridis_c() +
@@ -651,13 +712,16 @@ file_n <- 'plot_bar_meds_esp_DH_10k'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
-ggsave(outfile, plot = plot_1,
-       height = 12, width = 12, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
+ggsave(
+    outfile,
+    plot = plot_1,
+    height = 12,
+    width = 12,
+    units = "in",
+    dpi = 300, # Adjust DPI to maintain font size
+    scale = 1 # Increase scale factor
 )
 # ===
-
 
 # ===
 # Per OOAD but only top 10:
@@ -678,14 +742,18 @@ df <- df %>%
 df
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-df$`Área de Responsabilidad` <- gsub("_por10k", "", df$`Área de Responsabilidad`)
+df$`Área de Responsabilidad` <- gsub(
+    "_por10k",
+    "",
+    df$`Área de Responsabilidad`
+)
 df
 
 # For each DELEGACION, plot separately a bar plot of `Área de Responsabilidad` by `Tasa por 10 mil derechohabientes`:
 # safe file‐name from DELEGACION:
 safe_name <- function(x) {
     gsub("[^[:alnum:]_-]", "_", x)
-    }
+}
 
 # unique values:
 dels <- unique(df$DELEGACION)
@@ -694,34 +762,45 @@ for (del in dels) {
     df_sub <- df %>%
         filter(DELEGACION == del)
 
-    p <- ggplot(df_sub, aes(
-        x = reorder(`Área de Responsabilidad`,
-                    `Tasa por 10 mil derechohabientes`),
-        y = `Tasa por 10 mil derechohabientes`
-    )) +
+    p <- ggplot(
+        df_sub,
+        aes(
+            x = reorder(
+                `Área de Responsabilidad`,
+                `Tasa por 10 mil derechohabientes`
+            ),
+            y = `Tasa por 10 mil derechohabientes`
+        )
+    ) +
         geom_col(fill = "steelblue") +
-        geom_text(aes(label = round(`Tasa por 10 mil derechohabientes`, 1)),
-                  hjust = -0.1,  # negative to push label outside the bar
-                  size = 8
-                  ) +
+        geom_text(
+            aes(label = round(`Tasa por 10 mil derechohabientes`, 1)),
+            hjust = -0.1, # negative to push label outside the bar
+            size = 8
+        ) +
         coord_flip() +
         labs(
             title = del,
-            x     = NULL,
-            y     = "Tasa por 10,000 derechohabientes"
+            x = NULL,
+            y = "Tasa por 10,000 derechohabientes"
         ) +
-      expand_limits(y = max(df_sub$`Tasa por 10 mil derechohabientes`,
-                            na.rm = TRUE) * 1.1)  # extra space for labels
-
+        expand_limits(
+            y = max(df_sub$`Tasa por 10 mil derechohabientes`, na.rm = TRUE) *
+                1.1
+        ) # extra space for labels
 
     # Save:
     file_n <- paste0("plot_tasa_10k_meds_esp_top_10_", safe_name(del))
     suffix <- 'pdf'
     outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
-    ggsave(outfile, plot = p,
-           height = 12, width = 12, units = "in",
-           dpi = 300,  # Adjust DPI to maintain font size
-           scale = 1  # Increase scale factor
+    ggsave(
+        outfile,
+        plot = p,
+        height = 12,
+        width = 12,
+        units = "in",
+        dpi = 300, # Adjust DPI to maintain font size
+        scale = 1 # Increase scale factor
     )
 }
 
@@ -729,7 +808,6 @@ for (del in dels) {
 meds_OOAD_merged_per10k_long_top <- df
 rm(df) # so meds_OOAD_merged_per10k_long still has Total row
 # ===
-
 
 # ===
 # Maps
@@ -739,23 +817,20 @@ rm(df) # so meds_OOAD_merged_per10k_long still has Total row
 
 # ////////////
 
-
-
-
-
 # ////////////
 # The end ----
 # Outputs saved to disk, no need to save as rdata.
 sessionInfo()
 
 # Closing message loggers:
-if (!interactive()) { # TRUE if not interactive, will then log output
+if (!interactive()) {
+    # TRUE if not interactive, will then log output
     info(logger, "Script completed successfully")
 
     # Close screen output log (both screen and warnings/error messages):
     # Stop sinks
     sink(type = "message")
-    close(sink_msg)  # Close the connection
+    close(sink_msg) # Close the connection
     sink()
 }
 

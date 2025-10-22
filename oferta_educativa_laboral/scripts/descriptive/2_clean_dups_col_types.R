@@ -13,7 +13,6 @@
 # Output is rdata object with column types specified, redundant and admin columns removed, and ready for subsetting, plotting, etc.
 # ////////////
 
-
 # ////////////
 # Global options ----
 
@@ -25,15 +24,14 @@
 # ===
 # renv can be a hassle
 # disable temporarily if batch running, e.g.:
-    # Disable renv prompts
+# Disable renv prompts
 # Sys.setenv(RENV_CONFIG_PROMPT_ENABLED = "FALSE") # except renv rewrites rprofile to source itself
-    # Load the .rdata.gzip file
-    # load("xxx.rdata.gzip")
-    # Optionally re-enable prompts if desired
-    # Sys.unsetenv("RENV_CONFIG_PROMPT_ENABLED")
+# Load the .rdata.gzip file
+# load("xxx.rdata.gzip")
+# Optionally re-enable prompts if desired
+# Sys.unsetenv("RENV_CONFIG_PROMPT_ENABLED")
 # ===
 # ////////////
-
 
 # ////////////
 # Import libraries ----
@@ -46,10 +44,11 @@ library(htmltools)
 library(log4r)
 ############
 
-
 ############
 # Basic error handling so Ruffus sees failures
-options(error = function() {q(status = 1)})
+options(error = function() {
+  q(status = 1)
+})
 ############
 
 ############
@@ -62,7 +61,6 @@ infile <- args[1]
 results_dir_arg <- if (length(args) >= 2) args[2] else NA
 # ////////////
 
-
 # ////////////
 # Directory locations ----
 
@@ -73,17 +71,19 @@ getwd()
 
 project_root <- here::here()
 data_dir <- file.path(project_root, 'data')
+#data_dir <- file.path("/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/datahub/nominales_identificables/oferta_educativa_laboral_data/data_UP/processed")
 results_dir <- file.path(project_root, 'results')
 code_dir <- file.path(project_root, 'oferta_educativa_laboral')
 
 # Assign command line results_dir if provided
-if (!is.na(results_dir_arg)) results_dir <- results_dir_arg
+if (!is.na(results_dir_arg)) {
+  results_dir <- results_dir_arg
+}
 
 print(project_root)
 print(dir(path = normalizePath(project_root), all.files = TRUE))
 # ===
 # ////////////
-
 
 # TO DO: Can delete
 # # ////////////
@@ -93,70 +93,73 @@ print(dir(path = normalizePath(project_root), all.files = TRUE))
 # source(file.path(paste0(code_dir, '/scripts/funcs_epi_source.R')))
 # # ////////////
 
-
-
 # ////////////
 # Dataset ----
 print(dir(path = normalizePath(data_dir), all.files = TRUE))
-
-infile <- ""
-infile_path <- if (file.exists(infile)) infile else file.path(data_dir, infile)
+infile <- "Qna_15_Plantilla_2025.csv"
+#infile <- "/Users/antoniob/Documents/work/comp_med_medicina_datos/projects/datahub/nominales_identificables/oferta_educativa_laboral_data/data_UP/processed/Qna_15_Plantilla_2025.csv"
+# TO DO: clean up paths
+#infile <- if (file.exists(infile)) infile else file.path(data_dir, infile)
 
 print(infile)
 # ////////////
-
 
 # ////////////
 # Output dir, based on today's date ----
 script_n <- '2_clean_dups_col_types'
 infile_prefix <- strsplit(infile, "\\.")[[1]][1]
-results_subdir <- sprintf('%s_%s',
-                          format(Sys.Date(), '%d_%m_%Y'),
-                          infile_prefix
-                          )
+results_subdir <- sprintf(
+  '%s_%s',
+  format(Sys.Date(), '%d_%m_%Y'),
+  infile_prefix
+)
 results_subdir
-results_subdir <- epi_create_dir(base_path = results_dir,
-                                 subdir = results_subdir
-                                 )
+results_subdir <- epi_create_dir(
+  base_path = results_dir,
+  subdir = results_subdir
+)
 # ////////////
-
 
 # ////////////
 # Capture output / log ----
 
 # ===
 # Redirect standard output
-if (!interactive()) { # TRUE if not interactive, will then log output
-    sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
-    sink(sink_stdout, split = TRUE)
+if (!interactive()) {
+  # TRUE if not interactive, will then log output
+  sink_stdout <- paste0(results_subdir, '/', script_n, '.sink_stdout.log')
+  sink(sink_stdout, split = TRUE)
 
-    # Redirect messages and warnings
-    sink_msg <- file(paste0(results_subdir, '/', script_n, '.sink_msg.log'), open = "wt")
-    sink(sink_msg, type = "message")
+  # Redirect messages and warnings
+  sink_msg <- file(
+    paste0(results_subdir, '/', script_n, '.sink_msg.log'),
+    open = "wt"
+  )
+  sink(sink_msg, type = "message")
 
-    # Example outputs
-    cat("Test: This is standard output.\n")
-    message("Test: This is a message.")
-    warning("Test: This is a warning.")
-    }
+  # Example outputs
+  cat("Test: This is standard output.\n")
+  message("Test: This is a message.")
+  warning("Test: This is a warning.")
+}
 # ===
 
 # ===
 # Create a logger
-if (!interactive()) { # TRUE if not interactive, will then log output
-    logger <- create.logger()
-    log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
-    logfile(logger) <- log_n # Log file location
-    level(logger) <- "INFO"  # Set logging level (DEBUG, INFO, WARN, ERROR)
+if (!interactive()) {
+  # TRUE if not interactive, will then log output
+  logger <- create.logger()
+  log_n <- paste0(results_subdir, '/', script_n, '.log4r.log')
+  logfile(logger) <- log_n # Log file location
+  level(logger) <- "INFO" # Set logging level (DEBUG, INFO, WARN, ERROR)
 
-    # Add log messages
-    # info(logger, "Script started")
-    # debug(logger, "This is a debug message")
-    # warn(logger, "This is a warning")
-    # error(logger, "This is an error")
-    }
+  # Add log messages
+  # info(logger, "Script started")
+  # debug(logger, "This is a debug message")
+  # warn(logger, "This is a warning")
+  # error(logger, "This is an error")
+}
 # ////////////
-
 
 # ////////////
 # Read in ----
@@ -167,7 +170,6 @@ str(data_f)
 epi_head_and_tail(data_f)
 colnames(data_f)
 # ////////////
-
 
 # ////////////
 # Find non-unique IDs ----
@@ -188,15 +190,9 @@ print(dups)
 # Save:
 file_n <- 'duplicates_CURP'
 suffix <- 'txt'
-outfile <- sprintf(fmt = '%s/%s.%s',
-                   results_subdir,
-                   file_n,
-                   suffix
-                   )
+outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
-epi_write(file_object = dups,
-          file_name = outfile
-          )
+epi_write(file_object = dups, file_name = outfile)
 
 
 # View(t(dups))
@@ -207,7 +203,6 @@ epi_write(file_object = dups,
 # data_f <- df_dups # not needed
 rm(list = c('df_dups'))
 # ////////////
-
 
 # ////////////
 # Basic clean ----
@@ -236,10 +231,11 @@ summary(data_f$EDAD)
 # ===
 summary(data_f$FALTASACUMULADAS)
 length(which(data_f$FALTASACUMULADAS < 0))
-data_f$FALTASACUMULADAS <- ifelse(data_f$FALTASACUMULADAS < 0,
-                                  NA,
-                                  data_f$FALTASACUMULADAS
-                                  )
+data_f$FALTASACUMULADAS <- ifelse(
+  data_f$FALTASACUMULADAS < 0,
+  NA,
+  data_f$FALTASACUMULADAS
+)
 summary(data_f$FALTASACUMULADAS)
 summary(data_f$ANT_DIAS)
 summary(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
@@ -247,7 +243,6 @@ summary(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
 data_f[, c('FALTASACUMULADAS', 'ANT_DIAS')]
 head(data_f$FALTASACUMULADAS / data_f$ANT_DIAS)
 # ===
-
 
 # ===
 # Clean up MATRICULA, NA values mainly:
@@ -271,7 +266,11 @@ length(which(count_char < 8))
 
 
 to_NA <- c("0")
-data_f$MATRICULA <- ifelse(as.character(data_f$MATRICULA) %in% to_NA, NA, data_f$MATRICULA)
+data_f$MATRICULA <- ifelse(
+  as.character(data_f$MATRICULA) %in% to_NA,
+  NA,
+  data_f$MATRICULA
+)
 summary(data_f$MATRICULA)
 # Should match other IDs:
 summary(data_f$NSS)
@@ -281,26 +280,28 @@ summary(data_f$NSS)
 # Clean up ESCOLARIDAD, NA values mainly:
 head(data_f$ESCOLARIDAD, 20)
 summary(data_f$ESCOLARIDAD)
-to_NA <- c("-",
-           "1-",
-           "7-",
-           "9-",
-           "15|-",
-           "3-",
-           "8-"
-           )
-to_correct <- c("BACHILLERATO-",
-                "LICENCIATURA EN ENFERMERIA-",
-                "LICENCIATURA-",
-                "MAESTRIA COMPLETA-"
-                )
+to_NA <- c("-", "1-", "7-", "9-", "15|-", "3-", "8-")
+to_correct <- c(
+  "BACHILLERATO-",
+  "LICENCIATURA EN ENFERMERIA-",
+  "LICENCIATURA-",
+  "MAESTRIA COMPLETA-"
+)
 length(which(data_f$ESCOLARIDAD %in% to_NA))
 # vec_test <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_NA, NA, data_f$ESCOLARIDAD)
-data_f$ESCOLARIDAD <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_NA, NA, data_f$ESCOLARIDAD)
+data_f$ESCOLARIDAD <- ifelse(
+  as.character(data_f$ESCOLARIDAD) %in% to_NA,
+  NA,
+  data_f$ESCOLARIDAD
+)
 
 # Also exclude as ambiguous:
 # vec_test <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_correct, NA, data_f$ESCOLARIDAD)
-data_f$ESCOLARIDAD <- ifelse(as.character(data_f$ESCOLARIDAD) %in% to_correct, NA, data_f$ESCOLARIDAD)
+data_f$ESCOLARIDAD <- ifelse(
+  as.character(data_f$ESCOLARIDAD) %in% to_correct,
+  NA,
+  data_f$ESCOLARIDAD
+)
 
 head(data_f$ESCOLARIDAD)
 summary(as.factor(data_f$ESCOLARIDAD))
@@ -312,7 +313,6 @@ dim(data_f)
 # Get age, gender, municipio, etc. from CURP, compare against registered:
 # ===
 
-
 # ===
 # Column names:
 # AntiguedadVacA√±os
@@ -321,26 +321,24 @@ dim(data_f)
 # ===
 # ////////////
 
-
 # ////////////
 # Many columns duplicate information, check ----
 
 # ===
 
-identical(as.character(data_f$MATRICULA),
-          as.character(data_f$TITULAR)
-          )
+identical(as.character(data_f$MATRICULA), as.character(data_f$TITULAR))
 epi_head_and_tail(data_f[, c('MATRICULA', 'TITULAR')], cols = 2)
 # some zero's
 # Compare the columns and count matches
-match_count <- length(which(as.character(data_f$MATRICULA) == as.character(data_f$TITULAR)))
+match_count <- length(which(
+  as.character(data_f$MATRICULA) == as.character(data_f$TITULAR)
+))
 match_count
 length(which(as.character(data_f$TITULAR) == '0'))
 dim(data_f)
 # Looks like some zero's in both columns, but largely the same number/information
 # Remove
 # ===
-
 
 # ===
 identical(data_f$Nombre, data_f$NOMBRE_TITULAR)
@@ -352,8 +350,10 @@ match_count
 dim(data_f)
 # Looks like ~70% have the same information, 73577 / 90378
 mismatches_index <- which(data_f$Nombre != data_f$NOMBRE_TITULAR)
-epi_head_and_tail(data_f[mismatches_index, c('Nombre', 'NOMBRE_TITULAR')],
-                  cols = 2)
+epi_head_and_tail(
+  data_f[mismatches_index, c('Nombre', 'NOMBRE_TITULAR')],
+  cols = 2
+)
 # Remove for now, check
 # ===
 
@@ -368,7 +368,6 @@ length(which(is.na(data_f$Cédula)))
 # ===
 # ////////////
 
-
 # ////////////
 # Remove columns that aren't needed ----
 
@@ -382,11 +381,12 @@ length(which(is.na(data_f$Cédula)))
 colnames(data_f)
 
 print(results_dir)
-col_types_file <- sprintf("%s/%s/%s",
-                          results_dir,
-                          "manual_col_types/",
-                          "df_col_types2_utf8.csv" # txt was a pain with encodings
-                          )
+col_types_file <- sprintf(
+  "%s/%s/%s",
+  results_dir,
+  "manual_col_types/",
+  "df_col_types2_utf8.csv" # txt was a pain with encodings
+)
 print(col_types_file)
 
 col_types_file <- episcout::epi_read(col_types_file)
@@ -416,28 +416,38 @@ colnames(df_col_types)
 # col_types_file[[1]][88] <- 'AntiguedadVacAños'
 # ===
 
-
 # ===
 # Column type conversions, except for dates, will run separately:
 # i <- 1
 
-missing_cols <- col_types_file$variables[!col_types_file$variables %in% names(df_col_types)]
+missing_cols <- col_types_file$variables[
+  !col_types_file$variables %in% names(df_col_types)
+]
 missing_cols
 
 df_col_types <- setNames(
-    lapply(seq_len(nrow(col_types_file)), function(i) {
-        col <- col_types_file$variables[i]
-        typ <- col_types_file$convert_to[i]
-        if (is.na(typ) || !(col %in% names(df_col_types))) return(NULL)
-        switch(typ,
-               "factor" = as.factor(df_col_types[[col]]),
-               "character" = as.character(df_col_types[[col]]),
-               "integer" = as.integer(df_col_types[[col]]),
-               "numeric" = as.numeric(df_col_types[[col]]),
-               df_col_types[[col]])
-    }),
-    col_types_file$variables
-) %>% compact() %>% as.data.frame() %>% select(all_of(col_types_file$variables[col_types_file$variables %in% names(df_col_types)]))
+  lapply(seq_len(nrow(col_types_file)), function(i) {
+    col <- col_types_file$variables[i]
+    typ <- col_types_file$convert_to[i]
+    if (is.na(typ) || !(col %in% names(df_col_types))) {
+      return(NULL)
+    }
+    switch(
+      typ,
+      "factor" = as.factor(df_col_types[[col]]),
+      "character" = as.character(df_col_types[[col]]),
+      "integer" = as.integer(df_col_types[[col]]),
+      "numeric" = as.numeric(df_col_types[[col]]),
+      df_col_types[[col]]
+    )
+  }),
+  col_types_file$variables
+) %>%
+  compact() %>%
+  as.data.frame() %>%
+  select(all_of(col_types_file$variables[
+    col_types_file$variables %in% names(df_col_types)
+  ]))
 
 # View missing columns:
 cat("Missing columns:\n", missing_cols)
@@ -458,9 +468,7 @@ col1
 col2 <- t(as.data.frame(lapply(df_col_types, class)))
 col2
 
-column_types_dfs <- data.frame(original_base = col1,
-                               converted_class = col2
-                               )
+column_types_dfs <- data.frame(original_base = col1, converted_class = col2)
 column_types_dfs
 
 
@@ -469,10 +477,11 @@ summary(df_col_types)
 skim_summary <- skimr::skim(df_col_types)
 skim_summary
 
-epi_write_df(df = df,
-             results_subdir = results_subdir,
-             file_n = 'skimr_all_cols',
-             suffix = 'txt'
+epi_write_df(
+  df = skim_summary,
+  results_subdir = results_subdir,
+  file_n = 'skimr_all_cols',
+  suffix = 'txt'
 )
 
 
@@ -521,11 +530,12 @@ dim(data_f)
 summary(df_col_types)
 df <- skimr::skim(df_col_types)
 
-epi_write_df(df = df,
-             results_subdir = results_subdir,
-             file_n = 'skimr_selected_cols',
-             suffix = 'txt'
-             )
+epi_write_df(
+  df = df,
+  results_subdir = results_subdir,
+  file_n = 'skimr_selected_cols',
+  suffix = 'txt'
+)
 # ===
 
 # ===
@@ -534,7 +544,6 @@ data_f <- df_col_types
 rm(list = c('df_col_types'))
 # ===
 # ////////////
-
 
 # ////////////
 # ===
@@ -579,7 +588,6 @@ summary(as.Date(df_dates$FECHAING, "%m/%d/%y")) # format is different
 # Left as R’s native yyyy-mm-dd format internally
 # ===
 
-
 # ===
 # Loop and convert all:
 epi_head_and_tail(df_dates[, date_cols])
@@ -588,16 +596,16 @@ str(df_dates[, date_cols])
 
 # i <- date_cols[1]
 for (i in date_cols) {
-    print(i)
-    col_i <- df_dates[[i]]
-    str(col_i)
-    col_i <- as.Date(col_i, format = "%m/%d/%y")
-    str(col_i)
-    print(head(col_i))
-    df_dates[[i]] <- col_i
-    print(head(df_dates[, i]))
-    print(summary(df_dates[[i]]))
-        }
+  print(i)
+  col_i <- df_dates[[i]]
+  str(col_i)
+  col_i <- as.Date(col_i, format = "%m/%d/%y")
+  str(col_i)
+  print(head(col_i))
+  df_dates[[i]] <- col_i
+  print(head(df_dates[, i]))
+  print(summary(df_dates[[i]]))
+}
 
 epi_head_and_tail(data_f[, date_cols])
 epi_head_and_tail(df_dates[, date_cols])
@@ -613,11 +621,12 @@ str(df_dates[, date_cols])
 
 # Save dates summary:
 df <- skimr::skim(df_dates[, date_cols])
-epi_write_df(df = df,
-             results_subdir = results_subdir,
-             file_n = 'skimr_dates',
-             suffix = 'txt'
-             )
+epi_write_df(
+  df = df,
+  results_subdir = results_subdir,
+  file_n = 'skimr_dates',
+  suffix = 'txt'
+)
 # Generally looks good
 # ===
 
@@ -641,7 +650,6 @@ epi_write_df(df = df,
 # summary(col_test)
 # ===
 
-
 # ===
 # Clean up:
 data_f <- df_dates
@@ -649,7 +657,6 @@ str(data_f[, date_cols])
 rm(list = c('df_dates'))
 # ===
 # ////////////
-
 
 # ////////////
 # Check classes ----
@@ -678,31 +685,31 @@ colnames(data_f)
 # ===
 # Get character columns:
 char_cols <- data_f %>%
-	select_if(is.character) %>%
-	colnames()
+  select_if(is.character) %>%
+  colnames()
 char_cols
 epi_head_and_tail(data_f[, char_cols], cols = length(char_cols))
 
 
 # Get integer columns:
 int_cols <- data_f %>%
-	select_if(is.integer) %>%
-	colnames()
+  select_if(is.integer) %>%
+  colnames()
 int_cols
 epi_head_and_tail(data_f[, int_cols], cols = length(int_cols))
 
 # Get numeric columns:
 num_cols <- data_f %>%
-    select_if(~ is.numeric(.) && !is.integer(.)) %>%
-	colnames()
+  select_if(~ is.numeric(.) && !is.integer(.)) %>%
+  colnames()
 num_cols
 epi_head_and_tail(data_f[, num_cols], cols = length(num_cols))
 
 
 # Get factor columns:
 fact_cols <- data_f %>%
-	select_if(is.factor) %>%
-	colnames()
+  select_if(is.factor) %>%
+  colnames()
 fact_cols
 epi_head_and_tail(data_f[, fact_cols], cols = length(fact_cols))
 
@@ -714,29 +721,25 @@ epi_clean_count_classes(df = data_f)
 # ===
 # ////////////
 
-
 # ////////////
 # ===
 # Re-order columns to make it easier to select ----
 
 # ID columns are:
-id_cols <- c('MATRICULA',
-             'RFC',
-             'CURP',
-             'NSS'
-             )
+id_cols <- c('MATRICULA', 'RFC', 'CURP', 'NSS')
 id_cols
 epi_head_and_tail(data_f[, id_cols], cols = length(id_cols))
 
 colnames(data_f)
 df_ord <- data_f %>%
-  select('MATRICULA',
-         'RFC',
-         'CURP',
-         'NSS',
-         'SEXO',
-         matches("FECH"),
-         everything()
+  select(
+    'MATRICULA',
+    'RFC',
+    'CURP',
+    'NSS',
+    'SEXO',
+    matches("FECH"),
+    everything()
   )
 
 colnames(df_ord)
@@ -750,19 +753,18 @@ rm(list = c('df_ord'))
 # ===
 # ////////////
 
-
 # ////////////
 # Get list of column for checks in later scripts  ----
-all_colnames <- c(# id_cols, # id_cols are char_cols
-                  char_cols,
-                  fact_cols,
-                  num_cols,
-                  int_cols, # no true integer columns though, should be empty
-                  date_cols
-                  )
+all_colnames <- c(
+  # id_cols, # id_cols are char_cols
+  char_cols,
+  fact_cols,
+  num_cols,
+  int_cols, # no true integer columns though, should be empty
+  date_cols
+)
 all_colnames
 # ////////////
-
 
 # ////////////
 # The end  ----
@@ -770,16 +772,20 @@ all_colnames
 print(data_dir)
 dir(data_dir)
 
-processed_data_dir <- sprintf('%s/data_UP/access_SIAP_18092024/processed/',
-                              data_dir)
+#processed_data_dir <- sprintf(
+#  '%s/data_UP/access_SIAP_18092024/processed/',
+#  data_dir
+#)
 infile_prefix
 suffix <- 'rdata.gzip'
-outfile <- sprintf(fmt = '%s/%s_%s.%s',
-                   processed_data_dir,
-                   script_n,
-                   infile_prefix,
-                   suffix
-                   )
+outfile <- sprintf(
+  fmt = '%s/%s_%s.%s',
+  data_dir,
+  #  processed_data_dir,
+  script_n,
+  infile_prefix,
+  suffix
+)
 outfile
 
 # Check and remove objects that are not necessary to save:
@@ -788,40 +794,38 @@ object_sizes <- as.matrix(rev(sort(object_sizes))[1:10])
 object_sizes
 ls()
 
-objects_to_save <- (c('data_f',
-                      'project_root',
-                      'data_dir',
-                      'devel_dir',
-                      'code_dir',
-                      'results_dir',
-                      'id_cols',
-                      'date_cols',
-                      'char_cols',
-                      'int_cols',
-                      'fact_cols',
-                      'num_cols',
-                      'all_colnames'
-                      )
-                    )
+objects_to_save <- (c(
+  'data_f',
+  'project_root',
+  'data_dir',
+  #'devel_dir',
+  'code_dir',
+  'results_dir',
+  'id_cols',
+  'date_cols',
+  'char_cols',
+  'int_cols',
+  'fact_cols',
+  'num_cols',
+  'all_colnames'
+))
 
 # Save:
-save(list = objects_to_save,
-     file = outfile,
-     compress = 'gzip'
-     )
+save(list = objects_to_save, file = outfile, compress = 'gzip')
 
 print(sessionInfo())
 
 # Closing message loggers:
-if (!interactive()) { # TRUE if not interactive, will then log output
-    info(logger, "Script completed successfully")
+if (!interactive()) {
+  # TRUE if not interactive, will then log output
+  info(logger, "Script completed successfully")
 
-    # Close screen output log (both screen and warnings/error messages):
-    # Stop sinks
-    sink(type = "message")
-    close(sink_msg)  # Close the connection
-    sink()
-    }
+  # Close screen output log (both screen and warnings/error messages):
+  # Stop sinks
+  sink(type = "message")
+  close(sink_msg) # Close the connection
+  sink()
+}
 
 # Remove/clean up session:
 all_objects <- ls()

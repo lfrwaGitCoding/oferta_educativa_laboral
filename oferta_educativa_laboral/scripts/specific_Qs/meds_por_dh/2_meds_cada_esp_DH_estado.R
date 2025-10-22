@@ -48,10 +48,11 @@ epi_head_and_tail(meds_OOAD_merged_states)
 
 # ===
 # Rename to Estado:
-colnames(meds_OOAD_merged_states)[colnames(meds_OOAD_merged_states) == "DELEGACION"] <- "Estado"
+colnames(meds_OOAD_merged_states)[
+    colnames(meds_OOAD_merged_states) == "DELEGACION"
+] <- "Estado"
 colnames(meds_OOAD_merged_states)
 # ===
-
 
 meds_OOAD_merged_states <- meds_OOAD_merged_states %>%
     filter(!Estado %in% sum_ids)
@@ -91,16 +92,17 @@ meds_OOAD_merged_states_per10k <- meds_OOAD_merged_states %>%
 epi_head_and_tail(meds_OOAD_merged_states_per10k)
 epi_head_and_tail(meds_OOAD_merged_states_per10k, last_cols = T)
 
-meds_OOAD_merged_states_per10k[, c("Estado", "Total",
-                            "ANESTESIOLOGIA_por10k",
-                            "Total_por10k",
-                            "medicos_por_mil_derechohabientes_072025")
-]
+meds_OOAD_merged_states_per10k[, c(
+    "Estado",
+    "Total",
+    "ANESTESIOLOGIA_por10k",
+    "Total_por10k",
+    "medicos_por_mil_derechohabientes_072025"
+)]
 colnames(meds_OOAD_merged_states_per10k)
 # Drop cols not needed:
 meds_OOAD_merged_states_per10k$medicos_por_mil_derechohabientes_072025_por10k <- NULL
 # ===
-
 
 # ===
 # Plot per 10k ----
@@ -120,7 +122,7 @@ meds_OOAD_merged_states_per10k_long <- meds_OOAD_merged_states_per10k %>%
     select(Estado, ends_with("_por10k")) %>%
     pivot_longer(
         -Estado,
-        names_to  = "Área de Responsabilidad",
+        names_to = "Área de Responsabilidad",
         values_to = "Tasa por 10 mil derechohabientes"
     )
 meds_OOAD_merged_states_per10k_long
@@ -138,16 +140,24 @@ totals_long <- df %>%
 # View(totals_long)
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-totals_long$`Área de Responsabilidad` <- gsub("_por10k", "", totals_long$`Área de Responsabilidad`)
+totals_long$`Área de Responsabilidad` <- gsub(
+    "_por10k",
+    "",
+    totals_long$`Área de Responsabilidad`
+)
 totals_long
 
 df <- totals_long[-1, ] # drop "Total" row
-plot_1 <- ggplot(df, aes(x = reorder(
-    `Área de Responsabilidad`,
-    `Tasa por 10 mil derechohabientes`
-),
-y = `Tasa por 10 mil derechohabientes`,
-fill = `Tasa por 10 mil derechohabientes`)
+plot_1 <- ggplot(
+    df,
+    aes(
+        x = reorder(
+            `Área de Responsabilidad`,
+            `Tasa por 10 mil derechohabientes`
+        ),
+        y = `Tasa por 10 mil derechohabientes`,
+        fill = `Tasa por 10 mil derechohabientes`
+    )
 ) +
     geom_col() +
     coord_flip() +
@@ -164,13 +174,16 @@ file_n <- 'plot_bar_meds_esp_DH_10k_estado'
 suffix <- 'pdf'
 outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
 outfile
-ggsave(outfile, plot = plot_1,
-       height = 12, width = 12, units = "in",
-       dpi = 300,  # Adjust DPI to maintain font size
-       scale = 1  # Increase scale factor
+ggsave(
+    outfile,
+    plot = plot_1,
+    height = 12,
+    width = 12,
+    units = "in",
+    dpi = 300, # Adjust DPI to maintain font size
+    scale = 1 # Increase scale factor
 )
 # ===
-
 
 # ===
 # Per OOAD but only top 10:
@@ -190,7 +203,11 @@ meds_OOAD_merged_states_per10k_long_top <- meds_OOAD_merged_states_per10k_long %
 meds_OOAD_merged_states_per10k_long_top
 
 # Remove the string _por10k from each row value in `Área de Responsabilidad`:
-meds_OOAD_merged_states_per10k_long_top$`Área de Responsabilidad` <- gsub("_por10k", "", meds_OOAD_merged_states_per10k_long_top$`Área de Responsabilidad`)
+meds_OOAD_merged_states_per10k_long_top$`Área de Responsabilidad` <- gsub(
+    "_por10k",
+    "",
+    meds_OOAD_merged_states_per10k_long_top$`Área de Responsabilidad`
+)
 meds_OOAD_merged_states_per10k_long_top
 
 # For each Estado, plot separately a bar plot of `Área de Responsabilidad` by `Tasa por 10 mil derechohabientes`:
@@ -202,35 +219,41 @@ safe_name <- function(x) {
 # unique values:
 dels <- unique(meds_OOAD_merged_states_per10k_long_top$Estado)
 
-for(del in dels) {
+for (del in dels) {
     df_sub <- meds_OOAD_merged_states_per10k_long_top %>%
         filter(Estado == del)
 
-    p <- ggplot(df_sub, aes(
-        x = reorder(`Área de Responsabilidad`,
-                    `Tasa por 10 mil derechohabientes`),
-        y = `Tasa por 10 mil derechohabientes`
-    )) +
+    p <- ggplot(
+        df_sub,
+        aes(
+            x = reorder(
+                `Área de Responsabilidad`,
+                `Tasa por 10 mil derechohabientes`
+            ),
+            y = `Tasa por 10 mil derechohabientes`
+        )
+    ) +
         geom_col(fill = "steelblue") +
         coord_flip() +
         labs(
             title = del,
-            x     = NULL,
-            y     = "Tasa por 10 000 derechohabientes"
+            x = NULL,
+            y = "Tasa por 10 000 derechohabientes"
         )
 
     # Save:
     file_n <- paste0("plot_tasa_10k_meds_esp_top_10_estado_", safe_name(del))
     suffix <- 'pdf'
     outfile <- sprintf(fmt = '%s/%s.%s', results_subdir, file_n, suffix)
-    ggsave(outfile, plot = p,
-           height = 12, width = 12, units = "in",
-           dpi = 300,  # Adjust DPI to maintain font size
-           scale = 1  # Increase scale factor
+    ggsave(
+        outfile,
+        plot = p,
+        height = 12,
+        width = 12,
+        units = "in",
+        dpi = 300, # Adjust DPI to maintain font size
+        scale = 1 # Increase scale factor
     )
 }
 # ===
 # ////////////
-
-
-

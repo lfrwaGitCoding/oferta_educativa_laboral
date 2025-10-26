@@ -8,8 +8,6 @@ dependencies:
   - pip
   - ruffus
   - cgatcore
-  - time
-  - mdbtools
   # Modified to version 4.3 instead of 4.2
   - r-base=4.3
   - r-data.table
